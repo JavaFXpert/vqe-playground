@@ -64,6 +64,10 @@ class ExpectationGrid(pygame.sprite.Sprite):
                 pygame.draw.rect(self.image, BLACK, rect, 1)
 
     def calc_expectation_value(self):
-        exp_val = np.sum(self.eigenvalues * np.absolute(self.quantum_state) ** 2)
-        return exp_val
+        statevector_probs = np.absolute(self.quantum_state) ** 2
+        exp_val = np.sum(self.eigenvalues * statevector_probs)
+
+        basis_state_idx = np.argmax(statevector_probs)
+
+        return exp_val, self.basis_states[basis_state_idx]
 

@@ -33,11 +33,11 @@ class NetworkGraph(pygame.sprite.Sprite):
         self.set_adj_matrix(adj_matrix)
         self.solution = None
 
-    def set_adj_matrix(self, adj_matrix, solution=None):
+    def set_adj_matrix(self, adj_matrix, solution=np.zeros(0)):
         self.adj_matrix = adj_matrix
         num_nodes = self.adj_matrix.shape[0]  # Number of nodes in graph
 
-        if solution:
+        if solution.shape[0] != 0:
             self.solution = solution
         else:
             self.solution = np.zeros(num_nodes)

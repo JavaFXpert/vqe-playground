@@ -350,6 +350,14 @@ def main():
                                                rotation_gate_nodes)
             print('opt_rotations: ', opt_rotations)
 
+            cost, basis_state_str = expectation_grid.calc_expectation_value()
+
+            solution = np.zeros(NUM_STATE_DIMS)
+            for idx, char in enumerate(basis_state_str):
+                solution[idx] = int(char)
+
+            network_graph.set_adj_matrix(adj_matrix, solution)
+
             update_circ_viz(circuit, circuit_grid_model, circuit_grid, top_sprites, right_sprites,
                             expectation_grid)
 
@@ -428,9 +436,9 @@ def expectation_value_objective_function(rotations_radians, circuit_grid, expect
     for idx in range(len(rotation_gate_nodes)):
         circuit_grid.rotate_gate_absolute(rotation_gate_nodes[idx], rotations_radians[idx])
         expectation_grid.set_circuit(circuit_grid.circuit_grid_model.compute_circuit())
-        cost = expectation_grid.calc_expectation_value()
+        cost, basis_state = expectation_grid.calc_expectation_value()
 
-        print("rotations_radians: ", rotations_radians, ", cost: ", cost)
+        print("rotations_radians: ", rotations_radians, ", cost: ", cost, ", basis_state: ", basis_state)
     return cost
 
 
@@ -438,7 +446,7 @@ def update_circ_viz(circuit, circuit_grid_model, circuit_grid, top_sprites, righ
                     expectaton_grid):
     screen.blit(background, (0, 0))
     circuit = circuit_grid_model.compute_circuit()
-    expectaton_grid.set_circuit(circuit, )
+    expectaton_grid.set_circuit(circuit)
     top_sprites.arrange()
     right_sprites.arrange()
     top_sprites.draw(screen)
