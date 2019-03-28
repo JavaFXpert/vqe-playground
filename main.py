@@ -84,16 +84,32 @@ def main():
     circuit_grid_model.set_node(2, 2, CircuitGridNode(node_types.X, 0, 1))
     circuit_grid_model.set_node(3, 3, CircuitGridNode(node_types.X, 0, 2))
 
+    circuit_grid_model.set_node(0, 3, CircuitGridNode(node_types.X))
     # circuit_grid_model.set_node(1, 3, CircuitGridNode(node_types.Y))
     # circuit_grid_model.set_node(2, 3, CircuitGridNode(node_types.Y))
+    # circuit_grid_model.set_node(3, 3, CircuitGridNode(node_types.Y))
 
     circuit = circuit_grid_model.compute_circuit()
 
+    # adj_matrix = np.array([
+    #     [0.0, 1.0, 0.0, 1.0],
+    #     [1.0, 0.0, 1.0, 0.0],
+    #     [0.0, 1.0, 0.0, 1.0],
+    #     [1.0, 0.0, 1.0, 0.0]
+    # ])
+
+    # adj_matrix = np.array([
+    #     [0.0, 1.0, 1.0, 1.0],
+    #     [1.0, 0.0, 1.0, 0.0],
+    #     [1.0, 1.0, 0.0, 1.0],
+    #     [1.0, 0.0, 1.0, 0.0]
+    # ])
+
     adj_matrix = np.array([
-        [0.0, 1.0, 0.0, 0.0],
-        [1.0, 0.0, 1.0, 0.0],
-        [0.0, 1.0, 0.0, 1.0],
-        [0.0, 0.0, 1.0, 0.0]
+        [0.0, 1.0, 1.0, 1.0],
+        [1.0, 0.0, 1.0, 1.0],
+        [1.0, 1.0, 0.0, 1.0],
+        [1.0, 1.0, 1.0, 0.0]
     ])
 
     maxcut_op, maxcut_shift = maxcut.get_maxcut_qubitops(adj_matrix)
@@ -341,7 +357,7 @@ def main():
 def optimize_rotations(objective_function, x0, circuit_grid, expectation_grid, rotation_gate_nodes):
 
     # Tries to be plug-compatable with scipy.optimize.fmin_l_bfgs_b
-    optimization_epochs = 3
+    optimization_epochs = 1
     move_radians = np.pi / 8
 
     optimized_rotations = np.copy(x0)
@@ -396,6 +412,10 @@ def optimize_rotations(objective_function, x0, circuit_grid, expectation_grid, r
                             min_distance = temp_distance
                     else:
                         finished_with_while_loop = True
+        print('min_distance: ', min_distance)
+
+        objective_function(optimized_rotations, circuit_grid, expectation_grid, rotation_gate_nodes)
+        print('exp_val: ', expectation_grid.calc_expectation_value())
     return optimized_rotations
 
 
