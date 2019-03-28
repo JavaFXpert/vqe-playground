@@ -26,20 +26,21 @@ import random
 import scipy.optimize
 from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister
 from qiskit import execute
+from qiskit_aqua.translators.ising import maxcut
 from pygame.locals import *
 
 from model.circuit_grid_model import *
 from model import circuit_node_types as node_types
 from containers.vbox import VBox
 from utils.colors import *
-from utils.states import NUM_QUBITS
+from utils.states import NUM_QUBITS, NUM_STATE_DIMS
 from utils.navigation import *
 from utils.gamepad import *
 from viz.circuit_diagram import CircuitDiagram
-from viz.unitary_grid import UnitaryGrid
+from viz.expectation_grid import ExpectationGrid
 from controls.circuit_grid import *
 
-WINDOW_SIZE = 1500, 1000
+WINDOW_SIZE = 1660, 1000
 
 if not pygame.font: print('Warning, fonts disabled')
 if not pygame.mixer: print('Warning, sound disabled')
@@ -81,19 +82,33 @@ def main():
 
     circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.X, 0, 0))
     circuit_grid_model.set_node(2, 2, CircuitGridNode(node_types.X, 0, 1))
+    circuit_grid_model.set_node(3, 3, CircuitGridNode(node_types.X, 0, 2))
 
-    circuit_grid_model.set_node(1, 3, CircuitGridNode(node_types.Y))
-    circuit_grid_model.set_node(2, 3, CircuitGridNode(node_types.Y))
-
-
-
-    # print("str(circuit_grid_model): ", str(circuit_grid_model))
+    # circuit_grid_model.set_node(1, 3, CircuitGridNode(node_types.Y))
+    # circuit_grid_model.set_node(2, 3, CircuitGridNode(node_types.Y))
 
     circuit = circuit_grid_model.compute_circuit()
 
-    unitary_grid = UnitaryGrid(circuit)
+    adj_matrix = np.array([
+        [0.0, 1.0, 0.0, 0.0],
+        [1.0, 0.0, 1.0, 0.0],
+        [0.0, 1.0, 0.0, 1.0],
+        [0.0, 0.0, 1.0, 0.0]
+    ])
 
-    middle_sprites = VBox(400, 10, unitary_grid)
+    maxcut_op, maxcut_shift = maxcut.get_maxcut_qubitops(adj_matrix)
+
+    # TODO: Find different approach of calculating and retrieving diagonal
+    maxcut_op._paulis_to_matrix()
+    eigenvectors = maxcut_op._dia_matrix
+
+    expectation_grid = ExpectationGrid(circuit, eigenvectors)
+
+    # TODO: Put this flag in expectation_grid, making methods to
+    # TODO:     update respective matrices?
+    expectation_value_dirty = True
+
+    middle_sprites = VBox(1400, 10, expectation_grid)
 
     circuit_grid = CircuitGrid(10, 600, circuit_grid_model)
     screen.blit(background, (0, 0))
@@ -163,37 +178,37 @@ def main():
                     # Place X gate
                     circuit_grid.handle_input_x()
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 elif event.button == BTN_X:
                     # Place Y gate
                     circuit_grid.handle_input_y()
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 elif event.button == BTN_B:
                     # Place Z gate
                     circuit_grid.handle_input_z()
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 elif event.button == BTN_Y:
                     # Place Hadamard gate
                     circuit_grid.handle_input_h()
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 elif event.button == BTN_RIGHT_TRIGGER:
                     # Delete gate
                     circuit_grid.handle_input_delete()
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 elif event.button == BTN_RIGHT_THUMB:
                     # Add or remove a control
                     circuit_grid.handle_input_ctrl()
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
 
             elif event.type == JOYAXISMOTION:
@@ -201,22 +216,22 @@ def main():
                 if event.axis == AXIS_RIGHT_THUMB_X and joystick.get_axis(AXIS_RIGHT_THUMB_X) >= 0.95:
                     circuit_grid.handle_input_rotate(np.pi / 8)
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 if event.axis == AXIS_RIGHT_THUMB_X and joystick.get_axis(AXIS_RIGHT_THUMB_X) <= -0.95:
                     circuit_grid.handle_input_rotate(-np.pi / 8)
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 if event.axis == AXIS_RIGHT_THUMB_Y and joystick.get_axis(AXIS_RIGHT_THUMB_Y) <= -0.95:
                     circuit_grid.handle_input_move_ctrl(MOVE_UP)
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 if event.axis == AXIS_RIGHT_THUMB_Y and joystick.get_axis(AXIS_RIGHT_THUMB_Y) >= 0.95:
                     circuit_grid.handle_input_move_ctrl(MOVE_DOWN)
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
 
             elif event.type == KEYDOWN:
@@ -242,66 +257,62 @@ def main():
                 elif event.key == K_x:
                     circuit_grid.handle_input_x()
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 elif event.key == K_y:
                     circuit_grid.handle_input_y()
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 elif event.key == K_z:
                     circuit_grid.handle_input_z()
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 elif event.key == K_h:
                     circuit_grid.handle_input_h()
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 elif event.key == K_BACKSLASH:
                     circuit_grid.handle_input_delete()
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 elif event.key == K_c:
                     # Add or remove a control
                     circuit_grid.handle_input_ctrl()
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 elif event.key == K_UP:
                     # Move a control qubit up
                     circuit_grid.handle_input_move_ctrl(MOVE_UP)
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 elif event.key == K_DOWN:
                     # Move a control qubit down
                     circuit_grid.handle_input_move_ctrl(MOVE_DOWN)
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 elif event.key == K_LEFT:
                     # Rotate a gate
                     circuit_grid.handle_input_rotate(-np.pi/8)
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
                 elif event.key == K_RIGHT:
                     # Rotate a gate
                     circuit_grid.handle_input_rotate(np.pi / 8)
                     update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                               unitary_grid)
+                                    expectation_grid)
                     pygame.display.flip()
 
-        # TODO: Put this flag in unitary_grid, making methods to
-        # TODO:     update respective matrices
-        desired_vs_unitary_dirty = False
-        if desired_vs_unitary_dirty:
-            unitary_grid.normalize_desired_unitary()
-            unitary_grid.draw_unitary_grid(None, None)
-            print('after block swipe, mse: ', unitary_grid.cost_desired_vs_unitary())
+        if expectation_value_dirty:
+            # expectation_grid.normalize_desired_unitary()
+            expectation_grid.draw_expectation_grid()
 
             # TODO: Apply optimization
             rotation_gate_nodes = circuit_grid_model.get_rotation_gate_nodes()
@@ -311,23 +322,23 @@ def main():
 
             rotation_bounds = np.zeros((len(rotation_gate_nodes), 2))
 
-            opt_rotations = optimize_rotations(desired_vs_unitary_objective_function,
+            opt_rotations = optimize_rotations(expectation_value_objective_function,
                                                initial_rotations,
                                                circuit_grid,
-                                               unitary_grid,
+                                               expectation_grid,
                                                rotation_gate_nodes)
             print('opt_rotations: ', opt_rotations)
 
             update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                            unitary_grid)
+                            expectation_grid)
 
-            unitary_grid.zero_desired_unitary()
-            desired_vs_unitary_dirty = False
+            # expectation_grid.zero_desired_unitary()
+            expectation_value_dirty = False
 
     pygame.quit()
 
 
-def optimize_rotations(objective_function, x0, circuit_grid, unitary_grid, rotation_gate_nodes):
+def optimize_rotations(objective_function, x0, circuit_grid, expectation_grid, rotation_gate_nodes):
 
     # Tries to be plug-compatable with scipy.optimize.fmin_l_bfgs_b
     optimization_epochs = 3
@@ -339,7 +350,7 @@ def optimize_rotations(objective_function, x0, circuit_grid, unitary_grid, rotat
     # For each rotation this will be either 1 or -1, signifying direction of movement
     unit_direction_array = np.ones(len(optimized_rotations))
 
-    min_distance = objective_function(optimized_rotations, circuit_grid, unitary_grid, rotation_gate_nodes)
+    min_distance = objective_function(optimized_rotations, circuit_grid, expectation_grid, rotation_gate_nodes)
 
     for epoch_idx in range(optimization_epochs):
         for rotations_idx in range(len(optimized_rotations)):
@@ -354,7 +365,7 @@ def optimize_rotations(objective_function, x0, circuit_grid, unitary_grid, rotat
             if 0.0 <= proposed_cur_ang_rad < np.pi * 2:
                 optimized_rotations[rotations_idx] = proposed_cur_ang_rad
 
-                temp_distance = objective_function(optimized_rotations, circuit_grid, unitary_grid, rotation_gate_nodes)
+                temp_distance = objective_function(optimized_rotations, circuit_grid, expectation_grid, rotation_gate_nodes)
                 if temp_distance > min_distance:
                     # Moving in the wrong direction so restore the angle in the array and switch direction
                     optimized_rotations[rotations_idx] = cur_ang_rad
@@ -371,7 +382,7 @@ def optimize_rotations(objective_function, x0, circuit_grid, unitary_grid, rotat
                     proposed_cur_ang_rad += move_radians * unit_direction_array[rotations_idx]
                     if 0.0 <= proposed_cur_ang_rad < np.pi * 2:
                         optimized_rotations[rotations_idx] = proposed_cur_ang_rad
-                        temp_distance = objective_function(optimized_rotations, circuit_grid, unitary_grid, rotation_gate_nodes)
+                        temp_distance = objective_function(optimized_rotations, circuit_grid, expectation_grid, rotation_gate_nodes)
                         if temp_distance > min_distance:
                             # Distance is increasing so restore the angle in the array and leave the loop
                             optimized_rotations[rotations_idx] = cur_ang_rad
@@ -388,32 +399,25 @@ def optimize_rotations(objective_function, x0, circuit_grid, unitary_grid, rotat
     return optimized_rotations
 
 
-def desired_vs_unitary_objective_function(rotations_radians, circuit_grid, unitary_grid, rotation_gate_nodes):
-    # circuit_grid = args[0]
-    # unitary_grid = args[1]
-    # rotation_gate_nodes = args[2]
-
+def expectation_value_objective_function(rotations_radians, circuit_grid, expectation_grid, rotation_gate_nodes):
     for idx in range(len(rotation_gate_nodes)):
         circuit_grid.rotate_gate_absolute(rotation_gate_nodes[idx], rotations_radians[idx])
-        unitary_grid.set_circuit(circuit_grid.circuit_grid_model.compute_circuit())
-        cost = unitary_grid.cost_desired_vs_unitary()
+        expectation_grid.set_circuit(circuit_grid.circuit_grid_model.compute_circuit())
+        cost = expectation_grid.calc_expectation_value()
 
         print("rotations_radians: ", rotations_radians, ", cost: ", cost)
     return cost
 
 
 def update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                           unitary_grid):
+                    expectaton_grid):
     screen.blit(background, (0, 0))
     circuit = circuit_grid_model.compute_circuit()
-    unitary_grid.set_circuit(circuit)
+    expectaton_grid.set_circuit(circuit, )
     middle_sprites.arrange()
     middle_sprites.draw(screen)
     circuit_grid.draw(screen)
     pygame.display.flip()
-
-    update_roli_block_unitary(unitary_grid)
-
 
 
 def move_update_circuit_grid_display(circuit_grid, direction):
