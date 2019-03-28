@@ -35,16 +35,23 @@ class NetworkGraph(pygame.sprite.Sprite):
     def set_adj_matrix(self, adj_matrix):
         self.adj_matrix = adj_matrix
 
-        # def draw_network_graph(self):
         fig = plt.figure(figsize=(5, 5))
         ax = plt.subplot(111)
 
-        n = 4  # Number of nodes in graph
+        num_nodes = self.adj_matrix.shape[0]  # Number of nodes in graph
         G = nx.Graph()
-        G.add_nodes_from(np.arange(0, n, 1))
-        elist = [(0, 1, 1.0), (0, 2, 1.0), (0, 3, 1.0), (1, 2, 1.0), (2, 3, 1.0)]
+        G.add_nodes_from(np.arange(0, num_nodes, 1))
+
+        edge_list = []
+        for i in range(num_nodes):
+            for j in range(i + 1, num_nodes):
+                if adj_matrix[i, j] != 0:
+                    edge_list.append((i, j, 1.0))
+
+        # elist = [(0, 1, 1.0), (0, 2, 1.0), (0, 3, 1.0), (1, 2, 1.0), (2, 3, 1.0)]
         # tuple is (i,j,weight) where (i,j) is the edge
-        G.add_weighted_edges_from(elist)
+
+        G.add_weighted_edges_from(edge_list)
 
         colors = ['r' for node in G.nodes()]
         pos = nx.spring_layout(G)
