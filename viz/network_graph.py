@@ -30,42 +30,54 @@ class NetworkGraph(pygame.sprite.Sprite):
         self.image = None
         self.rect = None
         self.adj_matrix = None
-        self.set_adj_matrix(adj_matrix)
         self.solution = None
+        self.graph = nx.Graph()
+        self.graph_pos = None
+        self.default_axes = None
+        self.num_nodes = adj_matrix.shape[0] # Number of nodes in graph
+        self.set_adj_matrix(adj_matrix)
 
-    def set_adj_matrix(self, adj_matrix, solution=np.zeros(0)):
+    def set_adj_matrix(self, adj_matrix):
         self.adj_matrix = adj_matrix
-        num_nodes = self.adj_matrix.shape[0]  # Number of nodes in graph
-
-        if solution.shape[0] != 0:
-            self.solution = solution
-        else:
-            self.solution = np.zeros(num_nodes)
+        self.solution = np.zeros(self.num_nodes)
 
         fig = plt.figure(figsize=(5, 5))
         ax = plt.subplot(111)
 
-        graph = nx.Graph()
-        graph.add_nodes_from(np.arange(0, num_nodes, 1))
+        self.graph.add_nodes_from(np.arange(0, self.num_nodes, 1))
 
         # tuple is (i,j,weight) where (i,j) is the edge
         edge_list = []
-        for i in range(num_nodes):
-            for j in range(i + 1, num_nodes):
+        for i in range(self.num_nodes):
+            for j in range(i + 1, self.num_nodes):
                 if adj_matrix[i, j] != 0:
                     edge_list.append((i, j, 1.0))
 
-        graph.add_weighted_edges_from(edge_list)
+        self.graph.add_weighted_edges_from(edge_list)
 
-        colors = ['r' for node in graph.nodes()]
-        pos = nx.spring_layout(graph)
-        default_axes = plt.axes(frameon=True)
+        colors = ['r' for node in self.graph.nodes()]
+        self.default_axes = plt.axes(frameon=True)
 
-        colors = ['r' if self.solution[i] == 0 else 'b' for i in range(num_nodes)]
+        colors = ['r' if self.solution[i] == 0 else 'b' for i in range(self.num_nodes)]
 
-        nx.draw_networkx(graph, node_color=colors, node_size=600, alpha=.8, ax=default_axes, pos=pos)
+        self.graph_pos = nx.spring_layout(self.graph)
+        self.draw_network_graph(colors)
+        # nx.draw_networkx(self.graph, node_color=colors, node_size=600, alpha=.8, ax=self.default_axes, pos=self.graph_pos)
+        # plt.savefig("utils/data/network_graph.png")
+        #
+        # self.image, self.rect = load_image('network_graph.png', -1)
+        # self.image.convert()
+
+    def set_solution(self, solution):
+        self.solution = solution
+
+        colors = ['r' if self.solution[i] == 0 else 'b' for i in range(self.num_nodes)]
+        self.draw_network_graph(colors)
+
+    def draw_network_graph(self, colors):
+        nx.draw_networkx(self.graph, node_color=colors, node_size=600, alpha=.8, ax=self.default_axes, pos=self.graph_pos)
         plt.savefig("utils/data/network_graph.png")
 
         self.image, self.rect = load_image('network_graph.png', -1)
-        self.rect.inflate_ip(-100, -100)
         self.image.convert()
+

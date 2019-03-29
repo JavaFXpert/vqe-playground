@@ -81,12 +81,16 @@ def main():
     circuit_grid_model.set_node(1, 0, CircuitGridNode(node_types.Y))
     circuit_grid_model.set_node(2, 0, CircuitGridNode(node_types.Y))
     circuit_grid_model.set_node(3, 0, CircuitGridNode(node_types.Y))
+    circuit_grid_model.set_node(4, 0, CircuitGridNode(node_types.Y))
+    circuit_grid_model.set_node(5, 0, CircuitGridNode(node_types.Y))
 
     circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.X, 0, 0))
     circuit_grid_model.set_node(2, 2, CircuitGridNode(node_types.X, 0, 1))
     circuit_grid_model.set_node(3, 3, CircuitGridNode(node_types.X, 0, 2))
+    circuit_grid_model.set_node(4, 4, CircuitGridNode(node_types.X, 0, 3))
+    circuit_grid_model.set_node(5, 5, CircuitGridNode(node_types.X, 0, 4))
 
-    circuit_grid_model.set_node(0, 3, CircuitGridNode(node_types.X))
+    # circuit_grid_model.set_node(0, 3, CircuitGridNode(node_types.X))
     # circuit_grid_model.set_node(1, 3, CircuitGridNode(node_types.Y))
     # circuit_grid_model.set_node(2, 3, CircuitGridNode(node_types.Y))
     # circuit_grid_model.set_node(3, 3, CircuitGridNode(node_types.Y))
@@ -94,11 +98,20 @@ def main():
     circuit = circuit_grid_model.compute_circuit()
 
     adj_matrix = np.array([
-        [0.0, 1.0, 0.0, 1.0],
-        [1.0, 0.0, 1.0, 0.0],
-        [0.0, 1.0, 0.0, 1.0],
-        [1.0, 0.0, 1.0, 0.0]
+        [0.0, 1.0, 0.0, 1.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0, 1.0, 1.0],
+        [1.0, 0.0, 1.0, 0.0, 1.0, 1.0],
+        [0.0, 1.0, 1.0, 1.0, 0.0, 1.0],
+        [0.0, 0.0, 1.0, 1.0, 1.0, 0.0]
     ])
+
+    # adj_matrix = np.array([
+    #     [0.0, 1.0, 0.0, 1.0],
+    #     [1.0, 0.0, 1.0, 0.0],
+    #     [0.0, 1.0, 0.0, 1.0],
+    #     [1.0, 0.0, 1.0, 0.0]
+    # ])
 
     # adj_matrix = np.array([
     #     [0.0, 1.0, 1.0, 1.0],
@@ -128,10 +141,10 @@ def main():
     # TODO:     update respective matrices?
     expectation_value_dirty = True
 
-    top_sprites = HBox(500, 10, network_graph)
-    right_sprites = VBox(1400, 10, expectation_grid)
+    top_sprites = HBox(500, 0, network_graph)
+    right_sprites = VBox(1400, 0, expectation_grid)
 
-    circuit_grid = CircuitGrid(10, 600, circuit_grid_model)
+    circuit_grid = CircuitGrid(10, 500, circuit_grid_model)
     screen.blit(background, (0, 0))
 
     top_sprites.draw(screen)
@@ -356,7 +369,7 @@ def main():
             for idx, char in enumerate(basis_state_str):
                 solution[idx] = int(char)
 
-            network_graph.set_adj_matrix(adj_matrix, solution)
+            network_graph.set_solution(solution)
 
             update_circ_viz(circuit, circuit_grid_model, circuit_grid, top_sprites, right_sprites,
                             expectation_grid)
