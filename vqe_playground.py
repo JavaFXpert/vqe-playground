@@ -175,9 +175,6 @@ class VQEPlayground():
         gamepad_pressed_timer = 0
         gamepad_last_update = pygame.time.get_ticks()
 
-        bit_str_meas = '0000'
-
-
         # Main Loop
         going = True
         while going:
@@ -446,12 +443,9 @@ class VQEPlayground():
             expectation_grid.set_circuit(circuit_grid.circuit_grid_model.compute_circuit())
             cost, basis_state = expectation_grid.calc_expectation_value()
 
-            print("rotations_radians: ", rotations_radians, ", cost: ", cost, ", basis_state: ", basis_state)
+            # print("rotations_radians: ", rotations_radians, ", cost: ", cost, ", basis_state: ", basis_state)
         return cost
 
-
-    # def update_circ_viz(circuit, circuit_grid_model, circuit_grid, top_sprites, right_sprites,
-    #                     expectaton_grid):
     def update_circ_viz(self):
         self.screen.blit(self.background, (0, 0))
         circuit = self.circuit_grid_model.compute_circuit()
@@ -463,12 +457,10 @@ class VQEPlayground():
         self.circuit_grid.draw(self.screen)
         pygame.display.flip()
 
-
     def move_update_circuit_grid_display(self, circuit_grid, direction):
         circuit_grid.move_to_adjacent_node(direction)
         circuit_grid.draw(screen)
         pygame.display.flip()
-
 
     def measure_circuit(self, circ, initial_bit_str, unitary_grid):
         # Use the BasicAer qasm_simulator backend
