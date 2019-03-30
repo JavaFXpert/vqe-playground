@@ -19,6 +19,10 @@
 # TODO:   - Same gate twice erases (e.g. pressing X key already on an X gate erases it)
 # TODO:     - If gate was rotated, make unrotated (e.g. pressing X on rotated X gate makes X)
 # TODO: Use NUM_STATE_DIMS everywhere
+# TODO: Create UI component for adjacency matrix
+# TODO: Modify NetworkGraph to:
+# TODO:     - move vertices to each's side of the cut
+# TODO:     - put weight labels on edges
 # TODO: Make TSP and other demos, including chemistry
 # TODO: Make displays update during optimization
 # TODO: Modify optimizer to fit pluggable Aqua framework
@@ -27,30 +31,19 @@
 #
 """Demonstrate Variational Quantum Eigensolver (VQE) concepts using Qiskit and Pygame"""
 
-import pygame
-import numpy as np
-
-WINDOW_SIZE = 1660, 1000
-
-
-import random
-import scipy.optimize
-from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister
+from pygame.locals import *
+from qiskit import ClassicalRegister
 from qiskit import execute
 from qiskit_aqua.translators.ising import maxcut
-from pygame.locals import *
+from containers import *
+from controls.circuit_grid import *
 from model.circuit_grid_model import *
-from model import circuit_node_types as node_types
-from containers.hbox import HBox
-from containers.vbox import VBox
-from utils.colors import *
-from utils.states import NUM_QUBITS, NUM_STATE_DIMS
-from utils.navigation import *
 from utils.gamepad import *
-from viz.circuit_diagram import CircuitDiagram
+from utils.states import NUM_QUBITS, NUM_STATE_DIMS
 from viz.expectation_grid import ExpectationGrid
 from viz.network_graph import NetworkGraph
-from controls.circuit_grid import *
+
+WINDOW_SIZE = 1660, 1000
 
 
 class VQEPlayground():
@@ -64,6 +57,7 @@ class VQEPlayground():
         self.right_sprites = None
         self.expectation_grid = None
         self.network_graph = None
+        self.optimization_desired = False
 
     def main(self):
         if not pygame.font: print('Warning, fonts disabled')
@@ -116,8 +110,8 @@ class VQEPlayground():
         circuit = self.circuit_grid_model.compute_circuit()
 
         adj_matrix = np.array([
-            [0.0, 1.0, 0.0, 1.0, 0.0, 0.0],
-            [1.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+            [0.0, 7.0, 0.0, 1.0, 0.0, 0.0],
+            [7.0, 0.0, 0.0, 0.0, 1.0, 0.0],
             [0.0, 0.0, 0.0, 1.0, 1.0, 1.0],
             [1.0, 0.0, 1.0, 0.0, 1.0, 1.0],
             [0.0, 1.0, 1.0, 1.0, 0.0, 1.0],
@@ -157,7 +151,7 @@ class VQEPlayground():
 
         # TODO: Put this flag in expectation_grid, making methods to
         # TODO:     update respective matrices?
-        expectation_value_dirty = True
+        # self.optimization_desired = True
 
         self.top_sprites = HBox(500, 0, self.network_graph)
         self.right_sprites = VBox(1400, 0, self.expectation_grid)
@@ -200,13 +194,13 @@ class VQEPlayground():
                     gamepad_pressed_timer -= gamepad_repeat_delay
                 if gamepad_move:
                     if joystick_hat == (-1, 0):
-                        self.move_update_circuit_grid_display(self.circuit_grid, MOVE_LEFT)
+                        self.move_update_circuit_grid_display(MOVE_LEFT)
                     elif joystick_hat == (1, 0):
-                        self.move_update_circuit_grid_display(self.circuit_grid, MOVE_RIGHT)
+                        self.move_update_circuit_grid_display(MOVE_RIGHT)
                     elif joystick_hat == (0, 1):
-                        self.move_update_circuit_grid_display(self.circuit_grid, MOVE_UP)
+                        self.move_update_circuit_grid_display(MOVE_UP)
                     elif joystick_hat == (0, -1):
-                        self.move_update_circuit_grid_display(self.circuit_grid, MOVE_DOWN)
+                        self.move_update_circuit_grid_display(MOVE_DOWN)
                 gamepad_last_update = pygame.time.get_ticks()
 
                 # Check left thumbstick position
@@ -227,120 +221,93 @@ class VQEPlayground():
                         # Place X gate
                         self.circuit_grid.handle_input_x()
                         self.update_circ_viz()
-                        pygame.display.flip()
                     elif event.button == BTN_X:
                         # Place Y gate
                         self.circuit_grid.handle_input_y()
                         self.update_circ_viz()
-                        pygame.display.flip()
                     elif event.button == BTN_B:
                         # Place Z gate
                         self.circuit_grid.handle_input_z()
                         self.update_circ_viz()
-                        pygame.display.flip()
                     elif event.button == BTN_Y:
                         # Place Hadamard gate
                         self.circuit_grid.handle_input_h()
                         self.update_circ_viz()
-                        pygame.display.flip()
                     elif event.button == BTN_RIGHT_TRIGGER:
                         # Delete gate
                         self.circuit_grid.handle_input_delete()
                         self.update_circ_viz()
-                        pygame.display.flip()
                     elif event.button == BTN_RIGHT_THUMB:
                         # Add or remove a control
                         self.circuit_grid.handle_input_ctrl()
                         self.update_circ_viz()
-                        pygame.display.flip()
 
                 elif event.type == JOYAXISMOTION:
                     # print("event: ", event)
                     if event.axis == AXIS_RIGHT_THUMB_X and joystick.get_axis(AXIS_RIGHT_THUMB_X) >= 0.95:
                         self.circuit_grid.handle_input_rotate(np.pi / 8)
                         self.update_circ_viz()
-                        pygame.display.flip()
                     if event.axis == AXIS_RIGHT_THUMB_X and joystick.get_axis(AXIS_RIGHT_THUMB_X) <= -0.95:
                         self.circuit_grid.handle_input_rotate(-np.pi / 8)
                         self.update_circ_viz()
-                        pygame.display.flip()
                     if event.axis == AXIS_RIGHT_THUMB_Y and joystick.get_axis(AXIS_RIGHT_THUMB_Y) <= -0.95:
                         self.circuit_grid.handle_input_move_ctrl(MOVE_UP)
                         self.update_circ_viz()
-                        pygame.display.flip()
                     if event.axis == AXIS_RIGHT_THUMB_Y and joystick.get_axis(AXIS_RIGHT_THUMB_Y) >= 0.95:
                         self.circuit_grid.handle_input_move_ctrl(MOVE_DOWN)
                         self.update_circ_viz()
-                        pygame.display.flip()
 
                 elif event.type == KEYDOWN:
                     index_increment = 0
                     if event.key == K_ESCAPE:
                         going = False
                     elif event.key == K_a:
-                        self.circuit_grid.move_to_adjacent_node(MOVE_LEFT)
-                        self.circuit_grid.draw(screen)
-                        pygame.display.flip()
+                        self.move_update_circuit_grid_display(MOVE_LEFT)
                     elif event.key == K_d:
-                        self.circuit_grid.move_to_adjacent_node(MOVE_RIGHT)
-                        self.circuit_grid.draw(screen)
-                        pygame.display.flip()
+                        self.move_update_circuit_grid_display(MOVE_RIGHT)
                     elif event.key == K_w:
-                        self.circuit_grid.move_to_adjacent_node(MOVE_UP)
-                        self.circuit_grid.draw(screen)
-                        pygame.display.flip()
+                        self.move_update_circuit_grid_display(MOVE_UP)
                     elif event.key == K_s:
-                        self.circuit_grid.move_to_adjacent_node(MOVE_DOWN)
-                        self.circuit_grid.draw(screen)
-                        pygame.display.flip()
+                        self.move_update_circuit_grid_display(MOVE_DOWN)
                     elif event.key == K_x:
                         self.circuit_grid.handle_input_x()
                         self.update_circ_viz()
-                        pygame.display.flip()
                     elif event.key == K_y:
                         self.circuit_grid.handle_input_y()
                         self.update_circ_viz()
-                        pygame.display.flip()
                     elif event.key == K_z:
                         self.circuit_grid.handle_input_z()
                         self.update_circ_viz()
-                        pygame.display.flip()
                     elif event.key == K_h:
                         self.circuit_grid.handle_input_h()
                         self.update_circ_viz()
-                        pygame.display.flip()
                     elif event.key == K_BACKSLASH:
                         self.circuit_grid.handle_input_delete()
                         self.update_circ_viz()
-                        pygame.display.flip()
                     elif event.key == K_c:
                         # Add or remove a control
                         self.circuit_grid.handle_input_ctrl()
                         self.update_circ_viz()
-                        pygame.display.flip()
                     elif event.key == K_UP:
                         # Move a control qubit up
                         self.circuit_grid.handle_input_move_ctrl(MOVE_UP)
                         self.update_circ_viz()
-                        pygame.display.flip()
                     elif event.key == K_DOWN:
                         # Move a control qubit down
                         self.circuit_grid.handle_input_move_ctrl(MOVE_DOWN)
                         self.update_circ_viz()
-                        pygame.display.flip()
                     elif event.key == K_LEFT:
                         # Rotate a gate
                         self.circuit_grid.handle_input_rotate(-np.pi/8)
                         self.update_circ_viz()
-                        pygame.display.flip()
                     elif event.key == K_RIGHT:
                         # Rotate a gate
                         self.circuit_grid.handle_input_rotate(np.pi / 8)
                         self.update_circ_viz()
-                        pygame.display.flip()
+                    elif event.key == K_o:
+                        self.optimization_desired = True
 
-            if expectation_value_dirty:
-                # expectation_grid.normalize_desired_unitary()
+            if self.optimization_desired:
                 self.expectation_grid.draw_expectation_grid()
 
                 # TODO: Apply optimization
@@ -367,8 +334,7 @@ class VQEPlayground():
 
                 self.update_circ_viz()
 
-                # expectation_grid.zero_desired_unitary()
-                expectation_value_dirty = False
+                self.optimization_desired = False
 
         pygame.quit()
 
@@ -379,7 +345,6 @@ class VQEPlayground():
         move_radians = np.pi / 8
 
         optimized_rotations = np.copy(x0)
-        # min_distance = float("inf")
 
         # For each rotation this will be either 1 or -1, signifying direction of movement
         unit_direction_array = np.ones(len(optimized_rotations))
@@ -457,61 +422,10 @@ class VQEPlayground():
         self.circuit_grid.draw(self.screen)
         pygame.display.flip()
 
-    def move_update_circuit_grid_display(self, circuit_grid, direction):
-        circuit_grid.move_to_adjacent_node(direction)
-        circuit_grid.draw(screen)
+    def move_update_circuit_grid_display(self, direction):
+        self.circuit_grid.move_to_adjacent_node(direction)
+        self.circuit_grid.draw(self.screen)
         pygame.display.flip()
-
-    def measure_circuit(self, circ, initial_bit_str, unitary_grid):
-        # Use the BasicAer qasm_simulator backend
-        from qiskit import BasicAer
-        backend_sim = BasicAer.get_backend('qasm_simulator')
-
-        # Initialize each wire
-        init_qr = QuantumRegister(NUM_QUBITS, 'q')
-
-        init_circ = QuantumCircuit(init_qr)
-
-        for bit_idx in range(0, NUM_QUBITS):
-            if int(initial_bit_str[bit_idx]) == 1:
-                init_circ.x(init_qr[NUM_QUBITS - bit_idx - 1])
-            else:
-                init_circ.iden(init_qr[NUM_QUBITS - bit_idx - 1])
-
-        init_circ.barrier(init_qr)
-
-        # Create a Quantum Register with 4 qubits
-        qr = QuantumRegister(NUM_QUBITS, 'q')
-
-        # Create a Classical Register with 4 bits
-        cr = ClassicalRegister(NUM_QUBITS, 'c')
-
-        # Create the measurement portion of a quantum circuit
-        meas_circ = QuantumCircuit(qr, cr)
-
-        # Create a barrier that separates the gates from the measurements
-        meas_circ.barrier(qr)
-
-        # Measure the qubits into the classical registers
-        meas_circ.measure(qr, cr)
-
-        # Add the measurement circuit to the original circuit
-        complete_circuit = init_circ + circ + meas_circ
-
-        # Execute the circuit on the qasm simulator, running it 1000 times.
-        job_sim = execute(complete_circuit, backend_sim, shots=1)
-
-        # Grab the results from the job.
-        result_sim = job_sim.result()
-
-        # Print the counts, which are contained in a Python dictionary
-        counts = result_sim.get_counts(complete_circuit)
-        # print(counts)
-        basis_state_str = list(counts.keys())[0]
-        # print ("basis_state_str: ", basis_state_str)
-
-        return basis_state_str
-
 
 
 if __name__ == "__main__":
