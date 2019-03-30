@@ -19,6 +19,7 @@
 # TODO:   - Same gate twice erases (e.g. pressing X key already on an X gate erases it)
 # TODO:     - If gate was rotated, make unrotated (e.g. pressing X on rotated X gate makes X)
 # TODO: Use NUM_STATE_DIMS everywhere
+# TODO: Fix weights on network graph
 # TODO: Create UI component for adjacency matrix
 # TODO: Modify NetworkGraph to:
 # TODO:     - move vertices to each's side of the cut
@@ -131,23 +132,23 @@ class VQEPlayground():
 
         circuit = self.circuit_grid_model.compute_circuit()
 
-        adj_matrix = np.array([
-            [0.0, 0.0, 4.0, 1.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0, 0.0, 3.0, 0.0],
-            [4.0, 0.0, 0.0, 1.0, 1.0, 5.0],
-            [1.0, 0.0, 1.0, 0.0, 2.0, 1.0],
-            [0.0, 3.0, 1.0, 2.0, 0.0, 0.0],
-            [0.0, 0.0, 5.0, 1.0, 0.0, 0.0]
-        ])
-
         # adj_matrix = np.array([
-        #     [0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
-        #     [1.0, 0.0, 1.0, 1.0, 1.0, 1.0],
-        #     [1.0, 1.0, 0.0, 1.0, 1.0, 1.0],
-        #     [1.0, 1.0, 1.0, 0.0, 1.0, 1.0],
-        #     [1.0, 1.0, 1.0, 1.0, 0.0, 1.0],
-        #     [1.0, 1.0, 1.0, 1.0, 1.0, 0.0]
+        #     [0.0, 0.0, 4.0, 1.0, 0.0, 0.0],
+        #     [0.0, 0.0, 0.0, 0.0, 3.0, 0.0],
+        #     [4.0, 0.0, 0.0, 1.0, 1.0, 5.0],
+        #     [1.0, 0.0, 1.0, 0.0, 2.0, 1.0],
+        #     [0.0, 3.0, 1.0, 2.0, 0.0, 0.0],
+        #     [0.0, 0.0, 5.0, 1.0, 0.0, 0.0]
         # ])
+
+        adj_matrix = np.array([
+            [0.0, 1.0, 1.0, 1.0, 1.0, 0.0],
+            [1.0, 0.0, 1.0, 1.0, 1.0, 1.0],
+            [1.0, 1.0, 0.0, 1.0, 1.0, 1.0],
+            [1.0, 1.0, 1.0, 0.0, 1.0, 1.0],
+            [1.0, 1.0, 1.0, 1.0, 0.0, 1.0],
+            [0.0, 1.0, 1.0, 1.0, 1.0, 0.0]
+        ])
 
         # adj_matrix = np.array([
         #     [0.0, 1.0, 0.0, 1.0],
