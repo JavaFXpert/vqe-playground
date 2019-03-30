@@ -79,7 +79,7 @@ class VQEPlayground():
 
         pygame.font.init()
 
-        self.circuit_grid_model = CircuitGridModel(NUM_QUBITS, 18)
+        self.circuit_grid_model = CircuitGridModel(NUM_QUBITS, 19)
 
         pygame.display.set_caption('VQE Playground')
 
@@ -89,34 +89,54 @@ class VQEPlayground():
         # Prepare objects
         clock = pygame.time.Clock()
 
-        self.circuit_grid_model.set_node(0, 1, CircuitGridNode(node_types.Y))
-        self.circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.Y))
-        self.circuit_grid_model.set_node(2, 1, CircuitGridNode(node_types.Y))
-        self.circuit_grid_model.set_node(3, 1, CircuitGridNode(node_types.Y))
-        self.circuit_grid_model.set_node(4, 1, CircuitGridNode(node_types.Y))
-        self.circuit_grid_model.set_node(5, 1, CircuitGridNode(node_types.Y))
+        # self.circuit_grid_model.set_node(0, 1, CircuitGridNode(node_types.X))
+        # self.circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.X))
+        # self.circuit_grid_model.set_node(2, 1, CircuitGridNode(node_types.X))
+        # self.circuit_grid_model.set_node(3, 1, CircuitGridNode(node_types.X))
+        # self.circuit_grid_model.set_node(4, 1, CircuitGridNode(node_types.X))
+        # self.circuit_grid_model.set_node(5, 1, CircuitGridNode(node_types.X))
 
-        self.circuit_grid_model.set_node(1, 2, CircuitGridNode(node_types.X, 0, 0))
-        self.circuit_grid_model.set_node(2, 3, CircuitGridNode(node_types.X, 0, 1))
-        self.circuit_grid_model.set_node(3, 4, CircuitGridNode(node_types.X, 0, 2))
-        self.circuit_grid_model.set_node(4, 5, CircuitGridNode(node_types.X, 0, 3))
-        self.circuit_grid_model.set_node(5, 6, CircuitGridNode(node_types.X, 0, 4))
+        self.circuit_grid_model.set_node(0, 0, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(1, 0, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(2, 0, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(3, 0, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(4, 0, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(5, 0, CircuitGridNode(node_types.Y))
 
-        # self.circuit_grid_model.set_node(0, 7, CircuitGridNode(node_types.Y))
-        # self.circuit_grid_model.set_node(1, 7, CircuitGridNode(node_types.Y))
-        # self.circuit_grid_model.set_node(2, 7, CircuitGridNode(node_types.Y))
-        # self.circuit_grid_model.set_node(3, 7, CircuitGridNode(node_types.Y))
-        # self.circuit_grid_model.set_node(4, 7, CircuitGridNode(node_types.Y))
-        # self.circuit_grid_model.set_node(5, 7, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.X, 0, 0))
+        self.circuit_grid_model.set_node(2, 2, CircuitGridNode(node_types.X, 0, 1))
+        self.circuit_grid_model.set_node(3, 3, CircuitGridNode(node_types.X, 0, 2))
+        self.circuit_grid_model.set_node(4, 4, CircuitGridNode(node_types.X, 0, 3))
+        self.circuit_grid_model.set_node(5, 5, CircuitGridNode(node_types.X, 0, 4))
+
+        self.circuit_grid_model.set_node(0, 6, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(1, 6, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(2, 6, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(3, 6, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(4, 6, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(5, 6, CircuitGridNode(node_types.Y))
+
+        self.circuit_grid_model.set_node(1, 7, CircuitGridNode(node_types.X, 0, 0))
+        self.circuit_grid_model.set_node(2, 8, CircuitGridNode(node_types.X, 0, 1))
+        self.circuit_grid_model.set_node(3, 9, CircuitGridNode(node_types.X, 0, 2))
+        self.circuit_grid_model.set_node(4, 10, CircuitGridNode(node_types.X, 0, 3))
+        self.circuit_grid_model.set_node(5, 11, CircuitGridNode(node_types.X, 0, 4))
+
+        self.circuit_grid_model.set_node(0, 12, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(1, 12, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(2, 12, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(3, 12, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(4, 12, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(5, 12, CircuitGridNode(node_types.Y))
 
         circuit = self.circuit_grid_model.compute_circuit()
 
         adj_matrix = np.array([
-            [0.0, 0.0, 1.0, 1.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
-            [1.0, 0.0, 0.0, 1.0, 1.0, 1.0],
-            [1.0, 0.0, 1.0, 0.0, 1.0, 1.0],
-            [0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 4.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 3.0, 0.0],
+            [4.0, 0.0, 0.0, 1.0, 1.0, 1.0],
+            [1.0, 0.0, 1.0, 0.0, 2.0, 1.0],
+            [0.0, 3.0, 1.0, 2.0, 0.0, 0.0],
             [0.0, 0.0, 1.0, 1.0, 0.0, 0.0]
         ])
 
@@ -333,9 +353,11 @@ class VQEPlayground():
                                                         initial_rotations, self.circuit_grid,
                                                         self.expectation_grid, rotation_gate_nodes)
 
-                print('opt_rotations: ', opt_rotations)
+                # print('opt_rotations: ', opt_rotations)
 
                 cost, basis_state_str = self.expectation_grid.calc_expectation_value()
+                print('cost: ', cost, 'basis_state_str: ', basis_state_str)
+
 
                 solution = np.zeros(NUM_STATE_DIMS)
                 for idx, char in enumerate(basis_state_str):
@@ -418,10 +440,10 @@ class VQEPlayground():
                                 min_distance = temp_distance
                         else:
                             finished_with_while_loop = True
-            print('min_distance: ', min_distance)
+            # print('min_distance: ', min_distance)
 
             objective_function(optimized_rotations, circuit_grid, expectation_grid, rotation_gate_nodes)
-            print('exp_val: ', expectation_grid.calc_expectation_value())
+            # print('exp_val: ', expectation_grid.calc_expectation_value())
         return optimized_rotations
 
     def expectation_value_objective_function(self, rotations_radians, circuit_grid,
@@ -431,7 +453,7 @@ class VQEPlayground():
             expectation_grid.set_circuit(circuit_grid.circuit_grid_model.compute_circuit())
             cost, basis_state = expectation_grid.calc_expectation_value()
 
-            print("rotations_radians: ", rotations_radians, ", cost: ", cost, ", basis_state: ", basis_state)
+            # print("rotations_radians: ", rotations_radians, ", cost: ", cost, ", basis_state: ", basis_state)
         return cost
 
     def update_circ_viz(self):

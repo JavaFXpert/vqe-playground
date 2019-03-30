@@ -80,5 +80,6 @@ class ExpectationGrid(pygame.sprite.Sprite):
             self.basis_state_dirty = True
             self.cur_basis_state_idx = basis_state_idx
 
+        # print ("in calc_expectation_value, exp_val: ", exp_val, ", basis state: ", self.basis_states[basis_state_idx])
         return exp_val, self.basis_states[basis_state_idx]
 
