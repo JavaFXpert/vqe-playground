@@ -24,9 +24,10 @@ from utils.states import comp_basis_states, NUM_QUBITS, NUM_STATE_DIMS
 
 class ExpectationGrid(pygame.sprite.Sprite):
     """Displays a grid that contains basis states, eigenvalues, and probabilities"""
-    def __init__(self, circuit, eigenvalues):
+    def __init__(self, circuit, eigenvalues, maxcut_shift):
         pygame.sprite.Sprite.__init__(self)
         self.eigenvalues = eigenvalues
+        self.maxcut_shift = maxcut_shift
         self.image = None
         self.rect = None
         self.basis_states = comp_basis_states(NUM_QUBITS)
@@ -59,7 +60,7 @@ class ExpectationGrid(pygame.sprite.Sprite):
         x_offset = 50
         y_offset = 10
         for y in range(NUM_STATE_DIMS):
-            text_surface = ARIAL_22.render(self.basis_states[y] + ":  " + str(self.eigenvalues[y]), False, (0, 0, 0))
+            text_surface = ARIAL_22.render(self.basis_states[y] + ":  " + str(self.eigenvalues[y] + self.maxcut_shift), False, (0, 0, 0))
             self.image.blit(text_surface, (x_offset, (y + 1) * block_size + y_offset))
 
             prop_square_side = abs(self.quantum_state[y]) * block_size

@@ -171,12 +171,13 @@ class VQEPlayground():
         # ])
 
         maxcut_op, maxcut_shift = maxcut.get_maxcut_qubitops(adj_matrix)
+        # print("maxcut_op: ", maxcut_op, ", maxcut_shift: ", maxcut_shift)
 
         # TODO: Find different approach of calculating and retrieving diagonal
         maxcut_op._paulis_to_matrix()
         eigenvectors = maxcut_op._dia_matrix
 
-        self.expectation_grid = ExpectationGrid(circuit, eigenvectors)
+        self.expectation_grid = ExpectationGrid(circuit, eigenvectors, maxcut_shift)
 
         self.network_graph = NetworkGraph(adj_matrix)
 
