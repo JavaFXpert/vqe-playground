@@ -31,6 +31,8 @@ class ExpectationGrid(pygame.sprite.Sprite):
         self.rect = None
         self.basis_states = comp_basis_states(NUM_QUBITS)
         self.quantum_state = None
+        self.cur_basis_state_idx = 0
+        self.basis_state_dirty = False
         self.set_circuit(circuit)
 
     # def update(self):
@@ -42,6 +44,9 @@ class ExpectationGrid(pygame.sprite.Sprite):
         job_sim = execute(circuit, backend_sv_sim)
         result_sim = job_sim.result()
         self.quantum_state = result_sim.get_statevector(circuit, decimals=3)
+
+        self.calc_expectation_value()
+
         self.draw_expectation_grid()
 
     def draw_expectation_grid(self):
@@ -70,6 +75,10 @@ class ExpectationGrid(pygame.sprite.Sprite):
         exp_val = np.sum(self.eigenvalues * statevector_probs)
 
         basis_state_idx = np.argmax(statevector_probs)
+
+        if basis_state_idx != self.cur_basis_state_idx:
+            self.basis_state_dirty = True
+            self.cur_basis_state_idx = basis_state_idx
 
         return exp_val, self.basis_states[basis_state_idx]
 

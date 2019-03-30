@@ -89,34 +89,45 @@ class VQEPlayground():
         # Prepare objects
         clock = pygame.time.Clock()
 
-        self.circuit_grid_model.set_node(0, 0, CircuitGridNode(node_types.Y))
-        self.circuit_grid_model.set_node(1, 0, CircuitGridNode(node_types.Y))
-        self.circuit_grid_model.set_node(2, 0, CircuitGridNode(node_types.Y))
-        self.circuit_grid_model.set_node(3, 0, CircuitGridNode(node_types.Y))
-        self.circuit_grid_model.set_node(4, 0, CircuitGridNode(node_types.Y))
-        self.circuit_grid_model.set_node(5, 0, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(0, 1, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(2, 1, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(3, 1, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(4, 1, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(5, 1, CircuitGridNode(node_types.Y))
 
-        self.circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.X, 0, 0))
-        self.circuit_grid_model.set_node(2, 2, CircuitGridNode(node_types.X, 0, 1))
-        self.circuit_grid_model.set_node(3, 3, CircuitGridNode(node_types.X, 0, 2))
-        self.circuit_grid_model.set_node(4, 4, CircuitGridNode(node_types.X, 0, 3))
-        self.circuit_grid_model.set_node(5, 5, CircuitGridNode(node_types.X, 0, 4))
+        self.circuit_grid_model.set_node(1, 2, CircuitGridNode(node_types.X, 0, 0))
+        self.circuit_grid_model.set_node(2, 3, CircuitGridNode(node_types.X, 0, 1))
+        self.circuit_grid_model.set_node(3, 4, CircuitGridNode(node_types.X, 0, 2))
+        self.circuit_grid_model.set_node(4, 5, CircuitGridNode(node_types.X, 0, 3))
+        self.circuit_grid_model.set_node(5, 6, CircuitGridNode(node_types.X, 0, 4))
 
-        # circuit_grid_model.set_node(0, 3, CircuitGridNode(node_types.X))
-        # circuit_grid_model.set_node(1, 3, CircuitGridNode(node_types.Y))
-        # circuit_grid_model.set_node(2, 3, CircuitGridNode(node_types.Y))
-        # circuit_grid_model.set_node(3, 3, CircuitGridNode(node_types.Y))
+        # self.circuit_grid_model.set_node(0, 7, CircuitGridNode(node_types.Y))
+        # self.circuit_grid_model.set_node(1, 7, CircuitGridNode(node_types.Y))
+        # self.circuit_grid_model.set_node(2, 7, CircuitGridNode(node_types.Y))
+        # self.circuit_grid_model.set_node(3, 7, CircuitGridNode(node_types.Y))
+        # self.circuit_grid_model.set_node(4, 7, CircuitGridNode(node_types.Y))
+        # self.circuit_grid_model.set_node(5, 7, CircuitGridNode(node_types.Y))
 
         circuit = self.circuit_grid_model.compute_circuit()
 
         adj_matrix = np.array([
-            [0.0, 7.0, 0.0, 1.0, 0.0, 0.0],
-            [7.0, 0.0, 0.0, 0.0, 1.0, 0.0],
-            [0.0, 0.0, 0.0, 1.0, 1.0, 1.0],
+            [0.0, 0.0, 1.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+            [1.0, 0.0, 0.0, 1.0, 1.0, 1.0],
             [1.0, 0.0, 1.0, 0.0, 1.0, 1.0],
-            [0.0, 1.0, 1.0, 1.0, 0.0, 1.0],
-            [0.0, 0.0, 1.0, 1.0, 1.0, 0.0]
+            [0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 1.0, 0.0, 0.0]
         ])
+
+        # adj_matrix = np.array([
+        #     [0.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+        #     [1.0, 0.0, 1.0, 1.0, 1.0, 1.0],
+        #     [1.0, 1.0, 0.0, 1.0, 1.0, 1.0],
+        #     [1.0, 1.0, 1.0, 0.0, 1.0, 1.0],
+        #     [1.0, 1.0, 1.0, 1.0, 0.0, 1.0],
+        #     [1.0, 1.0, 1.0, 1.0, 1.0, 0.0]
+        # ])
 
         # adj_matrix = np.array([
         #     [0.0, 1.0, 0.0, 1.0],
@@ -336,6 +347,18 @@ class VQEPlayground():
 
                 self.optimization_desired = False
 
+            if self.expectation_grid.basis_state_dirty:
+                cost, basis_state_str = self.expectation_grid.calc_expectation_value()
+
+                solution = np.zeros(NUM_STATE_DIMS)
+                for idx, char in enumerate(basis_state_str):
+                    solution[idx] = int(char)
+
+                self.network_graph.set_solution(solution)
+
+                self.update_circ_viz()
+                self.expectation_grid.basis_state_dirty = False
+
         pygame.quit()
 
     def optimize_rotations(self, objective_function, x0, circuit_grid, expectation_grid, rotation_gate_nodes):
@@ -408,7 +431,7 @@ class VQEPlayground():
             expectation_grid.set_circuit(circuit_grid.circuit_grid_model.compute_circuit())
             cost, basis_state = expectation_grid.calc_expectation_value()
 
-            # print("rotations_radians: ", rotations_radians, ", cost: ", cost, ", basis_state: ", basis_state)
+            print("rotations_radians: ", rotations_radians, ", cost: ", cost, ", basis_state: ", basis_state)
         return cost
 
     def update_circ_viz(self):
