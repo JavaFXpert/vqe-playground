@@ -35,13 +35,13 @@ class AdjacencyMatrix(pygame.sprite.RenderPlain):
         pickers = []
         for row in range(self.num_nodes):
             for col in range(self.num_nodes):
-                pickers.append(NumberPicker(self.adj_matrix_numeric[row, col], 40, 40))
+                pickers.append(NumberPicker(self.adj_matrix_numeric[row, col], 64, 64))
         return pickers
 
     def arrange(self):
-        next_xpos = self.xpos
         next_ypos = self.ypos
         for row in range(self.num_nodes):
+            next_xpos = self.xpos
             for col in range(self.num_nodes):
                 picker = self.number_pickers_list[row * self.num_nodes + col]
                 picker.rect.left = next_xpos
