@@ -21,9 +21,9 @@
 # TODO: Use NUM_STATE_DIMS everywhere
 # TODO: Fix weights on network graph
 # TODO: Create UI component for adjacency matrix
+# TODO: Use better looking fonts
 # TODO: Modify NetworkGraph to:
 # TODO:     - move vertices to each's side of the cut
-# TODO:     - put weight labels on edges
 # TODO: Make TSP and other demos, including chemistry
 # TODO: Make displays update during optimization
 # TODO: Modify optimizer to fit pluggable Aqua framework
