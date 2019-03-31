@@ -16,28 +16,43 @@
 #
 import pygame
 import numpy as np
-from controls import number_picker
+from controls.number_picker import NumberPicker
 
 
 class AdjacencyMatrix(pygame.sprite.RenderPlain):
     """UI control for maintaining adjacency matrix"""
-    def __init__(self, xpos, ypos, adj_matrix):
-        pygame.sprite.RenderPlain.__init__(self, self.number_pickers_array)
-        self.adj_matrix = adj_matrix
+    def __init__(self, xpos, ypos, adj_matrix_numeric):
+        self.adj_matrix_numeric = adj_matrix_numeric
         self.xpos = xpos
         self.ypos = ypos
 
-        self.number_pickers_array = self.create_number_pickers()
+        self.num_nodes = adj_matrix_numeric.shape[0]
+        self.number_pickers_list = self.create_number_pickers_list()
+        pygame.sprite.RenderPlain.__init__(self, self.number_pickers_list)
         self.arrange()
 
-    def create_number_pickers_array(self):
-        self.number_pickers_array = np.empty_like(self.adj_matrix, dtype=number_picker)
+    def create_number_pickers_list(self):
+        pickers = []
+        for row in range(self.num_nodes):
+            for col in range(self.num_nodes):
+                pickers.append(NumberPicker(self.adj_matrix_numeric[row, col], 40, 40))
+        return pickers
 
     def arrange(self):
         next_xpos = self.xpos
         next_ypos = self.ypos
-        sprite_list = self.sprites()
-        for sprite in sprite_list:
-            sprite.rect.left = next_xpos
-            sprite.rect.top = next_ypos
-            next_xpos += sprite.rect.width
+        for row in range(self.num_nodes):
+            for col in range(self.num_nodes):
+                picker = self.number_pickers_list[row * self.num_nodes + col]
+                picker.rect.left = next_xpos
+                picker.rect.top = next_ypos
+                next_xpos += picker.rect.width
+            next_ypos += picker.rect.height
+
+        # next_xpos = self.xpos
+        # next_ypos = self.ypos
+        # sprite_list = self.sprites()
+        # for sprite in sprite_list:
+        #     sprite.rect.left = next_xpos
+        #     sprite.rect.top = next_ypos
+        #     next_xpos += sprite.rect.width

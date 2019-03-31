@@ -34,6 +34,7 @@ class NumberPicker(pygame.sprite.Sprite):
         self.font = ARIAL_30
 
         self.set_number(number)
+        self.draw_number_picker()
 
     # def update(self):
     #     # Nothing yet
@@ -42,7 +43,7 @@ class NumberPicker(pygame.sprite.Sprite):
     def set_number(self, number):
         self.number = number
 
-    def draw(self):
+    def draw_number_picker(self):
         self.image = pygame.Surface([self.width, self.height])
         self.image.convert()
         self.image.fill(WHITE)

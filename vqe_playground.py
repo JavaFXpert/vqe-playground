@@ -43,6 +43,7 @@ from utils.gamepad import *
 from utils.states import NUM_QUBITS, NUM_STATE_DIMS
 from viz.expectation_grid import ExpectationGrid
 from viz.network_graph import NetworkGraph
+from controls.adjacency_matrix import AdjacencyMatrix
 
 WINDOW_SIZE = 1660, 1000
 
@@ -58,6 +59,7 @@ class VQEPlayground():
         self.right_sprites = None
         self.expectation_grid = None
         self.network_graph = None
+        self.adjacency_matrix = None
         self.optimization_desired = False
 
     def main(self):
@@ -189,12 +191,15 @@ class VQEPlayground():
         self.top_sprites = HBox(500, 0, self.network_graph)
         self.right_sprites = VBox(1400, 0, self.expectation_grid)
 
+        self.adjacency_matrix = AdjacencyMatrix(1000, 0, adj_matrix)
+
         self.circuit_grid = CircuitGrid(10, 500, self.circuit_grid_model)
         self.screen.blit(self.background, (0, 0))
 
         self.top_sprites.draw(self.screen)
         self.right_sprites.draw(self.screen)
         self.circuit_grid.draw(self.screen)
+        self.adjacency_matrix.draw(self.screen)
         pygame.display.flip()
 
         gamepad_repeat_delay = 100
