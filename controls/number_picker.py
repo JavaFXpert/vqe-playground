@@ -53,9 +53,9 @@ class NumberPicker(pygame.sprite.Sprite):
         pygame.draw.rect(self.image, BLACK, rectangle, 1)
 
         # TODO: Perhaps calculate these positions, centering text
-        text_xpos = 3
-        text_ypos = 3
+        text_xpos = 18
+        text_ypos = 20
 
-        text_surface = ARIAL_22.render(str(self.number), False, WHITE)
+        text_surface = ARIAL_36.render(str(self.number), False, BLACK)
         self.image.blit(text_surface, (text_xpos, text_ypos))
 

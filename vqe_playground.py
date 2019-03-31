@@ -254,6 +254,19 @@ class VQEPlayground():
                 if event.type == QUIT:
                     going = False
 
+                elif event.type == MOUSEBUTTONDOWN:
+                    print("event: ", event)
+                    print("event.pos: ", event.pos)
+                    pickers = self.adjacency_matrix.number_pickers_list
+                    clicked_sprites = [p for p in pickers if p.rect.collidepoint(event.pos)]
+                    print('clicked_sprites: ', clicked_sprites)
+
+                    # TODO: Put following in method
+                    # picked_sprite_idx = -1
+                    for idx, picker in enumerate(pickers):
+                        if picker.rect.collidepoint(event.pos):
+                            print("picker index: ", idx, " clicked")
+
                 elif event.type == JOYBUTTONDOWN:
                     if event.button == BTN_A:
                         # Place X gate

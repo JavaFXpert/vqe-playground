@@ -49,10 +49,3 @@ class AdjacencyMatrix(pygame.sprite.RenderPlain):
                 next_xpos += picker.rect.width
             next_ypos += picker.rect.height
 
-        # next_xpos = self.xpos
-        # next_ypos = self.ypos
-        # sprite_list = self.sprites()
-        # for sprite in sprite_list:
-        #     sprite.rect.left = next_xpos
-        #     sprite.rect.top = next_ypos
-        #     next_xpos += sprite.rect.width
