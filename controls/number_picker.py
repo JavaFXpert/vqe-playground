@@ -15,23 +15,25 @@
 # limitations under the License.
 #
 import pygame
-from utils.colors import WHITE, BLACK
+from cmath import isclose
+from utils.colors import WHITE, BLACK, LIGHT_GREY
 from utils.fonts import *
 
 
 class NumberPicker(pygame.sprite.Sprite):
     """Displays a number that may be modified by clicking and dragging"""
-    def __init__(self, number, width, height):
+    def __init__(self, number, width, height, enabled=True):
         pygame.sprite.Sprite.__init__(self)
         self.number = None
         self.width = width
         self.height = height
+        self.enabled = enabled
 
         self.image = None
         self.rect = None
         self.background_color = WHITE
         self.font_color = BLACK
-        self.font = ARIAL_30
+        self.font = ARIAL_36
 
         self.set_number(number)
         self.draw_number_picker()
@@ -45,7 +47,7 @@ class NumberPicker(pygame.sprite.Sprite):
     def draw_number_picker(self):
         self.image = pygame.Surface([self.width, self.height])
         self.image.convert()
-        self.image.fill(WHITE)
+        self.image.fill(WHITE if self.enabled else LIGHT_GREY)
         self.rect = self.image.get_rect()
 
         rectangle = pygame.Rect(0, 0, self.width, self.height)
@@ -55,6 +57,7 @@ class NumberPicker(pygame.sprite.Sprite):
         text_xpos = 18
         text_ypos = 20
 
-        text_surface = ARIAL_36.render(str(self.number), False, BLACK)
-        self.image.blit(text_surface, (text_xpos, text_ypos))
+        if not isclose(self.number, 0):
+            text_surface = self.font.render(str(self.number), False, BLACK)
+            self.image.blit(text_surface, (text_xpos, text_ypos))
 
