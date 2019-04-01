@@ -60,6 +60,8 @@ class AdjacencyMatrix(pygame.sprite.RenderPlain):
                     if isclose(picker_in_list.number, 0.0):
                         picker_in_list.number = 1.0
                         self.adj_matrix_graph_dirty = True
+                    elif picker_in_list.number <= 3.0:
+                        picker_in_list.number += 1.0
                     else:
                         picker_in_list.number = 0.0
                         self.adj_matrix_graph_dirty = True

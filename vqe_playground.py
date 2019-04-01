@@ -259,8 +259,11 @@ class VQEPlayground():
                         if picker.rect.collidepoint(event.pos):
                             self.adjacency_matrix.handle_element_clicked(picker)
                             self.update_circ_viz()
-                            # if self.adjacency_matrix.adj_matrix_graph_dirty:
-                            #     self.network_graph.set_adj_matrix(self.adjacency_matrix.adj_matrix_numeric)
+                            if self.adjacency_matrix.adj_matrix_graph_dirty:
+                                self.network_graph.set_adj_matrix(self.adjacency_matrix.adj_matrix_numeric)
+                                self.adjacency_matrix.adj_matrix_graph_dirty = False
+                                # TODO: Remove
+                                self.expectation_grid.basis_state_dirty = True
 
                 elif event.type == JOYBUTTONDOWN:
                     if event.button == BTN_A:
