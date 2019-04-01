@@ -49,3 +49,7 @@ class AdjacencyMatrix(pygame.sprite.RenderPlain):
                 next_xpos += picker.rect.width
             next_ypos += picker.rect.height
 
+    def handle_element_clicked(self, picker):
+        for idx, picker_in_list in enumerate(self.number_pickers_list):
+            if picker == picker_in_list:
+                print("picker match in element: ", idx)
