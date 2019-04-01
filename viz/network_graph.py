@@ -19,6 +19,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.axes as axes
 import networkx as nx
+from cmath import isclose
 
 from utils import load_image
 
@@ -37,6 +38,10 @@ class NetworkGraph(pygame.sprite.Sprite):
         self.num_nodes = adj_matrix.shape[0] # Number of nodes in graph
         self.set_adj_matrix(adj_matrix)
 
+    def update(self):
+        colors = ['r' if self.solution[i] == 0 else 'b' for i in range(self.num_nodes)]
+        self.draw_network_graph(colors)
+
     def set_adj_matrix(self, adj_matrix):
         self.adj_matrix = adj_matrix
         self.solution = np.zeros(self.num_nodes)
@@ -50,14 +55,14 @@ class NetworkGraph(pygame.sprite.Sprite):
         edge_list = []
         for i in range(self.num_nodes):
             for j in range(i + 1, self.num_nodes):
-                if adj_matrix[i, j] != 0:
+                if not isclose(adj_matrix[i, j], 0.0):
                     edge_list.append((i, j, adj_matrix[i, j]))
 
         self.graph.add_weighted_edges_from(edge_list)
 
-        # colors = ['r' for node in self.graph.nodes()]
         self.default_axes = plt.axes(frameon=True)
 
+        # TODO: Factor out the line that repeats this one
         colors = ['r' if self.solution[i] == 0 else 'b' for i in range(self.num_nodes)]
 
         self.graph_pos = nx.spring_layout(self.graph)

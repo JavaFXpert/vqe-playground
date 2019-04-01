@@ -37,9 +37,8 @@ class NumberPicker(pygame.sprite.Sprite):
         self.draw_number_picker()
 
     # def update(self):
-    #     # Nothing yet
-    #     a = 1
-
+    #     self.draw_number_picker()
+    #
     def set_number(self, number):
         self.number = number
 

@@ -16,6 +16,7 @@
 #
 import pygame
 import numpy as np
+from cmath import isclose
 from controls.number_picker import NumberPicker
 
 
@@ -26,6 +27,7 @@ class AdjacencyMatrix(pygame.sprite.RenderPlain):
         self.xpos = xpos
         self.ypos = ypos
 
+        self.adj_matrix_graph_dirty = False
         self.num_nodes = adj_matrix_numeric.shape[0]
         self.number_pickers_list = self.create_number_pickers_list()
         pygame.sprite.RenderPlain.__init__(self, self.number_pickers_list)
@@ -52,4 +54,22 @@ class AdjacencyMatrix(pygame.sprite.RenderPlain):
     def handle_element_clicked(self, picker):
         for idx, picker_in_list in enumerate(self.number_pickers_list):
             if picker == picker_in_list:
-                print("picker match in element: ", idx)
+                row = idx // self.num_nodes
+                col = idx % self.num_nodes
+                if row != col:
+                    if isclose(picker_in_list.number, 0.0):
+                        picker_in_list.number = 1.0
+                        self.adj_matrix_graph_dirty = True
+                    else:
+                        picker_in_list.number = 0.0
+                        self.adj_matrix_graph_dirty = True
+
+                    picker_in_list.draw_number_picker()
+                    self.adj_matrix_numeric[row, col] = picker_in_list.number
+
+                    # Also update the other side
+                    other_idx = col * self.num_nodes + row
+                    other_picker = self.number_pickers_list[other_idx]
+                    other_picker.number = picker_in_list.number
+                    other_picker.draw_number_picker()
+                    self.adj_matrix_numeric[col, row] = picker_in_list.number

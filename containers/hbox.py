@@ -30,6 +30,7 @@ class HBox(pygame.sprite.RenderPlain):
         next_ypos = self.ypos
         sprite_list = self.sprites()
         for sprite in sprite_list:
+            sprite.update()
             sprite.rect.left = next_xpos
             sprite.rect.top = next_ypos
             next_xpos += sprite.rect.width

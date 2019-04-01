@@ -143,7 +143,7 @@ class VQEPlayground():
         #     [0.0, 0.0, 5.0, 1.0, 0.0, 0.0]
         # ])
 
-        adj_matrix = np.array([
+        initial_adj_matrix = np.array([
             [0.0, 1.0, 1.0, 1.0, 1.0, 0.0],
             [1.0, 0.0, 1.0, 1.0, 1.0, 1.0],
             [1.0, 1.0, 0.0, 1.0, 1.0, 1.0],
@@ -173,7 +173,7 @@ class VQEPlayground():
         #     [1.0, 1.0, 1.0, 0.0]
         # ])
 
-        maxcut_op, maxcut_shift = maxcut.get_maxcut_qubitops(adj_matrix)
+        maxcut_op, maxcut_shift = maxcut.get_maxcut_qubitops(initial_adj_matrix)
         # print("maxcut_op: ", maxcut_op, ", maxcut_shift: ", maxcut_shift)
 
         # TODO: Find different approach of calculating and retrieving diagonal
@@ -182,7 +182,9 @@ class VQEPlayground():
 
         self.expectation_grid = ExpectationGrid(circuit, eigenvectors, maxcut_shift)
 
-        self.network_graph = NetworkGraph(adj_matrix)
+        self.adjacency_matrix = AdjacencyMatrix(1000, 63, initial_adj_matrix)
+
+        self.network_graph = NetworkGraph(self.adjacency_matrix.adj_matrix_numeric)
 
         # TODO: Put this flag in expectation_grid, making methods to
         # TODO:     update respective matrices?
@@ -190,8 +192,6 @@ class VQEPlayground():
 
         self.top_sprites = HBox(500, 0, self.network_graph)
         self.right_sprites = VBox(1400, 0, self.expectation_grid)
-
-        self.adjacency_matrix = AdjacencyMatrix(1000, 63, adj_matrix)
 
         self.circuit_grid = CircuitGrid(10, 500, self.circuit_grid_model)
         self.screen.blit(self.background, (0, 0))
@@ -258,6 +258,9 @@ class VQEPlayground():
                     for idx, picker in enumerate(self.adjacency_matrix.number_pickers_list):
                         if picker.rect.collidepoint(event.pos):
                             self.adjacency_matrix.handle_element_clicked(picker)
+                            self.update_circ_viz()
+                            # if self.adjacency_matrix.adj_matrix_graph_dirty:
+                            #     self.network_graph.set_adj_matrix(self.adjacency_matrix.adj_matrix_numeric)
 
                 elif event.type == JOYBUTTONDOWN:
                     if event.button == BTN_A:
@@ -476,6 +479,7 @@ class VQEPlayground():
         self.right_sprites.arrange()
         self.top_sprites.draw(self.screen)
         self.right_sprites.draw(self.screen)
+        self.adjacency_matrix.arrange()
         self.adjacency_matrix.draw(self.screen)
         self.circuit_grid.draw(self.screen)
         pygame.display.flip()
