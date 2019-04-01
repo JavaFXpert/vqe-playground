@@ -17,7 +17,6 @@
 import pygame
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.axes as axes
 import networkx as nx
 from cmath import isclose
 
@@ -34,7 +33,6 @@ class NetworkGraph(pygame.sprite.Sprite):
         self.solution = None
         self.graph = nx.Graph()
         self.graph_pos = None
-        self.default_axes = None
         self.num_nodes = adj_matrix.shape[0] # Number of nodes in graph
         self.set_adj_matrix(adj_matrix)
 
@@ -47,7 +45,6 @@ class NetworkGraph(pygame.sprite.Sprite):
         self.solution = np.zeros(self.num_nodes)
 
         fig = plt.figure(figsize=(5, 5))
-        ax = plt.subplot(111)
 
         self.graph.add_nodes_from(np.arange(0, self.num_nodes, 1))
 
@@ -59,8 +56,6 @@ class NetworkGraph(pygame.sprite.Sprite):
                     edge_list.append((i, j, adj_matrix[i, j]))
 
         self.graph.add_weighted_edges_from(edge_list)
-
-        self.default_axes = plt.axes(frameon=True)
 
         # TODO: Factor out the line that repeats this one
         colors = ['r' if self.solution[i] == 0 else 'b' for i in range(self.num_nodes)]
@@ -78,7 +73,8 @@ class NetworkGraph(pygame.sprite.Sprite):
         edge_labels = dict([((u, v,), self.adj_matrix[u, v]) for u, v, d in self.graph.edges(data=True)])
         nx.draw_networkx_edge_labels(self.graph, self.graph_pos, edge_labels=edge_labels)
 
-        nx.draw_networkx(self.graph, node_color=colors, node_size=600, alpha=.8, ax=self.default_axes, pos=self.graph_pos, font_color='white')
+        nx.draw_networkx(self.graph, node_color=colors, node_size=600, alpha=.8, pos=self.graph_pos, font_color='white')
+        plt.axis('off')
         plt.savefig("utils/data/network_graph.png")
 
         self.image, self.rect = load_image('network_graph.png', -1)
