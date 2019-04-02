@@ -17,6 +17,7 @@
 import pygame
 import numpy as np
 from qiskit import BasicAer, execute
+from qiskit_aqua.translators.ising import maxcut
 from utils.colors import WHITE, BLACK
 from utils.fonts import *
 from utils.states import comp_basis_states, NUM_QUBITS, NUM_STATE_DIMS
@@ -24,30 +25,47 @@ from utils.states import comp_basis_states, NUM_QUBITS, NUM_STATE_DIMS
 
 class ExpectationGrid(pygame.sprite.Sprite):
     """Displays a grid that contains basis states, eigenvalues, and probabilities"""
-    def __init__(self, circuit, eigenvalues, maxcut_shift):
+    def __init__(self, circuit, adj_matrix):
         pygame.sprite.Sprite.__init__(self)
-        self.eigenvalues = eigenvalues
-        self.maxcut_shift = maxcut_shift
+        self.eigenvalues = None
+        self.maxcut_shift = None
         self.image = None
         self.rect = None
         self.basis_states = comp_basis_states(NUM_QUBITS)
         self.quantum_state = None
         self.cur_basis_state_idx = 0
         self.basis_state_dirty = False
-        self.set_circuit(circuit)
+
+        # When setting circuit this first time,
+        # don't calculate the expectation value
+        # or draw the expectation grid, as the
+        # adjacency matrix hasn't yet been supplied
+        self.set_circuit(circuit, recalc=False)
+        self.set_adj_matrix(adj_matrix)
 
     # def update(self):
     #     # Nothing yet
     #     a = 1
 
-    def set_circuit(self, circuit):
+    def set_circuit(self, circuit, recalc=True):
         backend_sv_sim = BasicAer.get_backend('statevector_simulator')
         job_sim = execute(circuit, backend_sv_sim)
         result_sim = job_sim.result()
         self.quantum_state = result_sim.get_statevector(circuit, decimals=3)
 
-        self.calc_expectation_value()
+        if recalc:
+            self.calc_expectation_value()
+            self.draw_expectation_grid()
 
+    def set_adj_matrix(self, adj_matrix):
+        maxcut_op, self.maxcut_shift = maxcut.get_maxcut_qubitops(adj_matrix)
+        # print("maxcut_op: ", maxcut_op, ", maxcut_shift: ", maxcut_shift)
+
+        # TODO: Find different approach of calculating and retrieving diagonal
+        maxcut_op._paulis_to_matrix()
+        self.eigenvalues = maxcut_op._dia_matrix
+
+        self.calc_expectation_value()
         self.draw_expectation_grid()
 
     def draw_expectation_grid(self):
@@ -69,7 +87,7 @@ class ExpectationGrid(pygame.sprite.Sprite):
                                prop_square_side,
                                prop_square_side)
             if abs(self.quantum_state[y]) > 0:
-                pygame.draw.rect(self.image, BLACK, rect, 1)
+                pygame.draw.rect(self.image, BLACK, rect, 2)
 
     def calc_expectation_value(self):
         statevector_probs = np.absolute(self.quantum_state) ** 2

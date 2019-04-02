@@ -25,6 +25,7 @@ from utils.fonts import ARIAL_36
 
 class AdjacencyMatrix(pygame.sprite.RenderPlain):
     ELEMENT_WIDTH_HEIGHT = 48
+    MAX_EDGE_VALUE = 4
 
     """UI control for maintaining adjacency matrix"""
     def __init__(self, xpos, ypos, adj_matrix_numeric):
@@ -100,7 +101,7 @@ class AdjacencyMatrix(pygame.sprite.RenderPlain):
                     if isclose(picker_in_list.number, 0):
                         picker_in_list.number = 1
                         self.adj_matrix_graph_dirty = True
-                    elif picker_in_list.number < 3:
+                    elif picker_in_list.number < self.MAX_EDGE_VALUE:
                         picker_in_list.number += 1
                     else:
                         picker_in_list.number = 0

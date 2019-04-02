@@ -35,7 +35,7 @@
 from pygame.locals import *
 from qiskit import ClassicalRegister
 from qiskit import execute
-from qiskit_aqua.translators.ising import maxcut
+# from qiskit_aqua.translators.ising import maxcut
 from containers import *
 from controls.circuit_grid import *
 from model.circuit_grid_model import *
@@ -82,7 +82,7 @@ class VQEPlayground():
 
         pygame.font.init()
 
-        self.circuit_grid_model = CircuitGridModel(NUM_QUBITS, 19)
+        self.circuit_grid_model = CircuitGridModel(NUM_QUBITS, 17)
 
         pygame.display.set_caption('VQE Playground')
 
@@ -112,24 +112,24 @@ class VQEPlayground():
         self.circuit_grid_model.set_node(4, 4, CircuitGridNode(node_types.X, 0, 3))
         # self.circuit_grid_model.set_node(5, 5, CircuitGridNode(node_types.X, 0, 4))
 
-        self.circuit_grid_model.set_node(0, 6, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(1, 6, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(2, 6, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(3, 6, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(4, 6, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(0, 5, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(1, 5, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(2, 5, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(3, 5, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(4, 5, CircuitGridNode(node_types.Y, np.pi))
         # self.circuit_grid_model.set_node(5, 6, CircuitGridNode(node_types.Y))
 
-        self.circuit_grid_model.set_node(1, 7, CircuitGridNode(node_types.X, 0, 0))
-        self.circuit_grid_model.set_node(2, 8, CircuitGridNode(node_types.X, 0, 1))
-        self.circuit_grid_model.set_node(3, 9, CircuitGridNode(node_types.X, 0, 2))
-        self.circuit_grid_model.set_node(4, 10, CircuitGridNode(node_types.X, 0, 3))
+        self.circuit_grid_model.set_node(1, 6, CircuitGridNode(node_types.X, 0, 0))
+        self.circuit_grid_model.set_node(2, 7, CircuitGridNode(node_types.X, 0, 1))
+        self.circuit_grid_model.set_node(3, 8, CircuitGridNode(node_types.X, 0, 2))
+        self.circuit_grid_model.set_node(4, 9, CircuitGridNode(node_types.X, 0, 3))
         # self.circuit_grid_model.set_node(5, 11, CircuitGridNode(node_types.X, 0, 4))
 
-        self.circuit_grid_model.set_node(0, 12, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(1, 12, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(2, 12, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(3, 12, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(4, 12, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(0, 10, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(1, 10, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(2, 10, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(3, 10, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(4, 10, CircuitGridNode(node_types.Y, np.pi))
         # self.circuit_grid_model.set_node(5, 12, CircuitGridNode(node_types.Y))
 
         circuit = self.circuit_grid_model.compute_circuit()
@@ -160,16 +160,16 @@ class VQEPlayground():
         #     [0, 0, 4, 1, 0, 0]
         # ])
 
-        maxcut_op, maxcut_shift = maxcut.get_maxcut_qubitops(initial_adj_matrix)
-        # print("maxcut_op: ", maxcut_op, ", maxcut_shift: ", maxcut_shift)
-
-        # TODO: Find different approach of calculating and retrieving diagonal
-        maxcut_op._paulis_to_matrix()
-        eigenvectors = maxcut_op._dia_matrix
-
-        self.expectation_grid = ExpectationGrid(circuit, eigenvectors, maxcut_shift)
+        # maxcut_op, maxcut_shift = maxcut.get_maxcut_qubitops(initial_adj_matrix)
+        # # print("maxcut_op: ", maxcut_op, ", maxcut_shift: ", maxcut_shift)
+        #
+        # # TODO: Find different approach of calculating and retrieving diagonal
+        # maxcut_op._paulis_to_matrix()
+        # eigenvectors = maxcut_op._dia_matrix
 
         self.adjacency_matrix = AdjacencyMatrix(1000, 63, initial_adj_matrix)
+        self.expectation_grid = ExpectationGrid(circuit,
+                                                self.adjacency_matrix.adj_matrix_numeric)
 
         self.network_graph = NetworkGraph(self.adjacency_matrix.adj_matrix_numeric)
 
@@ -245,6 +245,7 @@ class VQEPlayground():
                     for idx, picker in enumerate(self.adjacency_matrix.number_pickers_list):
                         if picker.rect.collidepoint(event.pos):
                             self.adjacency_matrix.handle_element_clicked(picker)
+                            self.expectation_grid.set_adj_matrix(self.adjacency_matrix.adj_matrix_numeric)
                             self.update_circ_viz()
                             if self.adjacency_matrix.adj_matrix_graph_dirty:
                                 self.network_graph.set_adj_matrix(self.adjacency_matrix.adj_matrix_numeric)
