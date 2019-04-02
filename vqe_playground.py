@@ -92,66 +92,67 @@ class VQEPlayground():
         # Prepare objects
         clock = pygame.time.Clock()
 
-        # self.circuit_grid_model.set_node(0, 1, CircuitGridNode(node_types.X))
-        # self.circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.X))
-        # self.circuit_grid_model.set_node(2, 1, CircuitGridNode(node_types.X))
-        # self.circuit_grid_model.set_node(3, 1, CircuitGridNode(node_types.X))
-        # self.circuit_grid_model.set_node(4, 1, CircuitGridNode(node_types.X))
-        # self.circuit_grid_model.set_node(5, 1, CircuitGridNode(node_types.X))
-
         self.circuit_grid_model.set_node(0, 0, CircuitGridNode(node_types.Y, np.pi))
         self.circuit_grid_model.set_node(1, 0, CircuitGridNode(node_types.Y, np.pi))
         self.circuit_grid_model.set_node(2, 0, CircuitGridNode(node_types.Y, np.pi))
         self.circuit_grid_model.set_node(3, 0, CircuitGridNode(node_types.Y, np.pi))
         self.circuit_grid_model.set_node(4, 0, CircuitGridNode(node_types.Y, np.pi))
-        # self.circuit_grid_model.set_node(5, 0, CircuitGridNode(node_types.Y))
 
         self.circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.X, 0, 0))
-        self.circuit_grid_model.set_node(2, 2, CircuitGridNode(node_types.X, 0, 1))
-        self.circuit_grid_model.set_node(3, 3, CircuitGridNode(node_types.X, 0, 2))
-        self.circuit_grid_model.set_node(4, 4, CircuitGridNode(node_types.X, 0, 3))
-        # self.circuit_grid_model.set_node(5, 5, CircuitGridNode(node_types.X, 0, 4))
 
-        self.circuit_grid_model.set_node(0, 5, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(1, 5, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(2, 5, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(3, 5, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(4, 5, CircuitGridNode(node_types.Y, np.pi))
-        # self.circuit_grid_model.set_node(5, 6, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(1, 2, CircuitGridNode(node_types.TRACE))
+        self.circuit_grid_model.set_node(2, 2, CircuitGridNode(node_types.X, 0, 0))
 
-        self.circuit_grid_model.set_node(1, 6, CircuitGridNode(node_types.X, 0, 0))
-        self.circuit_grid_model.set_node(2, 7, CircuitGridNode(node_types.X, 0, 1))
+        self.circuit_grid_model.set_node(1, 3, CircuitGridNode(node_types.TRACE))
+        self.circuit_grid_model.set_node(2, 3, CircuitGridNode(node_types.TRACE))
+        self.circuit_grid_model.set_node(3, 3, CircuitGridNode(node_types.X, 0, 0))
+
+        self.circuit_grid_model.set_node(1, 4, CircuitGridNode(node_types.TRACE))
+        self.circuit_grid_model.set_node(2, 4, CircuitGridNode(node_types.TRACE))
+        self.circuit_grid_model.set_node(3, 4, CircuitGridNode(node_types.TRACE))
+        self.circuit_grid_model.set_node(4, 4, CircuitGridNode(node_types.X, 0, 0))
+
+        self.circuit_grid_model.set_node(2, 5, CircuitGridNode(node_types.X, 0, 1))
+
+        self.circuit_grid_model.set_node(2, 6, CircuitGridNode(node_types.TRACE))
+        self.circuit_grid_model.set_node(3, 6, CircuitGridNode(node_types.X, 0, 1))
+
+        self.circuit_grid_model.set_node(2, 7, CircuitGridNode(node_types.TRACE))
+        self.circuit_grid_model.set_node(3, 7, CircuitGridNode(node_types.TRACE))
+        self.circuit_grid_model.set_node(4, 7, CircuitGridNode(node_types.X, 0, 1))
+
         self.circuit_grid_model.set_node(3, 8, CircuitGridNode(node_types.X, 0, 2))
-        self.circuit_grid_model.set_node(4, 9, CircuitGridNode(node_types.X, 0, 3))
-        # self.circuit_grid_model.set_node(5, 11, CircuitGridNode(node_types.X, 0, 4))
 
-        self.circuit_grid_model.set_node(0, 10, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(1, 10, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(2, 10, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(3, 10, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(4, 10, CircuitGridNode(node_types.Y, np.pi))
-        # self.circuit_grid_model.set_node(5, 10, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(3, 9, CircuitGridNode(node_types.TRACE))
+        self.circuit_grid_model.set_node(4, 9, CircuitGridNode(node_types.X, 0, 2))
 
-        self.circuit_grid_model.set_node(1, 11, CircuitGridNode(node_types.X, 0, 0))
-        self.circuit_grid_model.set_node(2, 12, CircuitGridNode(node_types.X, 0, 1))
-        self.circuit_grid_model.set_node(3, 13, CircuitGridNode(node_types.X, 0, 2))
-        self.circuit_grid_model.set_node(4, 14, CircuitGridNode(node_types.X, 0, 3))
-        # self.circuit_grid_model.set_node(5, 14, CircuitGridNode(node_types.X, 0, 4))
+        self.circuit_grid_model.set_node(4, 10, CircuitGridNode(node_types.X, 0, 3))
 
-        self.circuit_grid_model.set_node(0, 15, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(1, 15, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(2, 15, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(3, 15, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(4, 15, CircuitGridNode(node_types.Y, np.pi))
-        # self.circuit_grid_model.set_node(5, 15, CircuitGridNode(node_types.Y))
+        self.circuit_grid_model.set_node(0, 11, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(1, 11, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(2, 11, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(3, 11, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(4, 11, CircuitGridNode(node_types.Y, np.pi))
+
+        self.circuit_grid_model.set_node(1, 12, CircuitGridNode(node_types.X, 0, 0))
+        self.circuit_grid_model.set_node(2, 13, CircuitGridNode(node_types.X, 0, 1))
+        self.circuit_grid_model.set_node(3, 14, CircuitGridNode(node_types.X, 0, 2))
+        self.circuit_grid_model.set_node(4, 15, CircuitGridNode(node_types.X, 0, 3))
+
+        self.circuit_grid_model.set_node(0, 16, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(1, 16, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(2, 16, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(3, 16, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(4, 16, CircuitGridNode(node_types.Y, np.pi))
+
         circuit = self.circuit_grid_model.compute_circuit()
 
         initial_adj_matrix = np.array([
-            [0, 4, 0, 0, 0],
-            [4, 0, 3, 0, 0],
-            [0, 3, 0, 2, 0],
-            [0, 0, 2, 0, 1],
-            [0, 0, 0, 1, 0]
+            [0, 2, 2, 1, 0],
+            [2, 0, 3, 1, 0],
+            [2, 3, 0, 2, 4],
+            [1, 1, 2, 0, 1],
+            [0, 0, 4, 1, 0]
         ])
 
         # initial_adj_matrix = np.array([
@@ -179,7 +180,7 @@ class VQEPlayground():
         # maxcut_op._paulis_to_matrix()
         # eigenvectors = maxcut_op._dia_matrix
 
-        self.adjacency_matrix = AdjacencyMatrix(1000, 63, initial_adj_matrix)
+        self.adjacency_matrix = AdjacencyMatrix(950, 150, initial_adj_matrix)
         self.expectation_grid = ExpectationGrid(circuit,
                                                 self.adjacency_matrix.adj_matrix_numeric)
 
@@ -189,8 +190,8 @@ class VQEPlayground():
         # TODO:     update respective matrices?
         # self.optimization_desired = True
 
-        self.top_sprites = HBox(500, 0, self.network_graph)
-        self.right_sprites = VBox(1400, 0, self.expectation_grid)
+        self.top_sprites = HBox(400, 0, self.network_graph)
+        self.right_sprites = VBox(1100, 0, self.expectation_grid)
 
         self.circuit_grid = CircuitGrid(10, 500, self.circuit_grid_model)
         self.screen.blit(self.background, (0, 0))
