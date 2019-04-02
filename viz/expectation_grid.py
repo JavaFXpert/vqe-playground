@@ -56,16 +56,16 @@ class ExpectationGrid(pygame.sprite.Sprite):
         self.image.fill(WHITE)
         self.rect = self.image.get_rect()
 
-        block_size = 15
+        block_size = 28
         x_offset = 50
         y_offset = 10
         for y in range(NUM_STATE_DIMS):
-            text_surface = ARIAL_22.render(self.basis_states[y] + ":  " + str(self.eigenvalues[y] + self.maxcut_shift), False, (0, 0, 0))
+            text_surface = ARIAL_36.render(self.basis_states[y] + ":  " + str(self.eigenvalues[y] + self.maxcut_shift), False, (0, 0, 0))
             self.image.blit(text_surface, (x_offset, (y + 1) * block_size + y_offset))
 
             prop_square_side = abs(self.quantum_state[y]) * block_size
-            rect = pygame.Rect(x_offset + 20 - (prop_square_side / 2) + NUM_QUBITS * 20,
-                               y * block_size + 25 + (block_size / 2 - prop_square_side / 2),
+            rect = pygame.Rect(x_offset + 20 - (prop_square_side / 2) + NUM_QUBITS * 30,
+                               y * block_size + 36 + ((block_size - prop_square_side) / 2),
                                prop_square_side,
                                prop_square_side)
             if abs(self.quantum_state[y]) > 0:

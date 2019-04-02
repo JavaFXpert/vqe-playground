@@ -16,4 +16,4 @@
 
 
 def comp_graph_node_labels(num_nodes):
-    return {x: chr(x+65) for x in range(num_nodes)}
+    return {x: chr(x + 65) for x in range(num_nodes)}

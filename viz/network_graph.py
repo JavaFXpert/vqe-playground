@@ -38,8 +38,7 @@ class NetworkGraph(pygame.sprite.Sprite):
         self.set_adj_matrix(adj_matrix)
 
     def update(self):
-        colors = ['r' if self.solution[i] == 0 else 'b' for i in range(self.num_nodes)]
-        self.draw_network_graph(colors)
+        self.draw_network_graph(self.calc_node_colors())
 
     def set_adj_matrix(self, adj_matrix):
         self.adj_matrix = adj_matrix
@@ -58,17 +57,13 @@ class NetworkGraph(pygame.sprite.Sprite):
 
         self.graph.add_weighted_edges_from(edge_list)
 
-        # TODO: Factor out the line that repeats this one
-        colors = ['r' if self.solution[i] == 0 else 'b' for i in range(self.num_nodes)]
-
         self.graph_pos = nx.spring_layout(self.graph)
-        self.draw_network_graph(colors)
+        self.draw_network_graph(self.calc_node_colors())
 
     def set_solution(self, solution):
         self.solution = solution
 
-        colors = ['r' if self.solution[i] == 0 else 'b' for i in range(self.num_nodes)]
-        self.draw_network_graph(colors)
+        self.draw_network_graph(self.calc_node_colors())
 
     def draw_network_graph(self, colors):
         edge_labels = dict([((u, v,), self.adj_matrix[u, v]) for u, v, d in self.graph.edges(data=True)])
@@ -85,4 +80,7 @@ class NetworkGraph(pygame.sprite.Sprite):
 
         self.image, self.rect = load_image('network_graph.png', -1)
         self.image.convert()
+
+    def calc_node_colors(self):
+        return ['r' if self.solution[self.num_nodes - i - 1] == 0 else 'b' for i in range(self.num_nodes)]
 
