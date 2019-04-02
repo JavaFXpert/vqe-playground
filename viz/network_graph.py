@@ -21,6 +21,7 @@ import networkx as nx
 from cmath import isclose
 
 from utils import load_image
+from utils.labels import comp_graph_node_labels
 
 
 class NetworkGraph(pygame.sprite.Sprite):
@@ -73,13 +74,9 @@ class NetworkGraph(pygame.sprite.Sprite):
         edge_labels = dict([((u, v,), self.adj_matrix[u, v]) for u, v, d in self.graph.edges(data=True)])
         nx.draw_networkx_edge_labels(self.graph, self.graph_pos, edge_labels=edge_labels)
 
-        labels = {}
-        labels[0] = 'A'
-        labels[1] = 'B'
-        labels[2] = 'C'
-        labels[3] = 'D'
-        labels[4] = 'E'
-        labels[5] = 'F'
+        # node_labels = dict([()])
+
+        labels = comp_graph_node_labels(self.num_nodes)
         nx.draw_networkx_labels(self.graph, self.graph_pos, labels, font_size=16, font_color='white')
 
         nx.draw_networkx(self.graph, self.graph_pos, with_labels=False, node_color=colors, node_size=600, alpha=.8, font_color='white')

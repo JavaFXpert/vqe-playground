@@ -19,12 +19,13 @@ import numpy as np
 from cmath import isclose
 from controls.number_picker import NumberPicker
 from controls.matrix_label import MatrixLabel
-from utils.labels import NETWORK_GRAPH_NODES
+from utils.labels import comp_graph_node_labels
 from utils.fonts import ARIAL_36
 
 
 class AdjacencyMatrix(pygame.sprite.RenderPlain):
     ELEMENT_WIDTH_HEIGHT = 48
+
     """UI control for maintaining adjacency matrix"""
     def __init__(self, xpos, ypos, adj_matrix_numeric):
         self.adj_matrix_numeric = adj_matrix_numeric
@@ -33,6 +34,7 @@ class AdjacencyMatrix(pygame.sprite.RenderPlain):
 
         self.adj_matrix_graph_dirty = False
         self.num_nodes = adj_matrix_numeric.shape[0]
+        self.row_col_labels_dict = comp_graph_node_labels(self.num_nodes)
         self.row_labels_list = self.create_row_labels_list()
         self.col_labels_list = self.create_col_labels_list()
         self.number_pickers_list = self.create_number_pickers_list()
@@ -55,17 +57,17 @@ class AdjacencyMatrix(pygame.sprite.RenderPlain):
     def create_row_labels_list(self):
         row_labels = []
         for row in range(self.num_nodes):
-            row_labels.append(MatrixLabel(NETWORK_GRAPH_NODES[row],
-                                        self.ELEMENT_WIDTH_HEIGHT,
-                                        self.ELEMENT_WIDTH_HEIGHT))
+            row_labels.append(MatrixLabel(self.row_col_labels_dict[row],
+                                          self.ELEMENT_WIDTH_HEIGHT,
+                                          self.ELEMENT_WIDTH_HEIGHT))
         return row_labels
 
     def create_col_labels_list(self):
         col_labels = []
         for col in range(self.num_nodes):
-            col_labels.append(MatrixLabel(NETWORK_GRAPH_NODES[col],
-                                        self.ELEMENT_WIDTH_HEIGHT,
-                                        self.ELEMENT_WIDTH_HEIGHT))
+            col_labels.append(MatrixLabel(self.row_col_labels_dict[col],
+                                          self.ELEMENT_WIDTH_HEIGHT,
+                                          self.ELEMENT_WIDTH_HEIGHT))
         return col_labels
 
     def arrange(self):
