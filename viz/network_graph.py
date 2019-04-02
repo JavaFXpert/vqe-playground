@@ -41,6 +41,7 @@ class NetworkGraph(pygame.sprite.Sprite):
         self.draw_network_graph(self.calc_node_colors())
 
     def set_adj_matrix(self, adj_matrix):
+        self.graph = nx.Graph()
         self.adj_matrix = adj_matrix
         self.solution = np.zeros(self.num_nodes)
 

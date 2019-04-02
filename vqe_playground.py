@@ -130,8 +130,20 @@ class VQEPlayground():
         self.circuit_grid_model.set_node(2, 10, CircuitGridNode(node_types.Y, np.pi))
         self.circuit_grid_model.set_node(3, 10, CircuitGridNode(node_types.Y, np.pi))
         self.circuit_grid_model.set_node(4, 10, CircuitGridNode(node_types.Y, np.pi))
-        # self.circuit_grid_model.set_node(5, 12, CircuitGridNode(node_types.Y))
+        # self.circuit_grid_model.set_node(5, 10, CircuitGridNode(node_types.Y))
 
+        self.circuit_grid_model.set_node(1, 11, CircuitGridNode(node_types.X, 0, 0))
+        self.circuit_grid_model.set_node(2, 12, CircuitGridNode(node_types.X, 0, 1))
+        self.circuit_grid_model.set_node(3, 13, CircuitGridNode(node_types.X, 0, 2))
+        self.circuit_grid_model.set_node(4, 14, CircuitGridNode(node_types.X, 0, 3))
+        # self.circuit_grid_model.set_node(5, 14, CircuitGridNode(node_types.X, 0, 4))
+
+        self.circuit_grid_model.set_node(0, 15, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(1, 15, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(2, 15, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(3, 15, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(4, 15, CircuitGridNode(node_types.Y, np.pi))
+        # self.circuit_grid_model.set_node(5, 15, CircuitGridNode(node_types.Y))
         circuit = self.circuit_grid_model.compute_circuit()
 
         initial_adj_matrix = np.array([
