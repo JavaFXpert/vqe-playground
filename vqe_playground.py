@@ -149,29 +149,11 @@ class VQEPlayground():
 
         initial_adj_matrix = np.array([
             [0, 2, 0, 0, 4],
-            [2, 0, 3, 0, 0],
+            [2, 0, 3, 0, 1],
             [0, 3, 0, 2, 0],
             [0, 0, 2, 0, 1],
-            [4, 0, 0, 1, 0]
+            [4, 1, 0, 1, 0]
         ])
-
-        # initial_adj_matrix = np.array([
-        #     [0, 2, 0, 0, 0, 0],
-        #     [2, 0, 1, 0, 0, 0],
-        #     [0, 1, 0, 1, 0, 0],
-        #     [0, 0, 1, 0, 1, 0],
-        #     [0, 0, 0, 1, 0, 1],
-        #     [0, 0, 0, 0, 1, 0]
-        # ])
-
-        # initial_adj_matrix = np.array([
-        #     [0, 0, 4, 1, 0, 0],
-        #     [0, 0, 0, 0, 3, 0],
-        #     [4, 0, 0, 1, 1, 4],
-        #     [1, 0, 1, 0, 2, 1],
-        #     [0, 3, 1, 2, 0, 0],
-        #     [0, 0, 4, 1, 0, 0]
-        # ])
 
         # maxcut_op, maxcut_shift = maxcut.get_maxcut_qubitops(initial_adj_matrix)
         # # print("maxcut_op: ", maxcut_op, ", maxcut_shift: ", maxcut_shift)
@@ -180,18 +162,14 @@ class VQEPlayground():
         # maxcut_op._paulis_to_matrix()
         # eigenvectors = maxcut_op._dia_matrix
 
-        self.adjacency_matrix = AdjacencyMatrix(950, 150, initial_adj_matrix)
+        self.adjacency_matrix = AdjacencyMatrix(950, 10, initial_adj_matrix)
         self.expectation_grid = ExpectationGrid(circuit,
                                                 self.adjacency_matrix.adj_matrix_numeric)
 
         self.network_graph = NetworkGraph(self.adjacency_matrix.adj_matrix_numeric)
 
-        # TODO: Put this flag in expectation_grid, making methods to
-        # TODO:     update respective matrices?
-        # self.optimization_desired = True
-
         self.top_sprites = HBox(400, 0, self.network_graph)
-        self.right_sprites = VBox(1100, 0, self.expectation_grid)
+        self.right_sprites = VBox(960, 0, self.expectation_grid)
 
         self.circuit_grid = CircuitGrid(10, 500, self.circuit_grid_model)
         self.screen.blit(self.background, (0, 0))
