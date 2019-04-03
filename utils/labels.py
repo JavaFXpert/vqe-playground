@@ -16,4 +16,10 @@
 
 
 def comp_graph_node_labels(num_nodes):
+    """Construct dict containing node labels beginning with A"""
     return {x: chr(x + 65) for x in range(num_nodes)}
+
+
+def graph_node_labels_reversed_str(num_nodes):
+    labels_dict = comp_graph_node_labels(num_nodes)
+    return "".join(reversed(list(labels_dict.values())))

@@ -70,8 +70,6 @@ class NetworkGraph(pygame.sprite.Sprite):
         edge_labels = dict([((u, v,), self.adj_matrix[u, v]) for u, v, d in self.graph.edges(data=True)])
         nx.draw_networkx_edge_labels(self.graph, self.graph_pos, edge_labels=edge_labels)
 
-        # node_labels = dict([()])
-
         labels = comp_graph_node_labels(self.num_nodes)
         nx.draw_networkx_labels(self.graph, self.graph_pos, labels, font_size=16, font_color='white')
 

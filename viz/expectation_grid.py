@@ -19,7 +19,8 @@ import numpy as np
 from qiskit import BasicAer, execute
 from qiskit_aqua.translators.ising import maxcut
 from utils.colors import WHITE, BLACK
-from utils.fonts import ARIAL_36
+from utils.fonts import ARIAL_30, ARIAL_36
+from utils.labels import graph_node_labels_reversed_str
 from utils.states import comp_basis_states, NUM_QUBITS, NUM_STATE_DIMS
 
 
@@ -69,7 +70,7 @@ class ExpectationGrid(pygame.sprite.Sprite):
         self.draw_expectation_grid()
 
     def draw_expectation_grid(self):
-        self.image = pygame.Surface([(NUM_QUBITS + 1) * 50 + 100, 100 + NUM_STATE_DIMS * 50])
+        self.image = pygame.Surface([(NUM_QUBITS + 1) * 50 + 300, 100 + NUM_STATE_DIMS * 50])
         self.image.convert()
         self.image.fill(WHITE)
         self.rect = self.image.get_rect()
@@ -77,13 +78,22 @@ class ExpectationGrid(pygame.sprite.Sprite):
         block_size = 26
         x_offset = 250
         y_offset = 10
+
+        # Display column headings
+        node_letter_str = graph_node_labels_reversed_str(NUM_QUBITS)
+        text_surface = ARIAL_30.render(node_letter_str + '  Eigenval  Prob', False, (0, 0, 0))
+        self.image.blit(text_surface, (x_offset, y_offset + block_size / 2))
+
         for y in range(NUM_STATE_DIMS):
-            text_surface = ARIAL_36.render(self.basis_states[y] + ":  " + str(self.eigenvalues[y] + self.maxcut_shift), False, (0, 0, 0))
-            self.image.blit(text_surface, (x_offset, (y + 1) * block_size + y_offset))
+            text_surface = ARIAL_36.render(self.basis_states[y] + ":  " + str(int(self.eigenvalues[y] + self.maxcut_shift)),
+                                           False, (0, 0, 0))
+            # text_surface = ARIAL_36.render(self.basis_states[y] + ":  " + str(int(self.eigenvalues[y])),
+            #                                False, (0, 0, 0))
+            self.image.blit(text_surface, (x_offset, (y + 2) * block_size + y_offset))
 
             prop_square_side = abs(self.quantum_state[y]) * block_size
-            rect = pygame.Rect(x_offset + 20 - (prop_square_side / 2) + NUM_QUBITS * 30,
-                               y * block_size + 35 + ((block_size - prop_square_side) / 2),
+            rect = pygame.Rect(x_offset + 40 - (prop_square_side / 2) + NUM_QUBITS * 30,
+                               (y + 1) * block_size + 35 + ((block_size - prop_square_side) / 2),
                                prop_square_side,
                                prop_square_side)
             if abs(self.quantum_state[y]) > 0:
