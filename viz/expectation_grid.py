@@ -87,8 +87,8 @@ class ExpectationGrid(pygame.sprite.Sprite):
         text_surface = ARIAL_36.render('Lowest eigenvalue: ' + str(round(min(self.eigenvalues), 1)), False, (0, 0, 0))
         self.image.blit(text_surface, (0, y_offset + block_size * 13))
 
-        cost = round(self.cur_exp_val - min(self.eigenvalues), 2)
-        text_surface = ARIAL_36.render('Cost: ' + str(cost), False, (0, 0, 0))
+        maxcut_cost = round(self.cur_exp_val - min(self.eigenvalues), 2)
+        text_surface = ARIAL_36.render('Maxcut cost: ' + str(maxcut_cost), False, (0, 0, 0))
         self.image.blit(text_surface, (0, y_offset + block_size * 14))
 
         text_surface = ARIAL_36.render('Basis state: ' + str(self.basis_states[self.cur_basis_state_idx]),

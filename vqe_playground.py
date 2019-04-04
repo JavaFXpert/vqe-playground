@@ -68,6 +68,8 @@ class VQEPlayground():
         self.optimization_initialized = False
         self.optimized_rotations = None
         self.cur_optimization_epoch = 0
+        self.cur_rotation_num = 0
+        self.min_distance = None
 
     def main(self):
         if not pygame.font: print('Warning, fonts disabled')
@@ -155,10 +157,10 @@ class VQEPlayground():
         circuit = self.circuit_grid_model.compute_circuit()
 
         initial_adj_matrix = np.array([
-            [0, 2, 0, 0, 4],
+            [0, 2, 1, 1, 4],
             [2, 0, 3, 0, 1],
-            [0, 3, 0, 2, 0],
-            [0, 0, 2, 0, 1],
+            [1, 3, 0, 2, 0],
+            [1, 0, 2, 0, 1],
             [4, 1, 0, 1, 0]
         ])
 
@@ -343,37 +345,38 @@ class VQEPlayground():
                         self.optimization_desired = True
 
             if self.optimization_desired:
-                self.expectation_grid.draw_expectation_grid()
+                if self.cur_optimization_epoch < NUM_OPTIMIZATION_EPOCHS:
+                    if not self.optimization_initialized:
+                        self.expectation_grid.draw_expectation_grid()
+                        rotation_gate_nodes = self.circuit_grid_model.get_rotation_gate_nodes()
 
-                # TODO: Apply optimization
-                rotation_gate_nodes = self.circuit_grid_model.get_rotation_gate_nodes()
+                        # initial_rotations = np.zeros(len(rotation_gate_nodes))
+                        self.optimized_rotations = np.full(len(rotation_gate_nodes), np.pi)
+                        self.cur_optimization_epoch = 0
+                        self.cur_rotation_num = 0
 
-                # initial_rotations = np.zeros(len(rotation_gate_nodes))
-                initial_rotations = np.full(len(rotation_gate_nodes), np.pi)
+                        rotation_bounds = np.zeros((len(rotation_gate_nodes), 2))
 
-                rotation_bounds = np.zeros((len(rotation_gate_nodes), 2))
+                        self.optimization_initialized = True
 
-                self.optimization_initialized = False
+                    self.optimize_rotations(self.expectation_value_objective_function,
+                                            self.circuit_grid, self.expectation_grid, rotation_gate_nodes)
 
-                self.optimize_rotations(self.expectation_value_objective_function,
-                                        initial_rotations, self.circuit_grid,
-                                        self.expectation_grid, rotation_gate_nodes)
+                    # print('opt_rotations: ', opt_rotations)
 
-                # print('opt_rotations: ', opt_rotations)
+                    cost, basis_state_str = self.expectation_grid.calc_expectation_value()
+                    print('cost: ', cost, 'basis_state_str: ', basis_state_str)
 
-                cost, basis_state_str = self.expectation_grid.calc_expectation_value()
-                print('cost: ', cost, 'basis_state_str: ', basis_state_str)
+                    solution = np.zeros(NUM_STATE_DIMS)
+                    for idx, char in enumerate(basis_state_str):
+                        solution[idx] = int(char)
 
-                solution = np.zeros(NUM_STATE_DIMS)
-                for idx, char in enumerate(basis_state_str):
-                    solution[idx] = int(char)
+                    self.network_graph.set_solution(solution)
 
-                self.network_graph.set_solution(solution)
-
-                self.update_circ_viz()
-
-                self.optimization_initialized = False
-                self.optimization_desired = False
+                    self.update_circ_viz()
+                else:
+                    self.optimization_initialized = False
+                    self.optimization_desired = False
 
             if self.expectation_grid.basis_state_dirty:
                 cost, basis_state_str = self.expectation_grid.calc_expectation_value()
@@ -389,51 +392,49 @@ class VQEPlayground():
 
         pygame.quit()
 
-    def optimize_rotations(self, objective_function, x0, circuit_grid, expectation_grid, rotation_gate_nodes):
+    def optimize_rotations(self, objective_function, circuit_grid, expectation_grid, rotation_gate_nodes):
 
         move_radians = np.pi / 8
-
-        self.optimized_rotations = np.copy(x0)
 
         # For each rotation this will be either 1 or -1, signifying direction of movement
         unit_direction_array = np.ones(len(self.optimized_rotations))
 
-        min_distance = objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
+        self.min_distance = objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
 
         if self.cur_optimization_epoch < NUM_OPTIMIZATION_EPOCHS:
-            for rotations_idx in range(len(self.optimized_rotations)):
-                cur_ang_rad = self.optimized_rotations[rotations_idx]
+            if self.cur_rotation_num < len(self.optimized_rotations):
+                cur_ang_rad = self.optimized_rotations[self.cur_rotation_num]
                 proposed_cur_ang_rad = cur_ang_rad
 
                 # Decide whether to increase or decrease angle
-                unit_direction_array[rotations_idx] = 1
+                unit_direction_array[self.cur_rotation_num] = 1
                 if cur_ang_rad > np.pi:
-                    unit_direction_array[rotations_idx] = -1
-                proposed_cur_ang_rad += move_radians * unit_direction_array[rotations_idx]
+                    unit_direction_array[self.cur_rotation_num] = -1
+                proposed_cur_ang_rad += move_radians * unit_direction_array[self.cur_rotation_num]
                 if 0.0 <= proposed_cur_ang_rad < np.pi * 2:
-                    self.optimized_rotations[rotations_idx] = proposed_cur_ang_rad
+                    self.optimized_rotations[self.cur_rotation_num] = proposed_cur_ang_rad
 
                     temp_distance = objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
-                    if temp_distance > min_distance:
+                    if temp_distance > self.min_distance:
                         # Moving in the wrong direction so restore the angle in the array and switch direction
-                        self.optimized_rotations[rotations_idx] = cur_ang_rad
-                        unit_direction_array[rotations_idx] *= -1
+                        self.optimized_rotations[self.cur_rotation_num] = cur_ang_rad
+                        unit_direction_array[self.cur_rotation_num] *= -1
                     else:
                         # Moving in the right direction so use the proposed angle
                         cur_ang_rad = proposed_cur_ang_rad
-                        min_distance = temp_distance
+                        self.min_distance = temp_distance
 
                     finished_with_while_loop = False
                     loop_iterations = 0
                     while not finished_with_while_loop:
                         loop_iterations += 1
-                        proposed_cur_ang_rad += move_radians * unit_direction_array[rotations_idx]
+                        proposed_cur_ang_rad += move_radians * unit_direction_array[self.cur_rotation_num]
                         if 0.0 <= proposed_cur_ang_rad < np.pi * 2:
-                            self.optimized_rotations[rotations_idx] = proposed_cur_ang_rad
+                            self.optimized_rotations[self.cur_rotation_num] = proposed_cur_ang_rad
                             temp_distance = objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
-                            if temp_distance > min_distance:
+                            if temp_distance > self.min_distance:
                                 # Distance is increasing so restore the angle in the array and leave the loop
-                                self.optimized_rotations[rotations_idx] = cur_ang_rad
+                                self.optimized_rotations[self.cur_rotation_num] = cur_ang_rad
                                 finished_with_while_loop = True
                             elif loop_iterations > np.pi * 2 / move_radians:
                                 print("Unexpected: Was in while loop over ",  loop_iterations, " iterations")
@@ -441,25 +442,29 @@ class VQEPlayground():
                             else:
                                 # Distance is not increasing, so use the proposed angle
                                 cur_ang_rad = proposed_cur_ang_rad
-                                min_distance = temp_distance
+                                self.min_distance = temp_distance
                         else:
                             finished_with_while_loop = True
-            # print('min_distance: ', min_distance)
+
+                self.cur_rotation_num += 1
+            else:
+                self.cur_rotation_num = 0
+                self.cur_optimization_epoch += 1
+            print('self.min_distance: ', self.min_distance)
 
             objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
             # print('exp_val: ', expectation_grid.calc_expectation_value())
 
-            self.cur_optimization_epoch += 1
         # return optimized_rotations
 
     def expectation_value_objective_function(self, circuit_grid,
                                              expectation_grid, rotation_gate_nodes):
         for idx in range(len(rotation_gate_nodes)):
             circuit_grid.rotate_gate_absolute(rotation_gate_nodes[idx], self.optimized_rotations[idx])
-            expectation_grid.set_circuit(circuit_grid.circuit_grid_model.compute_circuit())
-            cost, basis_state = expectation_grid.calc_expectation_value()
+        expectation_grid.set_circuit(circuit_grid.circuit_grid_model.compute_circuit())
+        cost, basis_state = expectation_grid.calc_expectation_value()
 
-            print("self.optimized_rotations: ", self.optimized_rotations, ", cost: ", cost, ", basis_state: ", basis_state)
+        print("self.optimized_rotations: ", self.optimized_rotations, ", cost: ", cost, ", basis_state: ", basis_state)
         return cost
 
     def update_circ_viz(self):
