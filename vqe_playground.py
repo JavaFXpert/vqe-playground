@@ -352,15 +352,16 @@ class VQEPlayground():
 
                 rotation_bounds = np.zeros((len(rotation_gate_nodes), 2))
 
-                opt_rotations = self.optimize_rotations(self.expectation_value_objective_function,
-                                                        initial_rotations, self.circuit_grid,
-                                                        self.expectation_grid, rotation_gate_nodes)
+                self.optimization_initialized = False
+
+                self.optimize_rotations(self.expectation_value_objective_function,
+                                        initial_rotations, self.circuit_grid,
+                                        self.expectation_grid, rotation_gate_nodes)
 
                 # print('opt_rotations: ', opt_rotations)
 
                 cost, basis_state_str = self.expectation_grid.calc_expectation_value()
                 print('cost: ', cost, 'basis_state_str: ', basis_state_str)
-
 
                 solution = np.zeros(NUM_STATE_DIMS)
                 for idx, char in enumerate(basis_state_str):
@@ -370,6 +371,7 @@ class VQEPlayground():
 
                 self.update_circ_viz()
 
+                self.optimization_initialized = False
                 self.optimization_desired = False
 
             if self.expectation_grid.basis_state_dirty:
