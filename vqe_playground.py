@@ -46,6 +46,7 @@ from viz.network_graph import NetworkGraph
 from controls.adjacency_matrix import AdjacencyMatrix
 
 WINDOW_SIZE = 1660, 1000
+NUM_OPTIMIZATION_EPOCHS = 1
 
 
 class VQEPlayground():
@@ -65,8 +66,8 @@ class VQEPlayground():
         # the optimizing algorithm is running
         self.optimization_desired = False
         self.optimization_initialized = False
-        self.cur_optimization_epoch = 0
         self.optimized_rotations = None
+        self.cur_optimization_epoch = 0
 
     def main(self):
         if not pygame.font: print('Warning, fonts disabled')
@@ -390,8 +391,6 @@ class VQEPlayground():
 
     def optimize_rotations(self, objective_function, x0, circuit_grid, expectation_grid, rotation_gate_nodes):
 
-        # Tries to be plug-compatible with scipy.optimize.fmin_l_bfgs_b
-        optimization_epochs = 1
         move_radians = np.pi / 8
 
         self.optimized_rotations = np.copy(x0)
@@ -401,7 +400,7 @@ class VQEPlayground():
 
         min_distance = objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
 
-        for epoch_idx in range(optimization_epochs):
+        if self.cur_optimization_epoch < NUM_OPTIMIZATION_EPOCHS:
             for rotations_idx in range(len(self.optimized_rotations)):
                 cur_ang_rad = self.optimized_rotations[rotations_idx]
                 proposed_cur_ang_rad = cur_ang_rad
@@ -449,6 +448,8 @@ class VQEPlayground():
 
             objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
             # print('exp_val: ', expectation_grid.calc_expectation_value())
+
+            self.cur_optimization_epoch += 1
         # return optimized_rotations
 
     def expectation_value_objective_function(self, circuit_grid,
