@@ -158,9 +158,9 @@ class VQEPlayground():
 
         initial_adj_matrix = np.array([
             [0, 2, 1, 1, 4],
-            [2, 0, 3, 0, 1],
+            [2, 0, 3, 3, 1],
             [1, 3, 0, 2, 0],
-            [1, 0, 2, 0, 1],
+            [1, 3, 2, 0, 1],
             [4, 1, 0, 1, 0]
         ])
 
@@ -362,7 +362,7 @@ class VQEPlayground():
                     self.optimize_rotations(self.expectation_value_objective_function,
                                             self.circuit_grid, self.expectation_grid, rotation_gate_nodes)
 
-                    # print('opt_rotations: ', opt_rotations)
+                    # print('opt_rotations: ', self.optimized_rotations)
 
                     cost, basis_state_str = self.expectation_grid.calc_expectation_value()
                     print('cost: ', cost, 'basis_state_str: ', basis_state_str)
@@ -371,12 +371,14 @@ class VQEPlayground():
                     for idx, char in enumerate(basis_state_str):
                         solution[idx] = int(char)
 
-                    self.network_graph.set_solution(solution)
-
-                    self.update_circ_viz()
+                    # TODO: Uncomment to update display more often?
+                    # self.network_graph.set_solution(solution)
+                    # self.update_circ_viz()
                 else:
                     self.optimization_initialized = False
                     self.optimization_desired = False
+                    self.cur_optimization_epoch = 0
+                    print("Finished, self.cur_optimization_epoch: ", self.cur_optimization_epoch)
 
             if self.expectation_grid.basis_state_dirty:
                 cost, basis_state_str = self.expectation_grid.calc_expectation_value()
@@ -386,8 +388,8 @@ class VQEPlayground():
                     solution[idx] = int(char)
 
                 self.network_graph.set_solution(solution)
-
                 self.update_circ_viz()
+
                 self.expectation_grid.basis_state_dirty = False
 
         pygame.quit()
@@ -401,6 +403,8 @@ class VQEPlayground():
 
         self.min_distance = objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
 
+        print('self.cur_optimization_epoch: ', self.cur_optimization_epoch)
+        print('self.cur_rotation_num: ', self.cur_rotation_num)
         if self.cur_optimization_epoch < NUM_OPTIMIZATION_EPOCHS:
             if self.cur_rotation_num < len(self.optimized_rotations):
                 cur_ang_rad = self.optimized_rotations[self.cur_rotation_num]
@@ -455,6 +459,9 @@ class VQEPlayground():
             objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
             # print('exp_val: ', expectation_grid.calc_expectation_value())
 
+        # else:
+            # self.cur_optimization_epoch = 0
+            # print("Finished, self.cur_optimization_epoch: ", self.cur_optimization_epoch)
         # return optimized_rotations
 
     def expectation_value_objective_function(self, circuit_grid,
@@ -464,7 +471,7 @@ class VQEPlayground():
         expectation_grid.set_circuit(circuit_grid.circuit_grid_model.compute_circuit())
         cost, basis_state = expectation_grid.calc_expectation_value()
 
-        print("self.optimized_rotations: ", self.optimized_rotations, ", cost: ", cost, ", basis_state: ", basis_state)
+        # print("self.optimized_rotations: ", self.optimized_rotations, ", cost: ", cost, ", basis_state: ", basis_state)
         return cost
 
     def update_circ_viz(self):
