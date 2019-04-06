@@ -169,6 +169,14 @@ class VQEPlayground():
             [4, 1, 1, 1, 0]
         ])
 
+        # initial_adj_matrix = np.array([
+        #     [0, 2, 1, 1, 0],
+        #     [2, 0, 0, 3, 1],
+        #     [1, 0, 0, 2, 1],
+        #     [1, 3, 2, 0, 0],
+        #     [0, 1, 1, 0, 0]
+        # ])
+
         # maxcut_op, maxcut_shift = maxcut.get_maxcut_qubitops(initial_adj_matrix)
         # # print("maxcut_op: ", maxcut_op, ", maxcut_shift: ", maxcut_shift)
         #
