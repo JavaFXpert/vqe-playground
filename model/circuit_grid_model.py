@@ -95,8 +95,8 @@ class CircuitGridModel():
 
     def get_rotation_gate_nodes(self):
         rot_gate_nodes = []
-        for wire_num in range(self.max_wires):
-            for column_num in range(self.max_columns):
+        for column_num in range(self.max_columns):
+            for wire_num in range(self.max_wires):
                 node = self.nodes[wire_num][column_num]
                 if node and node.ctrl_a == -1:
                     if node.node_type == node_types.X or \
