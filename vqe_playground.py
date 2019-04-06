@@ -70,6 +70,11 @@ class VQEPlayground():
         self.cur_optimization_epoch = 0
         self.cur_rotation_num = 0
         self.min_distance = None
+        self.rotation_initialized = False
+        self.finished_rotating = True
+        self.rotation_iterations = 0
+        self.proposed_cur_ang_rad = 0
+        self.cur_ang_rad = 0
 
     def main(self):
         if not pygame.font: print('Warning, fonts disabled')
@@ -159,9 +164,9 @@ class VQEPlayground():
         initial_adj_matrix = np.array([
             [0, 2, 1, 1, 4],
             [2, 0, 3, 3, 1],
-            [1, 3, 0, 2, 0],
+            [1, 3, 0, 2, 1],
             [1, 3, 2, 0, 1],
-            [4, 1, 0, 1, 0]
+            [4, 1, 1, 1, 0]
         ])
 
         # maxcut_op, maxcut_shift = maxcut.get_maxcut_qubitops(initial_adj_matrix)
@@ -365,7 +370,7 @@ class VQEPlayground():
                     # print('opt_rotations: ', self.optimized_rotations)
 
                     cost, basis_state_str = self.expectation_grid.calc_expectation_value()
-                    print('cost: ', cost, 'basis_state_str: ', basis_state_str)
+                    # print('cost: ', cost, 'basis_state_str: ', basis_state_str)
 
                     solution = np.zeros(NUM_STATE_DIMS)
                     for idx, char in enumerate(basis_state_str):
@@ -373,12 +378,14 @@ class VQEPlayground():
 
                     # TODO: Uncomment to update display more often?
                     # self.network_graph.set_solution(solution)
-                    # self.update_circ_viz()
+                    self.update_circ_viz()
                 else:
                     self.optimization_initialized = False
                     self.optimization_desired = False
                     self.cur_optimization_epoch = 0
                     print("Finished, self.cur_optimization_epoch: ", self.cur_optimization_epoch)
+                    # self.network_graph.set_solution(solution)
+                    self.update_circ_viz()
 
             if self.expectation_grid.basis_state_dirty:
                 cost, basis_state_str = self.expectation_grid.calc_expectation_value()
@@ -403,66 +410,71 @@ class VQEPlayground():
 
         self.min_distance = objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
 
-        print('self.cur_optimization_epoch: ', self.cur_optimization_epoch)
-        print('self.cur_rotation_num: ', self.cur_rotation_num)
+        # print('self.cur_optimization_epoch: ', self.cur_optimization_epoch)
+        # print('self.cur_rotation_num: ', self.cur_rotation_num)
         if self.cur_optimization_epoch < NUM_OPTIMIZATION_EPOCHS:
             if self.cur_rotation_num < len(self.optimized_rotations):
-                cur_ang_rad = self.optimized_rotations[self.cur_rotation_num]
-                proposed_cur_ang_rad = cur_ang_rad
+                if not self.rotation_initialized:
+                    self.rotation_initialized = True
+                    self.cur_ang_rad = self.optimized_rotations[self.cur_rotation_num]
+                    self.proposed_cur_ang_rad = self.cur_ang_rad
 
-                # Decide whether to increase or decrease angle
-                unit_direction_array[self.cur_rotation_num] = 1
-                if cur_ang_rad > np.pi:
-                    unit_direction_array[self.cur_rotation_num] = -1
-                proposed_cur_ang_rad += move_radians * unit_direction_array[self.cur_rotation_num]
-                if 0.0 <= proposed_cur_ang_rad < np.pi * 2:
-                    self.optimized_rotations[self.cur_rotation_num] = proposed_cur_ang_rad
+                    # Decide whether to increase or decrease angle
+                    unit_direction_array[self.cur_rotation_num] = 1
+                    if self.cur_ang_rad > np.pi:
+                        unit_direction_array[self.cur_rotation_num] = -1
+                    self.proposed_cur_ang_rad += move_radians * unit_direction_array[self.cur_rotation_num]
+                    if 0.0 <= self.proposed_cur_ang_rad < np.pi * 2:
+                        self.optimized_rotations[self.cur_rotation_num] = self.proposed_cur_ang_rad
 
-                    temp_distance = objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
-                    if temp_distance > self.min_distance:
-                        # Moving in the wrong direction so restore the angle in the array and switch direction
-                        self.optimized_rotations[self.cur_rotation_num] = cur_ang_rad
-                        unit_direction_array[self.cur_rotation_num] *= -1
-                    else:
-                        # Moving in the right direction so use the proposed angle
-                        cur_ang_rad = proposed_cur_ang_rad
-                        self.min_distance = temp_distance
-
-                    finished_with_while_loop = False
-                    loop_iterations = 0
-                    while not finished_with_while_loop:
-                        loop_iterations += 1
-                        proposed_cur_ang_rad += move_radians * unit_direction_array[self.cur_rotation_num]
-                        if 0.0 <= proposed_cur_ang_rad < np.pi * 2:
-                            self.optimized_rotations[self.cur_rotation_num] = proposed_cur_ang_rad
-                            temp_distance = objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
-                            if temp_distance > self.min_distance:
-                                # Distance is increasing so restore the angle in the array and leave the loop
-                                self.optimized_rotations[self.cur_rotation_num] = cur_ang_rad
-                                finished_with_while_loop = True
-                            elif loop_iterations > np.pi * 2 / move_radians:
-                                print("Unexpected: Was in while loop over ",  loop_iterations, " iterations")
-                                finished_with_while_loop = True
-                            else:
-                                # Distance is not increasing, so use the proposed angle
-                                cur_ang_rad = proposed_cur_ang_rad
-                                self.min_distance = temp_distance
+                        temp_distance = objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
+                        if temp_distance > self.min_distance:
+                            # Moving in the wrong direction so restore the angle in the array and switch direction
+                            self.optimized_rotations[self.cur_rotation_num] = self.cur_ang_rad
+                            unit_direction_array[self.cur_rotation_num] *= -1
                         else:
-                            finished_with_while_loop = True
+                            # Moving in the right direction so use the proposed angle
+                            self.cur_ang_rad = self.proposed_cur_ang_rad
+                            self.min_distance = temp_distance
 
-                self.cur_rotation_num += 1
+                        self.finished_rotating = False
+                        self.rotation_iterations = 0
+
+                elif self.rotation_initialized and not self.finished_rotating:
+                    self.rotation_iterations += 1
+                    self.proposed_cur_ang_rad += move_radians * unit_direction_array[self.cur_rotation_num]
+                    if 0.0 <= self.proposed_cur_ang_rad < np.pi * 2:
+                        self.optimized_rotations[self.cur_rotation_num] = self.proposed_cur_ang_rad
+                        temp_distance = objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
+                        if temp_distance >= self.min_distance:
+                            # Distance is increasing so restore the angle in the array and leave the loop
+                            self.optimized_rotations[self.cur_rotation_num] = self.cur_ang_rad
+                            self.finished_rotating = True
+                            self.cur_rotation_num += 1
+                            self.rotation_initialized = False
+                        elif self.rotation_iterations > np.pi * 2 / move_radians:
+                            print("Unexpected: self.rotation_iterations: ",  self.rotation_iterations)
+                            self.finished_rotating = True
+                            self.cur_rotation_num += 1
+                            self.rotation_initialized = False
+                        else:
+                            # Distance is not increasing, so use the proposed angle
+                            self.cur_ang_rad = self.proposed_cur_ang_rad
+                            self.min_distance = temp_distance
+                    else:
+                        self.finished_rotating = True
+                        self.cur_rotation_num += 1
+                        self.rotation_initialized = False
+
+                # self.cur_rotation_num += 1
             else:
                 self.cur_rotation_num = 0
                 self.cur_optimization_epoch += 1
-            print('self.min_distance: ', self.min_distance)
+            # print('self.min_distance: ', self.min_distance)
 
             objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
             # print('exp_val: ', expectation_grid.calc_expectation_value())
 
-        # else:
-            # self.cur_optimization_epoch = 0
-            # print("Finished, self.cur_optimization_epoch: ", self.cur_optimization_epoch)
-        # return optimized_rotations
 
     def expectation_value_objective_function(self, circuit_grid,
                                              expectation_grid, rotation_gate_nodes):
