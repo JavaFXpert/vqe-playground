@@ -97,7 +97,7 @@ class VQEPlayground():
 
         pygame.font.init()
 
-        self.circuit_grid_model = CircuitGridModel(NUM_QUBITS, 17)
+        self.circuit_grid_model = CircuitGridModel(NUM_QUBITS, 21)
 
         pygame.display.set_caption('VQE Playground')
 
@@ -114,60 +114,57 @@ class VQEPlayground():
         self.circuit_grid_model.set_node(4, 0, CircuitGridNode(node_types.Y, np.pi))
 
         self.circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.X, 0, 0))
+        self.circuit_grid_model.set_node(2, 2, CircuitGridNode(node_types.X, 0, 1))
+        self.circuit_grid_model.set_node(3, 3, CircuitGridNode(node_types.X, 0, 2))
+        self.circuit_grid_model.set_node(4, 4, CircuitGridNode(node_types.X, 0, 3))
 
-        self.circuit_grid_model.set_node(1, 2, CircuitGridNode(node_types.TRACE))
-        self.circuit_grid_model.set_node(2, 2, CircuitGridNode(node_types.X, 0, 0))
+        self.circuit_grid_model.set_node(0, 5, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(1, 5, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(2, 5, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(3, 5, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(4, 5, CircuitGridNode(node_types.Y, np.pi))
 
-        self.circuit_grid_model.set_node(1, 3, CircuitGridNode(node_types.TRACE))
-        self.circuit_grid_model.set_node(2, 3, CircuitGridNode(node_types.TRACE))
-        self.circuit_grid_model.set_node(3, 3, CircuitGridNode(node_types.X, 0, 0))
-
-        self.circuit_grid_model.set_node(1, 4, CircuitGridNode(node_types.TRACE))
-        self.circuit_grid_model.set_node(2, 4, CircuitGridNode(node_types.TRACE))
-        self.circuit_grid_model.set_node(3, 4, CircuitGridNode(node_types.TRACE))
-        self.circuit_grid_model.set_node(4, 4, CircuitGridNode(node_types.X, 0, 0))
-
-        self.circuit_grid_model.set_node(2, 5, CircuitGridNode(node_types.X, 0, 1))
-
-        self.circuit_grid_model.set_node(2, 6, CircuitGridNode(node_types.TRACE))
-        self.circuit_grid_model.set_node(3, 6, CircuitGridNode(node_types.X, 0, 1))
-
-        self.circuit_grid_model.set_node(2, 7, CircuitGridNode(node_types.TRACE))
-        self.circuit_grid_model.set_node(3, 7, CircuitGridNode(node_types.TRACE))
-        self.circuit_grid_model.set_node(4, 7, CircuitGridNode(node_types.X, 0, 1))
-
+        self.circuit_grid_model.set_node(1, 6, CircuitGridNode(node_types.X, 0, 0))
+        self.circuit_grid_model.set_node(2, 7, CircuitGridNode(node_types.X, 0, 1))
         self.circuit_grid_model.set_node(3, 8, CircuitGridNode(node_types.X, 0, 2))
+        self.circuit_grid_model.set_node(4, 9, CircuitGridNode(node_types.X, 0, 3))
 
-        self.circuit_grid_model.set_node(3, 9, CircuitGridNode(node_types.TRACE))
-        self.circuit_grid_model.set_node(4, 9, CircuitGridNode(node_types.X, 0, 2))
+        self.circuit_grid_model.set_node(0, 10, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(1, 10, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(2, 10, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(3, 10, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(4, 10, CircuitGridNode(node_types.Y, np.pi))
 
-        self.circuit_grid_model.set_node(4, 10, CircuitGridNode(node_types.X, 0, 3))
+        self.circuit_grid_model.set_node(1, 11, CircuitGridNode(node_types.X, 0, 0))
+        self.circuit_grid_model.set_node(2, 12, CircuitGridNode(node_types.X, 0, 1))
+        self.circuit_grid_model.set_node(3, 13, CircuitGridNode(node_types.X, 0, 2))
+        self.circuit_grid_model.set_node(4, 14, CircuitGridNode(node_types.X, 0, 3))
 
-        self.circuit_grid_model.set_node(0, 11, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(1, 11, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(2, 11, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(3, 11, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(4, 11, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(0, 15, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(1, 15, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(2, 15, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(3, 15, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(4, 15, CircuitGridNode(node_types.Y, np.pi))
 
-        self.circuit_grid_model.set_node(1, 12, CircuitGridNode(node_types.X, 0, 0))
-        self.circuit_grid_model.set_node(2, 13, CircuitGridNode(node_types.X, 0, 1))
-        self.circuit_grid_model.set_node(3, 14, CircuitGridNode(node_types.X, 0, 2))
-        self.circuit_grid_model.set_node(4, 15, CircuitGridNode(node_types.X, 0, 3))
+        self.circuit_grid_model.set_node(1, 16, CircuitGridNode(node_types.X, 0, 0))
+        self.circuit_grid_model.set_node(2, 17, CircuitGridNode(node_types.X, 0, 1))
+        self.circuit_grid_model.set_node(3, 18, CircuitGridNode(node_types.X, 0, 2))
+        self.circuit_grid_model.set_node(4, 19, CircuitGridNode(node_types.X, 0, 3))
 
-        self.circuit_grid_model.set_node(0, 16, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(1, 16, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(2, 16, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(3, 16, CircuitGridNode(node_types.Y, np.pi))
-        self.circuit_grid_model.set_node(4, 16, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(0, 20, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(1, 20, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(2, 20, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(3, 20, CircuitGridNode(node_types.Y, np.pi))
+        self.circuit_grid_model.set_node(4, 20, CircuitGridNode(node_types.Y, np.pi))
 
         circuit = self.circuit_grid_model.compute_circuit()
 
         initial_adj_matrix = np.array([
-            [0, 2, 1, 1, 4],
-            [2, 0, 3, 3, 1],
-            [1, 3, 0, 2, 1],
-            [1, 3, 2, 0, 1],
-            [4, 1, 1, 1, 0]
+            [0, 3, 1, 3, 0],
+            [3, 0, 0, 0, 2],
+            [1, 0, 0, 3, 0],
+            [3, 0, 3, 0, 2],
+            [0, 2, 0, 2, 0]
         ])
 
         # maxcut_op, maxcut_shift = maxcut.get_maxcut_qubitops(initial_adj_matrix)
@@ -184,9 +181,9 @@ class VQEPlayground():
         self.network_graph = NetworkGraph(self.adjacency_matrix.adj_matrix_numeric)
 
         self.top_sprites = HBox(400, 0, self.network_graph)
-        self.right_sprites = VBox(960, 0, self.expectation_grid)
+        self.right_sprites = VBox(1060, 0, self.expectation_grid)
 
-        self.circuit_grid = CircuitGrid(10, 500, self.circuit_grid_model)
+        self.circuit_grid = CircuitGrid(0, 500, self.circuit_grid_model)
         self.screen.blit(self.background, (0, 0))
 
         self.top_sprites.draw(self.screen)
@@ -253,7 +250,6 @@ class VQEPlayground():
                             self.adjacency_matrix.handle_element_clicked(picker)
                             self.expectation_grid.set_adj_matrix(self.adjacency_matrix.adj_matrix_numeric)
                             self.circ_viz_dirty = True
-                            # self.update_circ_viz()
                             if self.adjacency_matrix.adj_matrix_graph_dirty:
                                 self.network_graph.set_adj_matrix(self.adjacency_matrix.adj_matrix_numeric)
                                 self.adjacency_matrix.adj_matrix_graph_dirty = False
@@ -264,42 +260,42 @@ class VQEPlayground():
                     if event.button == BTN_A:
                         # Place X gate
                         self.circuit_grid.handle_input_x()
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     elif event.button == BTN_X:
                         # Place Y gate
                         self.circuit_grid.handle_input_y()
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     elif event.button == BTN_B:
                         # Place Z gate
                         self.circuit_grid.handle_input_z()
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     elif event.button == BTN_Y:
                         # Place Hadamard gate
                         self.circuit_grid.handle_input_h()
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     elif event.button == BTN_RIGHT_TRIGGER:
                         # Delete gate
                         self.circuit_grid.handle_input_delete()
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     elif event.button == BTN_RIGHT_THUMB:
                         # Add or remove a control
                         self.circuit_grid.handle_input_ctrl()
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
 
                 elif event.type == JOYAXISMOTION:
                     # print("event: ", event)
                     if event.axis == AXIS_RIGHT_THUMB_X and joystick.get_axis(AXIS_RIGHT_THUMB_X) >= 0.95:
                         self.circuit_grid.handle_input_rotate(np.pi / 8)
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     if event.axis == AXIS_RIGHT_THUMB_X and joystick.get_axis(AXIS_RIGHT_THUMB_X) <= -0.95:
                         self.circuit_grid.handle_input_rotate(-np.pi / 8)
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     if event.axis == AXIS_RIGHT_THUMB_Y and joystick.get_axis(AXIS_RIGHT_THUMB_Y) <= -0.95:
                         self.circuit_grid.handle_input_move_ctrl(MOVE_UP)
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     if event.axis == AXIS_RIGHT_THUMB_Y and joystick.get_axis(AXIS_RIGHT_THUMB_Y) >= 0.95:
                         self.circuit_grid.handle_input_move_ctrl(MOVE_DOWN)
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
 
                 elif event.type == KEYDOWN:
                     index_increment = 0
@@ -315,39 +311,39 @@ class VQEPlayground():
                         self.move_update_circuit_grid_display(MOVE_DOWN)
                     elif event.key == K_x:
                         self.circuit_grid.handle_input_x()
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     elif event.key == K_y:
                         self.circuit_grid.handle_input_y()
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     elif event.key == K_z:
                         self.circuit_grid.handle_input_z()
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     elif event.key == K_h:
                         self.circuit_grid.handle_input_h()
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     elif event.key == K_BACKSLASH:
                         self.circuit_grid.handle_input_delete()
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     elif event.key == K_c:
                         # Add or remove a control
                         self.circuit_grid.handle_input_ctrl()
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     elif event.key == K_UP:
                         # Move a control qubit up
                         self.circuit_grid.handle_input_move_ctrl(MOVE_UP)
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     elif event.key == K_DOWN:
                         # Move a control qubit down
                         self.circuit_grid.handle_input_move_ctrl(MOVE_DOWN)
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     elif event.key == K_LEFT:
                         # Rotate a gate
                         self.circuit_grid.handle_input_rotate(-np.pi/8)
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     elif event.key == K_RIGHT:
                         # Rotate a gate
                         self.circuit_grid.handle_input_rotate(np.pi / 8)
-                        self.update_circ_viz()
+                        self.circ_viz_dirty = True
                     elif event.key == K_o:
                         self.optimization_desired = True
 
@@ -404,9 +400,6 @@ class VQEPlayground():
                 self.network_graph.set_solution(solution)
 
                 self.circ_viz_dirty = True
-
-                #self.update_circ_viz()
-
                 self.expectation_grid.basis_state_dirty = False
 
             if self.circ_viz_dirty:
@@ -438,7 +431,7 @@ class VQEPlayground():
                     if self.cur_ang_rad > np.pi:
                         unit_direction_array[self.cur_rotation_num] = -1
                     self.proposed_cur_ang_rad += move_radians * unit_direction_array[self.cur_rotation_num]
-                    if 0.0 <= self.proposed_cur_ang_rad < np.pi * 2:
+                    if 0.0 <= self.proposed_cur_ang_rad < np.pi * 2 + 0.01:
                         self.optimized_rotations[self.cur_rotation_num] = self.proposed_cur_ang_rad
 
                         temp_distance = objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
@@ -458,7 +451,7 @@ class VQEPlayground():
                 elif self.rotation_initialized and not self.finished_rotating:
                     self.rotation_iterations += 1
                     self.proposed_cur_ang_rad += move_radians * unit_direction_array[self.cur_rotation_num]
-                    if 0.0 <= self.proposed_cur_ang_rad < np.pi * 2:
+                    if 0.0 <= self.proposed_cur_ang_rad <= np.pi * 2 + 0.01:
                         self.optimized_rotations[self.cur_rotation_num] = self.proposed_cur_ang_rad
                         temp_distance = objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
 
