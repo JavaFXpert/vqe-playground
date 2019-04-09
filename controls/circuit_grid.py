@@ -22,8 +22,8 @@ from utils.resources import *
 from model.circuit_grid_model import CircuitGridNode
 from model import circuit_node_types as node_types
 
-GRID_WIDTH = 66
-GRID_HEIGHT = 66
+GRID_WIDTH = 60
+GRID_HEIGHT = 60
 
 GATE_TILE_WIDTH = 43
 GATE_TILE_HEIGHT = 45
@@ -406,7 +406,7 @@ class CircuitGridCursor(pygame.sprite.Sprite):
     """Cursor to highlight current grid node"""
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_image('images/circuit-grid-cursor.png', -1)
+        self.image, self.rect = load_image('images/circuit-grid-cursor-60px.png', -1)
         self.image.convert_alpha()
 
 

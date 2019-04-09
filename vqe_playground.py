@@ -45,7 +45,7 @@ from viz.expectation_grid import ExpectationGrid
 from viz.network_graph import NetworkGraph
 from controls.adjacency_matrix import AdjacencyMatrix
 
-WINDOW_SIZE = 1660, 1000
+WINDOW_SIZE = 1650, 950
 NUM_OPTIMIZATION_EPOCHS = 1
 
 
@@ -181,9 +181,9 @@ class VQEPlayground():
         self.network_graph = NetworkGraph(self.adjacency_matrix.adj_matrix_numeric)
 
         self.top_sprites = HBox(400, 0, self.network_graph)
-        self.right_sprites = VBox(1060, 0, self.expectation_grid)
+        self.right_sprites = VBox(1010, 0, self.expectation_grid)
 
-        self.circuit_grid = CircuitGrid(0, 500, self.circuit_grid_model)
+        self.circuit_grid = CircuitGrid(10, 540, self.circuit_grid_model)
         self.screen.blit(self.background, (0, 0))
 
         self.top_sprites.draw(self.screen)
