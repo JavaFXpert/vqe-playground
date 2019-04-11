@@ -44,6 +44,7 @@ from utils.states import NUM_QUBITS, NUM_STATE_DIMS
 from viz.expectation_grid import ExpectationGrid
 from viz.network_graph import NetworkGraph
 from controls.adjacency_matrix import AdjacencyMatrix
+from controls.button import Button
 
 WINDOW_SIZE = 1650, 950
 NUM_OPTIMIZATION_EPOCHS = 1
@@ -61,6 +62,7 @@ class VQEPlayground():
         self.expectation_grid = None
         self.network_graph = None
         self.adjacency_matrix = None
+        self.optimize_button = None
         self.circ_viz_dirty = False
 
         # Optimization state variables, so that the display can update while
@@ -179,8 +181,9 @@ class VQEPlayground():
                                                 self.adjacency_matrix.adj_matrix_numeric)
 
         self.network_graph = NetworkGraph(self.adjacency_matrix.adj_matrix_numeric)
+        self.optimize_button = Button("Optimize", 150, 40)
 
-        self.top_sprites = HBox(400, 0, self.network_graph)
+        self.top_sprites = HBox(50, 20, self.network_graph, self.optimize_button)
         self.right_sprites = VBox(1010, 0, self.expectation_grid)
 
         self.circuit_grid = CircuitGrid(10, 540, self.circuit_grid_model)
@@ -245,16 +248,20 @@ class VQEPlayground():
                     going = False
 
                 elif event.type == MOUSEBUTTONDOWN:
-                    for idx, picker in enumerate(self.adjacency_matrix.number_pickers_list):
-                        if picker.rect.collidepoint(event.pos):
-                            self.adjacency_matrix.handle_element_clicked(picker)
-                            self.expectation_grid.set_adj_matrix(self.adjacency_matrix.adj_matrix_numeric)
-                            self.circ_viz_dirty = True
-                            if self.adjacency_matrix.adj_matrix_graph_dirty:
-                                self.network_graph.set_adj_matrix(self.adjacency_matrix.adj_matrix_numeric)
-                                self.adjacency_matrix.adj_matrix_graph_dirty = False
-                                # TODO: Remove
-                                self.expectation_grid.basis_state_dirty = True
+                    if self.optimize_button.rect.collidepoint(event.pos):
+                        self.optimize_button.set_enabled(False)
+                        self.optimization_desired = True
+                    else:
+                        for idx, picker in enumerate(self.adjacency_matrix.number_pickers_list):
+                            if picker.rect.collidepoint(event.pos):
+                                self.adjacency_matrix.handle_element_clicked(picker)
+                                self.expectation_grid.set_adj_matrix(self.adjacency_matrix.adj_matrix_numeric)
+                                self.circ_viz_dirty = True
+                                if self.adjacency_matrix.adj_matrix_graph_dirty:
+                                    self.network_graph.set_adj_matrix(self.adjacency_matrix.adj_matrix_numeric)
+                                    self.adjacency_matrix.adj_matrix_graph_dirty = False
+                                    # TODO: Remove
+                                    self.expectation_grid.basis_state_dirty = True
 
                 elif event.type == JOYBUTTONDOWN:
                     if event.button == BTN_A:
@@ -349,6 +356,7 @@ class VQEPlayground():
 
             if self.optimization_desired:
                 if self.cur_optimization_epoch < NUM_OPTIMIZATION_EPOCHS:
+                # if self.cur_optimization_epoch >= NUM_OPTIMIZATION_EPOCHS:
                     if not self.optimization_initialized:
                         self.expectation_grid.draw_expectation_grid()
                         rotation_gate_nodes = self.circuit_grid_model.get_rotation_gate_nodes()
@@ -384,7 +392,9 @@ class VQEPlayground():
                     self.optimization_initialized = False
                     self.optimization_desired = False
                     self.cur_optimization_epoch = 0
-                    print("Finished, self.cur_optimization_epoch: ", self.cur_optimization_epoch)
+                    self.optimize_button.set_enabled(True)
+                    self.circ_viz_dirty = True
+                    print("Finished")
                     # self.network_graph.set_solution(solution)
 
                     # TODO: Conditionally execute next line
