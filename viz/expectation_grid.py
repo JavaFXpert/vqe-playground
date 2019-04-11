@@ -82,24 +82,24 @@ class ExpectationGrid(pygame.sprite.Sprite):
 
         # Display expectation value and other relevant values
         text_surface = ARIAL_36.render('Weighted average: ' + str(round(self.cur_exp_val, 2)), False, (0, 0, 0))
-        self.image.blit(text_surface, (0, y_offset + block_size * 12))
+        self.image.blit(text_surface, (0, y_offset + block_size * 14))
 
         text_surface = ARIAL_36.render('Lowest eigenvalue: ' + str(round(min(self.eigenvalues), 1)), False, (0, 0, 0))
-        self.image.blit(text_surface, (0, y_offset + block_size * 13))
+        self.image.blit(text_surface, (0, y_offset + block_size * 15))
 
         maxcut_cost = round(self.cur_exp_val - min(self.eigenvalues), 2)
         text_surface = ARIAL_36.render('Maxcut cost: ' + str(maxcut_cost), False, (0, 0, 0))
-        self.image.blit(text_surface, (0, y_offset + block_size * 14))
+        self.image.blit(text_surface, (0, y_offset + block_size * 16))
 
         text_surface = ARIAL_36.render('Basis state: ' + str(self.basis_states[self.cur_basis_state_idx]),
                                        False, (0, 0, 0))
-        self.image.blit(text_surface, (0, y_offset + block_size * 15))
+        self.image.blit(text_surface, (0, y_offset + block_size * 17))
 
         text_surface = ARIAL_36.render('Maxcut eigenval shift: ' + str(round(self.maxcut_shift, 1)), False, (0, 0, 0))
-        self.image.blit(text_surface, (0, y_offset + block_size * 16))
+        self.image.blit(text_surface, (0, y_offset + block_size * 18))
 
         text_surface = ARIAL_36.render('Maxcut weight total: ' + str(round(self.cur_exp_val + self.maxcut_shift, 2)), False, (0, 0, 0))
-        self.image.blit(text_surface, (0, y_offset + block_size * 17))
+        self.image.blit(text_surface, (0, y_offset + block_size * 19))
 
         # Display column headings
         node_letter_str = graph_node_labels_reversed_str(NUM_QUBITS)

@@ -45,7 +45,7 @@ class NetworkGraph(pygame.sprite.Sprite):
         self.adj_matrix = adj_matrix
         self.solution = np.zeros(self.num_nodes)
 
-        fig = plt.figure(figsize=(5, 5))
+        fig = plt.figure(figsize=(7, 5))
 
         self.graph.add_nodes_from(np.arange(0, self.num_nodes, 1))
 
