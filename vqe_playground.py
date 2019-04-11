@@ -391,6 +391,10 @@ class VQEPlayground():
                     self.optimization_desired = False
                     self.cur_optimization_epoch = 0
                     self.optimize_button.set_enabled(True)
+
+                    # Select top-left node in circuit, regardless of gate type
+                    self.circuit_grid.highlight_selected_node(0, 0)
+
                     self.circ_viz_dirty = True
                     print("Finished")
                     # self.network_graph.set_solution(solution)
@@ -427,9 +431,17 @@ class VQEPlayground():
         if self.cur_optimization_epoch < NUM_OPTIMIZATION_EPOCHS:
             if self.cur_rotation_num < len(self.optimized_rotations):
                 if not self.rotation_initialized:
-                    self.rotation_initialized = True
                     self.cur_ang_rad = self.optimized_rotations[self.cur_rotation_num]
                     self.proposed_cur_ang_rad = self.cur_ang_rad
+
+                    # Highlight gate being operated on
+                    cur_wire_num = rotation_gate_nodes[self.cur_rotation_num].wire_num
+                    cur_column_num = rotation_gate_nodes[self.cur_rotation_num].column_num
+                    self.circuit_grid.highlight_selected_node(cur_wire_num, cur_column_num)
+                    if self.frequent_viz_update:
+                        self.circ_viz_dirty = True
+
+                    self.rotation_initialized = True
 
                     # Decide whether to increase or decrease angle
                     unit_direction_array[self.cur_rotation_num] = 1
@@ -448,8 +460,6 @@ class VQEPlayground():
                             # Moving in the right direction so use the proposed angle
                             self.cur_ang_rad = self.proposed_cur_ang_rad
                             self.min_distance = temp_distance
-                            if self.frequent_viz_update:
-                                self.circ_viz_dirty = True
 
                         self.finished_rotating = False
                         self.rotation_iterations = 0
