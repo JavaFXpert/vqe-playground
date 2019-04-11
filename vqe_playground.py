@@ -78,6 +78,7 @@ class VQEPlayground():
         self.rotation_iterations = 0
         self.proposed_cur_ang_rad = 0
         self.cur_ang_rad = 0
+        self.frequent_viz_update = True
 
     def main(self):
         if not pygame.font: print('Warning, fonts disabled')
@@ -249,8 +250,9 @@ class VQEPlayground():
 
                 elif event.type == MOUSEBUTTONDOWN:
                     if self.optimize_button.rect.collidepoint(event.pos):
-                        self.optimize_button.set_enabled(False)
-                        self.optimization_desired = True
+                        if self.optimize_button.get_enabled():
+                            self.optimize_button.set_enabled(False)
+                            self.optimization_desired = True
                     else:
                         for idx, picker in enumerate(self.adjacency_matrix.number_pickers_list):
                             if picker.rect.collidepoint(event.pos):
@@ -260,7 +262,6 @@ class VQEPlayground():
                                 if self.adjacency_matrix.adj_matrix_graph_dirty:
                                     self.network_graph.set_adj_matrix(self.adjacency_matrix.adj_matrix_numeric)
                                     self.adjacency_matrix.adj_matrix_graph_dirty = False
-                                    # TODO: Remove
                                     self.expectation_grid.basis_state_dirty = True
 
                 elif event.type == JOYBUTTONDOWN:
@@ -352,16 +353,16 @@ class VQEPlayground():
                         self.circuit_grid.handle_input_rotate(np.pi / 8)
                         self.circ_viz_dirty = True
                     elif event.key == K_o:
-                        self.optimization_desired = True
+                        if self.optimize_button.get_enabled():
+                            self.optimize_button.set_enabled(False)
+                            self.optimization_desired = True
 
             if self.optimization_desired:
                 if self.cur_optimization_epoch < NUM_OPTIMIZATION_EPOCHS:
-                # if self.cur_optimization_epoch >= NUM_OPTIMIZATION_EPOCHS:
                     if not self.optimization_initialized:
                         self.expectation_grid.draw_expectation_grid()
                         rotation_gate_nodes = self.circuit_grid_model.get_rotation_gate_nodes()
 
-                        # initial_rotations = np.zeros(len(rotation_gate_nodes))
                         self.optimized_rotations = np.full(len(rotation_gate_nodes), np.pi)
                         self.cur_optimization_epoch = 0
                         self.cur_rotation_num = 0
@@ -385,9 +386,6 @@ class VQEPlayground():
                     # TODO: Uncomment to update display more often?
                     # self.network_graph.set_solution(solution)
 
-                    # TODO: Conditionally execute next line
-                    # self.update_circ_viz()
-
                 else:
                     self.optimization_initialized = False
                     self.optimization_desired = False
@@ -396,9 +394,6 @@ class VQEPlayground():
                     self.circ_viz_dirty = True
                     print("Finished")
                     # self.network_graph.set_solution(solution)
-
-                    # TODO: Conditionally execute next line
-                    # self.update_circ_viz()
 
             if self.expectation_grid.basis_state_dirty:
                 cost, basis_state_str = self.expectation_grid.calc_expectation_value()
@@ -453,7 +448,8 @@ class VQEPlayground():
                             # Moving in the right direction so use the proposed angle
                             self.cur_ang_rad = self.proposed_cur_ang_rad
                             self.min_distance = temp_distance
-                            self.circ_viz_dirty = True
+                            if self.frequent_viz_update:
+                                self.circ_viz_dirty = True
 
                         self.finished_rotating = False
                         self.rotation_iterations = 0
@@ -481,7 +477,8 @@ class VQEPlayground():
                             # Distance is not increasing, so use the proposed angle
                             self.cur_ang_rad = self.proposed_cur_ang_rad
                             self.min_distance = temp_distance
-                            self.circ_viz_dirty = True
+                            if self.frequent_viz_update:
+                                self.circ_viz_dirty = True
                     else:
                         self.finished_rotating = True
                         self.cur_rotation_num += 1
@@ -508,6 +505,7 @@ class VQEPlayground():
         return cost
 
     def update_circ_viz(self):
+        print("in update_circ_viz")
         self.screen.blit(self.background, (0, 0))
         circuit = self.circuit_grid_model.compute_circuit()
         self.expectation_grid.set_circuit(circuit)
