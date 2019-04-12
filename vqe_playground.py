@@ -515,7 +515,7 @@ class VQEPlayground():
         return cost
 
     def update_circ_viz(self):
-        print("in update_circ_viz")
+        # print("in update_circ_viz")
         self.screen.blit(self.background, (0, 0))
         circuit = self.circuit_grid_model.compute_circuit()
         self.expectation_grid.set_circuit(circuit)
