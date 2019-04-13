@@ -498,7 +498,7 @@ class VQEPlayground():
             else:
                 self.cur_rotation_num = 0
                 self.cur_optimization_epoch += 1
-            # print('self.min_distance: ', self.min_distance)
+                # print('self.min_distance: ', self.min_distance)
 
             objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
             # print('exp_val: ', expectation_grid.calc_expectation_value())
