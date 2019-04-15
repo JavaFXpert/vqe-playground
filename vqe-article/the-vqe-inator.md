@@ -6,6 +6,8 @@ Seriously, life choices you've made so far have brought you to reading about how
 
 The Variational Quantum Eigensolver, or VQE for short, is a quantum computing algorithm that is well suited for solving certain classes of problems using quantum computers available in the near term. VQE may be used for problems involving modeling nature, including chemistry, as [Dr. Richard Feynmann challenged the world to do](https://en.wikipedia.org/wiki/Quantum_computing#Timeline). VQE is also great at finding optimal combinations of things, for example finding the shortest route for visiting a list of cities. This is known as the [Traveling Salesman Problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem), and mathematicians call these sorts of challenges [combinatorial optimization](https://en.wikipedia.org/wiki/Combinatorial_optimization) problems.
 
+The open source [Qiskit Aqua library](https://qiskit.org/aqua) contains an implementation of the VQE algorithm, so you may use VQE without understanding how it works. Given that you're still reading this, however, we'd suggest using the Aqua VQE code as a reference to see how the inner workings described here are implemented in code. 
+
 #### Stuff Physicists say
 
 Some words that we'll use here such as [Hamiltonian](https://en.wikipedia.org/wiki/Hamiltonian_(quantum_mechanics)) are bandied about by physicists, mathematicians, and theoretical computer scientists, but in most cases they are just fancy words that represent straightforward concepts. There are some concepts and notations used in this article, however, that we'll assume that you're familiar with. You can get up to speed on these in the [Learning Qiskit: for Developers](https://learnqiskit.gitbook.io/developers) guide, working through all of the material up to and including the *Getting Started with Qiskit* section.
@@ -38,7 +40,7 @@ Actually, there are an overabundance of terms in quantum computing that begin wi
 
 <img src="images/graph-three-vertices.png" alt="graph-coloring" width="150"/>
 
-The graph has already been colored with one of its MaxCut solutions, namely, 3, as the sum of the cuts between nodes of different colors is 3.  
+The graph has already been colored with one of its MaxCut solutions, namely, 3, as the sum of the cuts between nodes of different colors is 3. The energy for that coloring is 	  
 
 $$
 \begin{bmatrix}
@@ -52,6 +54,15 @@ $$
   0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 \\
  \end{bmatrix}
 $$
+
+| + Shift | - Energy      | = Cut   |
+| ------- | ------------- | ------- |
+| 4/2 (2) | (+3+1)/2 (2)  | 0/2 (0) |
+| 4/2 (2) | (+3-1)/2 (1)  | 2/2 (1) |
+| 4/2 (2) | (-3+1)/2 (-1) | 6/2 (3) |
+| 4/2 (2) | (-3-1)/2 (-2) | 8/2 (4) |
+
+
 
 #### Glossary
 
