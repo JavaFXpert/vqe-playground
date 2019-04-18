@@ -36,15 +36,15 @@ from pygame.locals import *
 from qiskit import ClassicalRegister
 from qiskit import execute
 # from qiskit_aqua.translators.ising import maxcut
-from containers import *
-from controls.circuit_grid import *
-from model.circuit_grid_model import *
-from utils.gamepad import *
-from utils.states import NUM_QUBITS, NUM_STATE_DIMS
-from viz.expectation_grid import ExpectationGrid
-from viz.network_graph import NetworkGraph
-from controls.adjacency_matrix import AdjacencyMatrix
-from controls.button import Button
+from .containers import *
+from .controls.circuit_grid import *
+from .model.circuit_grid_model import *
+from .utils.gamepad import *
+from .utils.states import NUM_QUBITS, NUM_STATE_DIMS
+from .viz.expectation_grid import ExpectationGrid
+from .viz.network_graph import NetworkGraph
+from .controls.adjacency_matrix import AdjacencyMatrix
+from .controls.button import Button
 
 WINDOW_SIZE = 1650, 950
 NUM_OPTIMIZATION_EPOCHS = 1

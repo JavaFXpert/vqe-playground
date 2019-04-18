@@ -11,11 +11,16 @@ setuptools.setup(
     description="Variational Quantum Eigensolver Playground",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/JavaFXpert/vqe-playground",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
+    entry_points={
+        'console_scripts': [
+            'vqe-playground = vqe_playground.command_line:main',
+        ],
+    },
 )
