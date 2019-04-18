@@ -51,7 +51,7 @@ class MeasurementsHistogram(pygame.sprite.Sprite):
         print(counts)
 
         histogram = plot_histogram(counts)
-        histogram.savefig("utils/data/bell_histogram.png")
+        histogram.savefig("/vqe_playground/utils/data/bell_histogram.png")
 
         self.image, self.rect = load_image('bell_histogram.png', -1)
         self.image.convert()

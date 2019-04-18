@@ -75,7 +75,7 @@ class NetworkGraph(pygame.sprite.Sprite):
 
         nx.draw_networkx(self.graph, self.graph_pos, with_labels=False, node_color=colors, node_size=600, alpha=.8, font_color='white')
         plt.axis('off')
-        plt.savefig("utils/data/network_graph.png")
+        plt.savefig("/vqe_playground/utils/data/network_graph.png")
 
         self.image, self.rect = load_image('network_graph.png', -1)
         self.image.convert()
