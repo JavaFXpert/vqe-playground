@@ -16,7 +16,7 @@
 #
 import pygame
 
-from utils.resources import load_image
+from vqe_playground.utils.resources import load_image
 
 
 class CircuitDiagram(pygame.sprite.Sprite):
