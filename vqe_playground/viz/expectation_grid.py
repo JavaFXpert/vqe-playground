@@ -18,10 +18,10 @@ import pygame
 import numpy as np
 from qiskit import BasicAer, execute
 from qiskit_aqua.translators.ising import maxcut
-from utils.colors import WHITE, BLACK
-from utils.fonts import ARIAL_30, ARIAL_36
-from utils.labels import graph_node_labels_reversed_str
-from utils.states import comp_basis_states, NUM_QUBITS, NUM_STATE_DIMS
+from vqe_playground.utils.colors import WHITE, BLACK
+from vqe_playground.utils.fonts import ARIAL_30, ARIAL_36
+from vqe_playground.utils.labels import graph_node_labels_reversed_str
+from vqe_playground.utils.states import comp_basis_states, NUM_QUBITS, NUM_STATE_DIMS
 
 
 class ExpectationGrid(pygame.sprite.Sprite):

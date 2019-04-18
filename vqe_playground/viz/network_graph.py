@@ -20,8 +20,8 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from cmath import isclose
 
-from utils import load_image
-from utils.labels import comp_graph_node_labels
+from vqe_playground.utils import load_image
+from vqe_playground.utils.labels import comp_graph_node_labels
 
 
 class NetworkGraph(pygame.sprite.Sprite):

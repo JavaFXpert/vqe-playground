@@ -16,8 +16,8 @@
 #
 import pygame
 from cmath import isclose
-from utils.colors import WHITE, BLACK, LIGHT_GREY
-from utils.fonts import *
+from vqe_playground.utils.colors import WHITE, BLACK, LIGHT_GREY
+from vqe_playground.utils.fonts import *
 
 
 class NumberPicker(pygame.sprite.Sprite):

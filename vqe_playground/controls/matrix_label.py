@@ -16,8 +16,8 @@
 #
 import pygame
 from cmath import isclose
-from utils.colors import WHITE, BLACK
-from utils.fonts import *
+from vqe_playground.utils.colors import WHITE, BLACK
+from vqe_playground.utils.fonts import *
 
 
 class MatrixLabel(pygame.sprite.Sprite):

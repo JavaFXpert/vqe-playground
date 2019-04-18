@@ -15,8 +15,8 @@
 # limitations under the License.
 #
 import pygame
-from utils.colors import BLUE, BLACK, WHITE, LIGHT_GREY
-from utils.fonts import *
+from vqe_playground.utils.colors import BLUE, BLACK, WHITE, LIGHT_GREY
+from vqe_playground.utils.fonts import *
 
 
 class Button(pygame.sprite.Sprite):
