@@ -17,8 +17,8 @@
 import pygame
 import numpy as np
 from cmath import isclose
-from vqe_playground.number_picker import NumberPicker
-from vqe_playground.matrix_label import MatrixLabel
+from .number_picker import NumberPicker
+from .matrix_label import MatrixLabel
 from vqe_playground.utils.labels import comp_graph_node_labels
 from vqe_playground.utils.fonts import ARIAL_36
 
