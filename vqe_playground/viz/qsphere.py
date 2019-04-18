@@ -40,7 +40,7 @@ class QSphere(pygame.sprite.Sprite):
 
         quantum_state = result_sim.get_statevector(circuit, decimals=3)
         qsphere = plot_state_qsphere(quantum_state)
-        qsphere.savefig("/vqe_playground/utils/data/bell_qsphere.png")
+        qsphere.savefig("vqe_playground/utils/data/bell_qsphere.png")
 
         self.image, self.rect = load_image('bell_qsphere.png', -1)
         self.rect.inflate_ip(-100, -100)
