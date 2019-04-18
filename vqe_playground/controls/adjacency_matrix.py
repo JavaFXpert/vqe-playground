@@ -17,10 +17,10 @@
 import pygame
 import numpy as np
 from cmath import isclose
-from controls.number_picker import NumberPicker
-from controls.matrix_label import MatrixLabel
-from utils.labels import comp_graph_node_labels
-from utils.fonts import ARIAL_36
+from vqe_playground.number_picker import NumberPicker
+from vqe_playground.matrix_label import MatrixLabel
+from vqe_playground.utils.labels import comp_graph_node_labels
+from vqe_playground.utils.fonts import ARIAL_36
 
 
 class AdjacencyMatrix(pygame.sprite.RenderPlain):

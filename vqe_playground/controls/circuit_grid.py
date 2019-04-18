@@ -16,11 +16,11 @@
 #
 import pygame
 import numpy as np
-from utils.colors import *
-from utils.navigation import *
-from utils.resources import *
-from model.circuit_grid_model import CircuitGridNode
-from model import circuit_node_types as node_types
+from vqe_playground.utils.colors import *
+from vqe_playground.utils.navigation import *
+from vqe_playground.utils.resources import *
+from vqe_playground.model.circuit_grid_model import CircuitGridNode
+from vqe_playground.model import circuit_node_types as node_types
 
 GRID_WIDTH = 60
 GRID_HEIGHT = 60
