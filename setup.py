@@ -13,6 +13,15 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/JavaFXpert/vqe-playground",
     packages=setuptools.find_packages(),
+    install_requires=[
+        'pygame',
+        'networkx',
+        'qiskit',
+        'qiskit_aqua',
+    ],
+    package_data={
+        'vqe_playground.utils': ['**/*.png'],
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",
