@@ -20,15 +20,19 @@ import pygame
 from pygame.compat import geterror
 from pygame.constants import RLEACCEL
 
-main_dir = os.path.split(os.path.abspath(__file__))[0]
-data_dir = os.path.join(main_dir, 'data')
+# main_dir = os.path.split(os.path.abspath(__file__))[0]
+# main_dir = 'vqe_playground/utils/data'
+# data_dir = os.path.join(main_dir, 'data')
+data_dir = 'vqe_playground/utils/data/'
 
 def load_image(name, colorkey=None):
-    fullname = os.path.join(data_dir, name)
+    # fullname = os.path.join(data_dir, name)
+    fullname = data_dir + name
+    print('fullname:', fullname)
     try:
         image = pygame.image.load(fullname)
     except pygame.error:
-        print ('Cannot load image:', fullname)
+        print ('Cannot load image!:', fullname)
         raise SystemExit(str(geterror()))
     image = image.convert()
     if colorkey is not None:
