@@ -16,8 +16,8 @@ setuptools.setup(
     install_requires=[
         'pygame',
         'networkx',
-        'qiskit',
-        'qiskit_aqua',
+        #'qiskit',  # not including for now, because of hard scikit learn reqirement
+        #'qiskit_aqua',
     ],
     package_data={
         'vqe_playground.utils': ['**/*.png'],
