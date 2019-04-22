@@ -19,8 +19,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 from cmath import isclose
+import io
 
-from vqe_playground.utils import load_image
+from vqe_playground.utils.resources import load_mem_image
 from vqe_playground.utils.labels import comp_graph_node_labels
 
 
@@ -75,9 +76,10 @@ class NetworkGraph(pygame.sprite.Sprite):
 
         nx.draw_networkx(self.graph, self.graph_pos, with_labels=False, node_color=colors, node_size=600, alpha=.8, font_color='white')
         plt.axis('off')
-        plt.savefig("vqe_playground/utils/data/network_graph.png")
+        buf = io.BytesIO()
+        plt.savefig(buf, format="png")
 
-        self.image, self.rect = load_image('network_graph.png', -1)
+        self.image, self.rect = load_mem_image(buf, -1)
         self.image.convert()
 
     def calc_node_colors(self):
