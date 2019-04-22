@@ -1,0 +1,6 @@
+# This initialization file is associated with your terminal in vqe-playground/..cocalc.x11-0.term.init.
+# It is automatically run whenever it starts up -- restart the terminal via Ctrl-d and Return-key.
+
+# Usually, your ~/.bashrc is executed and this behavior is emulated for completeness:
+source ~/.bashrc
+vqe-playground
