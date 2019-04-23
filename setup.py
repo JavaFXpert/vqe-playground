@@ -20,7 +20,8 @@ setuptools.setup(
         #'qiskit_aqua',
     ],
     package_data={
-        'vqe_playground.utils': ['**/*.png'],
+        'vqe_playground.utils':
+        ['**/*.png', 'data/images/*.png', 'data/gate_images/*.png'],
     },
     classifiers=[
         "Programming Language :: Python :: 3",
