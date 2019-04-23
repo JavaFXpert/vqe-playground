@@ -28,7 +28,7 @@ data_dir = os.path.join(main_dir, 'data')
 def load_image(name, colorkey=None):
     fullname = os.path.join(data_dir, name)
     # fullname = data_dir + name
-    print('fullname:', fullname)
+    # ßprint('fullname:', fullname)
     try:
         image = pygame.image.load(fullname)
     except pygame.error:
