@@ -8,7 +8,7 @@ Variational Quantum Eigensolver (VQE) Playground: Gaining intuition about VQE.
 ## Running locally from a command prompt
 
 Requires pip installing qiskit-aqua, qiskit, matplotlib, and pygame. Then run
-`python vqe_start.py` from the command prompt.
+`vqe_start.py` using Python 3.
 
 ## Running locally after installing as a Python package
 
