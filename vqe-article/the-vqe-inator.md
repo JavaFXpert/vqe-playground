@@ -40,8 +40,9 @@ Actually, there are an overabundance of terms in quantum computing that begin wi
 
 <img src="images/graph-three-vertices.png" alt="graph-coloring" width="150"/>
 
-The graph has already been colored with one of its MaxCut solutions, namely, 3, as the sum of the cuts between nodes of different colors is 3. The energy for that coloring is 	  
+The graph has already been colored with one of its MaxCut solutions, namely, 3, as the sum of the cuts between nodes of different colors is 3. The energy for that coloring is $-2$, because the weight total between opposite color vertices is $-3$ and the weight total between same color vertices is 1. Adding these totals yields $-2$.
 
+There are $2^3$ combinations with which the vertices in our graph may be colored. The energy states for each of these combinations are represented on the [main diagonal](https://en.wikipedia.org/wiki/Main_diagonal) of the following Hermitian matrix.  
 $$
 \begin{bmatrix}
   2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
@@ -53,7 +54,23 @@ $$
   0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
   0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 \\
  \end{bmatrix}
+ \begin{matrix}
+ CBA \\
+ r, r, r \\
+ r, r, b \\
+ r, b, r \\
+ r, b, b \\
+ b, r, r \\
+ b, r, b \\
+ b, b, r \\
+ b, b, b \\
+ \\
+ \end{matrix}
 $$
+
+For example the fourth row of the matrix represents the energy state ($-1$) of our graph when the A and B vertices are colored blue, and the C vertex is colored red.
+
+
 
 | + Shift | - Energy      | = Cut   |
 | ------- | ------------- | ------- |
