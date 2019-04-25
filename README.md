@@ -1,11 +1,16 @@
-# Variational Quantum Eigensolver Playground"
+# Variational Quantum Eigensolver Playground
 
-Variational Quantum Eigensolver: gaining intuition about Variational Quantum Eigensolver.
+Variational Quantum Eigensolver (VQE) Playground: Gaining intuition about VQE.
 (based on [Qiskit](https://qiskit.org/), the "Quantum Information Science Kit")
 
 **License:** Apache 2.0
 
-## Running locally
+## Running locally from a command prompt
+
+Requires pip installing qiskit-aqua, qiskit, matplotlib, and pygame. Then run
+`python vqe_start.py` from the command prompt.
+
+## Running locally after installing as a Python package
 
 Installing this Python package registers an entry point `vqe-playground`.
 Running it starts a pygame based graphical interface.
