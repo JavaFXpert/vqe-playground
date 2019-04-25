@@ -1,7 +1,7 @@
 # Variational Quantum Eigensolver Playground"
 
 Variational Quantum Eigensolver: gaining intuition about Variational Quantum Eigensolver.
-(based on [Quiskit](https://qiskit.org/), the "Quntum Information Science Kit")
+(based on [Qiskit](https://qiskit.org/), the "Quantum Information Science Kit")
 
 **License:** Apache 2.0
 
