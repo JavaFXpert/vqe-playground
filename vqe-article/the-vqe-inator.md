@@ -20,7 +20,7 @@ Take a few moments to solve the following graph coloring puzzle that involves fi
 
 *Fig 1: Graph coloring puzzle*
 
-Hint: The highest possible score for the preceding puzzle (or problem if you prefer) is 13, and there are two possible solutions. Please get out your crayons and solve this puzzle before peeking at one of these solutions shown in the next drawing.
+Hint: The highest possible score for the preceding puzzle (or problem if you prefer) is 13, and there are two possible solutions with that score. Please get out your crayons and solve this puzzle before peeking at one of these solutions shown in the next drawing.
 
 ##### The relevance of this graph coloring problem
 
@@ -104,7 +104,7 @@ $$
  \end{bmatrix}
 $$
 
-> Note: Multiplying this vector with this matrix yields the same result as multiplying this vector with a scalar, in this case $-1$. Therefore, this vector is an [eigenvector](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors) of the matrix, and the eigenvalue of this eigenvector is $-1$. In fact, this matrix has exactly eight eigenvectors, with their associated eigenvalues appearing on the main diagonal.
+> Note: Multiplying this vector with this matrix yields the same result as multiplying this vector with a scalar, in this case $-1$. Therefore, this vector is an [eigenvector](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors) of the matrix, and the eigenvalue of this eigenvector is $-1$. In fact, this matrix has exactly eight eigenvectors, with their associated eigenvalues appearing on the main diagonal. We use the Variational Quantum Eigensolver algorithm to find an eigenvector with the lowest eigenvalue.
 
 To obtain the energy value as a scalar from the vector that contains it above, we'll take the inner product of it with a row vector that represents the $\vert011\rangle$ basis state.
 $$
@@ -124,11 +124,21 @@ $$
  \end{bmatrix}
  = -1
 $$
-To express these calculations more succinctly, we'll use [Dirac bra-ket](https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation) notation, where the row vector is expressed as a *bra* and the column vector is expressed as a *ket*. The ***H*** symbol is our Hamiltonian operator, which is multiplied by the ket vector, and the resultant vector multiplied by the bra vector.
+To express these calculations more succinctly, we'll use [Dirac bra-ket](https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation) notation, where the row vector is expressed as a *bra* and the column vector is expressed as a *ket*. The ***H*** symbol is our Hamiltonian operator, which is multiplied by the ket vector, and the resultant vector multiplied by the bra vector. These are the same operations performed previously, only this time expressed with Dirac notation:
 
 $\langle011\vert H\vert011\rangle=-1$
 
-> This expression take the form $\langle\psi\vert H\vert\psi\rangle$ and is known as the [expectation value](https://en.wikipedia.org/wiki/Expectation_value_(quantum_mechanics)). Here we expect the energy value for the given basis state, but as demonstrated later, an expectation value is the average of all the possible outcomes of a measurement as weighted by their likelihood.
+> Note: This expression take the form $\langle\psi\vert H\vert\psi\rangle$ and is known as the [expectation value](https://en.wikipedia.org/wiki/Expectation_value_(quantum_mechanics)). Here we expect the energy value for the given basis state, but as demonstrated later, an expectation value is the average of all the possible outcomes of a measurement weighted by their likelihood.
+
+##### It's time to play
+
+Enough theory about VQE (for the moment anyway)! Let's get some hands-on intuition by using an open source application named [VQE Playground](https://github.com/JavaFXpert/vqe-playground). As shown in the following screenshot, this application provides an interactive visualization of how VQE can find the MaxCut of a graph.
+
+> ![Screenshot of VQE Playground](/Users/James.Weaver@ibm.com/PycharmProjects/vqe-playground/vqe-article/images/vqe-playground-initial.png)
+
+Included in this visualization are a graph with five vertices, an adjacency matrix that defines the graph's edges and their weights, and a list of the eigenvectors and eigenvalues in the Hamiltonian operator for the graph. This visualization also has a quantum circuit with several ***Ry*** gates that will be rotated as the algorithm seeks the lowest eigenvalue. Take a look at this short video of VQE Playground in action.
+
+<video src="https://vimeo.com/332727564" />
 
 | + Shift | - Energy      | = Cut   |
 | ------- | ------------- | ------- |
