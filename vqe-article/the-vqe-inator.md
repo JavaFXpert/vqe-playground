@@ -134,7 +134,7 @@ $\langle011\vert H\vert011\rangle=-1$
 
 Enough theory about VQE (for the moment anyway)! Let's get some hands-on intuition by using an open source application named [VQE Playground](https://github.com/JavaFXpert/vqe-playground). As shown in the following screenshot, this application provides an interactive visualization of how VQE can find the MaxCut of a graph.
 
-> ![Screenshot of VQE Playground](/Users/James.Weaver@ibm.com/PycharmProjects/vqe-playground/vqe-article/images/vqe-playground-initial.png)
+> ![Screenshot of VQE Playground](images/vqe-playground-initial.png)
 
 Included in this visualization are a graph with five vertices, an adjacency matrix that defines the graph's edges and their weights, and a list of the eigenvectors and eigenvalues in the Hamiltonian operator for the graph. This visualization also has a quantum circuit with several ***Ry*** gates that will be rotated as the algorithm seeks the lowest eigenvalue. Take a look at this short video of VQE Playground in action.
 
