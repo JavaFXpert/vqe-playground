@@ -138,7 +138,9 @@ Enough theory about VQE (for the moment anyway)! Let's get some hands-on intuiti
 
 Included in this visualization are a graph with five vertices, an adjacency matrix that defines the graph's edges and their weights, and a list of the eigenvectors and eigenvalues in the Hamiltonian operator for the graph. This visualization also has a quantum circuit with several ***Ry*** gates that will be rotated as the algorithm seeks the lowest eigenvalue. Take a look at this short video of VQE Playground in action.
 
-<video src="https://vimeo.com/332727564" />
+><iframe src="https://player.vimeo.com/video/332727564?title=0&byline=0&portrait=0" width="800" height="448" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+
+<p><a href="https://vimeo.com/332727564">VQE Playground demo</a> from <a href="https://vimeo.com/javafxpert">James L. Weaver</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
 
 | + Shift | - Energy      | = Cut   |
 | ------- | ------------- | ------- |
