@@ -56,21 +56,59 @@ $$
  \end{bmatrix}
  \begin{matrix}
  CBA \\
- r, r, r \\
- r, r, b \\
- r, b, r \\
- r, b, b \\
- b, r, r \\
- b, r, b \\
- b, b, r \\
- b, b, b \\
+ \vert000\rangle \\
+ \vert001\rangle \\
+ \vert010\rangle \\
+ \vert011\rangle \\
+ \vert100\rangle \\
+ \vert101\rangle \\
+ \vert110\rangle \\
+ \vert111\rangle \\
  \\
  \end{matrix}
 $$
 
-For example the fourth row of the matrix represents the energy state ($-1$) of our graph when the A and B vertices are colored blue, and the C vertex is colored red.
+The right side of the previous figure contains basis states that represent the color combinations, with $0$ denoting red and $1$ denoting blue. For example the fourth row of the matrix represents the energy state ($-1$) of our graph when the A and B vertices are colored blue, and the C vertex is colored red. To obtain the energy value from this matrix for a given basis state, we'll first multiply the matrix by a vector that represents the basis state. For example, the following operation yields a vector that contains the energy value for the $\vert011\rangle$ basis state.
+$$
+\begin{bmatrix}
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  0 & 0 & -1 & 0 & 0 & 0 & 0 & 0 \\
+  0 & 0 & 0 & -1 & 0 & 0 & 0 & 0 \\
+  0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 \\
+  0 & 0 & 0 & 0 & 0 & -1 & 0 & 0 \\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 \\
+ \end{bmatrix}
+ \cdot
+ \begin{bmatrix}
+ 0 \\
+ 0 \\
+ 0 \\
+ 1 \\
+ 0 \\
+ 0 \\
+ 0 \\
+ 0
+ \end{bmatrix}
+ =
+ \begin{bmatrix}
+ 0 \\
+ 0 \\
+ 0 \\
+ -1 \\
+ 0 \\
+ 0 \\
+ 0 \\
+ 0
+ \end{bmatrix}
 
+ 
+$$
 
+> Note: Multiplying this vector with this matrix yields the same result as multiplying this vector with a scalar, in this case $-1$. Therefore, this vector is an [eigenvector](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors) of the matrix, and the eigenvalue of this eigenvector is $-1$. In fact, this matrix has exactly eight eigenvectors, with their associated eigenvalues appearing on the main diagonal.
+
+To continue [TODO: LEFT OFF HERE]
 
 | + Shift | - Energy      | = Cut   |
 | ------- | ------------- | ------- |
