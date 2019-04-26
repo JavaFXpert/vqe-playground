@@ -68,7 +68,7 @@ $$
  \end{matrix}
 $$
 
-The right side of the previous figure contains basis states that represent the color combinations, with $0$ denoting red and $1$ denoting blue. For example the fourth row of the matrix represents the energy state ($-1$) of our graph when the A and B vertices are colored blue, and the C vertex is colored red. To obtain the energy value from this matrix for a given basis state, we'll first multiply the matrix by a vector that represents the basis state. For example, the following operation yields a vector that contains the energy value for the $\vert011\rangle$ basis state.
+This matrix serves as our *Hamiltonian operator*, as we'll use it in operations to determine energy values of our graph. To the right of the matrix are basis states that represent the possible color combinations, with $0$ denoting red and $1$ denoting blue. For example the fourth row of the matrix represents the energy state ($-1$) of our graph when the A and B vertices are colored blue, and the C vertex is colored red. To obtain the energy value from this matrix for a given basis state, we'll first multiply the matrix by a column vector that represents the basis state. For example, the following operation yields a vector that contains the energy value for the $\vert011\rangle$ basis state.
 $$
 \begin{bmatrix}
   2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
@@ -102,13 +102,33 @@ $$
  0 \\
  0
  \end{bmatrix}
-
- 
 $$
 
 > Note: Multiplying this vector with this matrix yields the same result as multiplying this vector with a scalar, in this case $-1$. Therefore, this vector is an [eigenvector](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors) of the matrix, and the eigenvalue of this eigenvector is $-1$. In fact, this matrix has exactly eight eigenvectors, with their associated eigenvalues appearing on the main diagonal.
 
-To continue [TODO: LEFT OFF HERE]
+To obtain the energy value as a scalar from the vector that contains it above, we'll take the inner product of it with a row vector that represents the $\vert011\rangle$ basis state.
+$$
+\begin{bmatrix}
+  0 & 0 & 0 & 1 & 0 & 0 & 0 & 0
+ \end{bmatrix}
+ \cdot
+ \begin{bmatrix}
+ 0 \\
+ 0 \\
+ 0 \\
+ -1 \\
+ 0 \\
+ 0 \\
+ 0 \\
+ 0
+ \end{bmatrix}
+ = -1
+$$
+To express these calculations more succinctly, we'll use [Dirac bra-ket](https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation) notation, where the row vector is expressed as a *bra* and the column vector is expressed as a *ket*. The ***H*** symbol is our Hamiltonian operator, which is multiplied by the ket vector, and the resultant vector multiplied by the bra vector.
+
+$\langle011\vert H\vert011\rangle=-1$
+
+> This expression take the form $\langle\psi\vert H\vert\psi\rangle$ and is known as the [expectation value](https://en.wikipedia.org/wiki/Expectation_value_(quantum_mechanics)). Here we expect the energy value for the given basis state, but as demonstrated later, an expectation value is the average of all the possible outcomes of a measurement as weighted by their likelihood.
 
 | + Shift | - Energy      | = Cut   |
 | ------- | ------------- | ------- |
