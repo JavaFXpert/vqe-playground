@@ -44,7 +44,7 @@ The graph has already been colored with one of its MaxCut solutions, namely, 3, 
 
 There are $2^3$ combinations with which the vertices in our graph may be colored. The energy states for each of these combinations are represented on the [main diagonal](https://en.wikipedia.org/wiki/Main_diagonal) of the following Hermitian matrix.  
 $$
- \begin{bmatrix}
+\begin{bmatrix}
   2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
   0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
   0 & 0 & -1 & 0 & 0 & 0 & 0 & 0 \\
