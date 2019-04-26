@@ -44,7 +44,7 @@ The graph has already been colored with one of its MaxCut solutions, namely, 3, 
 
 There are $2^3$ combinations with which the vertices in our graph may be colored. The energy states for each of these combinations are represented on the [main diagonal](https://en.wikipedia.org/wiki/Main_diagonal) of the following Hermitian matrix.  
 $$
-\\begin{bmatrix}
+ \begin{bmatrix}
   2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
   0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
   0 & 0 & -1 & 0 & 0 & 0 & 0 & 0 \\
@@ -53,24 +53,24 @@ $$
   0 & 0 & 0 & 0 & 0 & -1 & 0 & 0 \\
   0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
   0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 \\
- \\end{bmatrix}
- \\begin{matrix}
+ \end{bmatrix}
+ \begin{matrix}
  CBA \\
- \\vert000\rangle \\
- \\vert001\rangle \\
- \\vert010\rangle \\
- \\vert011\rangle \\
- \\vert100\rangle \\
- \\vert101\rangle \\
- \\vert110\rangle \\
- \\vert111\rangle \\
+ \vert000\rangle \\
+ \vert001\rangle \\
+ \vert010\rangle \\
+ \vert011\rangle \\
+ \vert100\rangle \\
+ \vert101\rangle \\
+ \vert110\rangle \\
+ \vert111\rangle \\
  \\
- \\end{matrix}
+ \end{matrix}
 $$
 
 This matrix serves as our *Hamiltonian operator*, as we'll use it in operations to determine energy values of our graph. To the right of the matrix are basis states that represent the possible color combinations, with $0$ denoting red and $1$ denoting blue. For example the fourth row of the matrix represents the energy state ($-1$) of our graph when the A and B vertices are colored blue, and the C vertex is colored red. To obtain the energy value from this matrix for a given basis state, we'll first multiply the matrix by a column vector that represents the basis state. For example, the following operation yields a vector that contains the energy value for the $\vert011\rangle$ basis state.
 $$
-\begin{bmatrix}
+ \begin{bmatrix}
   2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
   0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
   0 & 0 & -1 & 0 & 0 & 0 & 0 & 0 \\
@@ -108,7 +108,7 @@ $$
 
 To obtain the energy value as a scalar from the vector that contains it above, we'll take the inner product of it with a row vector that represents the $\vert011\rangle$ basis state.
 $$
-\begin{bmatrix}
+ \begin{bmatrix}
   0 & 0 & 0 & 1 & 0 & 0 & 0 & 0
  \end{bmatrix}
  \cdot
