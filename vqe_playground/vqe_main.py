@@ -247,6 +247,7 @@ class VQEPlayground():
                 #     print("event: ", event)
                 if event.type == QUIT:
                     pygame.quit()
+                    print("Quitting VQE Playground")
                     return
                     # going = False
 
