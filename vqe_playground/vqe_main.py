@@ -246,7 +246,9 @@ class VQEPlayground():
                 # if event.type != MOUSEMOTION:
                 #     print("event: ", event)
                 if event.type == QUIT:
-                    going = False
+                    pygame.quit()
+                    return
+                    # going = False
 
                 elif event.type == MOUSEBUTTONDOWN:
                     if self.optimize_button.rect.collidepoint(event.pos):
