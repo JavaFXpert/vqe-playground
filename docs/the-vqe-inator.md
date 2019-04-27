@@ -24,7 +24,7 @@ Hint: The highest possible score for the preceding puzzle (or problem if you pre
 
 ##### The relevance of this graph coloring problem
 
-Coloring the vertices of this graph with two colors can model real world problems such as social network interactions and marketing influencers. It is another way of expressing the [MaxCut problem](https://en.wikipedia.org/wiki/Maximum_cut), in which the score is calculated by adding up the weights on the edges that are cut by a line drawn between vertices of different colors:
+Coloring the vertices of this [weighted graph](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)#Weighted_graph) with two colors can model real world problems such as social network interactions and marketing influencers. It is another way of expressing the [MaxCut problem](https://en.wikipedia.org/wiki/Maximum_cut), in which the score is calculated by adding up the weights on the edges that are cut by a line drawn between vertices of different colors:
 
 <img src="images/graph-coloring-maxcut.png" alt="graph-coloring" width="600"/>
 
@@ -104,7 +104,7 @@ $$
  \end{bmatrix}
 $$
 
-> Note: Multiplying this vector with this matrix yields the same result as multiplying this vector with a scalar, in this case $-1$. Therefore, this vector is an [eigenvector](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors) of the matrix, and the eigenvalue of this eigenvector is $-1$. In fact, this matrix has exactly eight eigenvectors, with their associated eigenvalues appearing on the main diagonal. We use the Variational Quantum Eigensolver algorithm to find an eigenvector with the lowest eigenvalue.
+> Note: Multiplying this vector with this matrix yields the same result as multiplying this vector with a scalar, in this case $-1$. Therefore, this vector is an [eigenvector](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors) of the matrix, and the eigenvalue of this eigenvector is $-1$. In fact, this matrix has exactly eight eigenvectors, with their associated eigenvalues appearing on the main diagonal. We'll use the Variational Quantum Eigensolver algorithm to find an eigenvector with the lowest eigenvalue.
 
 To obtain the energy value as a scalar from the vector that contains it above, we'll take the inner product of it with a row vector that represents the $\vert011\rangle$ basis state.
 $$
@@ -141,6 +141,12 @@ Included in this visualization are a graph with five vertices, an adjacency matr
 ><iframe src="https://player.vimeo.com/video/332727564?title=0&byline=0&portrait=0" width="800" height="448" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
 
 <p><a href="https://vimeo.com/332727564">VQE Playground demo</a> from <a href="https://vimeo.com/javafxpert">James L. Weaver</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+
+In this video, we first demonstrate how to add an edge to the graph and adjust its weight by clicking repeatedly a cell in the adjacency matrix. Clicking a blank cell adds an edge with a weight value of $1$ between the vertices corresponding to the cell's row and column header labels. Every additional click adds $1$ to the weight, and clicking on a cell with a weight value of $4$ causes that cell to be blank, which removes the corresponding edge from the graph.
+
+> Note: Because this adjacency matrix models an undirected graph (edges don't have arrows), the weight of a cell in a given row and column is the same as the cell in the corresponding column and row. Expressed more succinctly, $A_{ij} = A_{ji}$.
+
+Notice that as the adjacency matrix is modified, the eigenvalues corresponding to the basis states are recalculated.  
 
 | + Shift | - Energy      | = Cut   |
 | ------- | ------------- | ------- |
