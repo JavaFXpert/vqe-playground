@@ -136,7 +136,11 @@ Enough theory about VQE (for the moment anyway)! Let's get some hands-on intuiti
 
 > ![Screenshot of VQE Playground](images/vqe-playground-initial.png)
 
-Included in this visualization are a graph with five vertices, an adjacency matrix that defines the graph's edges and their weights, and a list of the eigenvectors and eigenvalues in the Hamiltonian operator for the graph. This visualization also has a quantum circuit with several ***Ry*** gates that will be rotated as the algorithm seeks the lowest eigenvalue. Take a look at this short video of VQE Playground in action.
+Included in this visualization are a graph with five vertices, an adjacency matrix that defines the graph's edges and their weights, and a list of the eigenvectors and eigenvalues in the Hamiltonian operator for the graph. This visualization also has a quantum circuit with several ***Ry*** gates that will be rotated as the algorithm seeks the lowest eigenvalue.
+
+> Note: This quantum circuit, with its initial rotation angles, is an example of an [ansatz](https://en.wikipedia.org/wiki/Ansatz), which is a term that physicists and mathematicians use that means "educated guess", or more colloquially, [SWAG](https://en.wikipedia.org/wiki/Scientific_wild-ass_guess). As the algorithm progresses, our ansatz will be iteratively updated with rotations that result in increasingly better guesses. 
+
+Take a look at this short video of VQE Playground in action.
 
 ><iframe src="https://player.vimeo.com/video/332727564?title=0&byline=0&portrait=0" width="800" height="448" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
 
@@ -146,7 +150,11 @@ In this video, we first demonstrate how to add an edge to the graph and adjust i
 
 > Note: Because this adjacency matrix models an undirected graph (edges don't have arrows), the weight of a cell in a given row and column is the same as the cell in the corresponding column and row. Expressed more succinctly, $A_{ij} = A_{ji}$.
 
-Notice that as the adjacency matrix is modified, the eigenvalues corresponding to the basis states are recalculated.  
+Notice that as the adjacency matrix is modified, the eigenvalues corresponding to the basis states are recalculated. We'll discuss the details of this calculation later, but as you would expect, it uses the weights in the adjacency matrix to compute the energy for each combination of graph coloring.
+
+Clicking the **Optimize** button results in executing the VQE algorithm, which seeks the lowest eigenvalue by iteratively doing the following steps:
+
+1. 
 
 | + Shift | - Energy      | = Cut   |
 | ------- | ------------- | ------- |
