@@ -162,15 +162,25 @@ Take a look at this short video of VQE Playground in action.
 
 *Fig 8: Video of the VQE Playground application* 
 
-In this video, we first demonstrate how to add an edge to the graph and adjust its weight by clicking repeatedly a cell in the adjacency matrix. Clicking a blank cell adds an edge with a weight value of $1$ between the vertices corresponding to the cell's row and column header labels. Every additional click adds $1$ to the weight, and clicking on a cell with a weight value of $4$ causes that cell to be blank, which removes the corresponding edge from the graph.
+In this video, we first demonstrate how to add an edge to the graph and adjust its weight by clicking a cell repeatedly in the adjacency matrix. Clicking a blank cell adds an edge with a weight value of $1$ between the vertices corresponding to the cell's row and column header labels. Every additional click adds $1$ to the weight, and clicking on a cell with a weight value of $4$ causes that cell to be blank, which removes the corresponding edge from the graph.
 
 > Note: Because this adjacency matrix models an undirected graph (edges don't have arrows), the weight of a cell in a given row and column is the same as the cell in the corresponding column and row. Expressed more succinctly, $A_{ij} = A_{ji}$.
 
 Notice that as the adjacency matrix is modified, the eigenvalues corresponding to the basis states are recalculated. We'll discuss the details of this calculation later, but as you would expect, it uses the weights in the adjacency matrix to compute the energy for each combination of graph coloring.
 
+##### The Optimizer-inator
+
 Clicking the **Optimize** button results in executing the VQE algorithm, which relies upon an optimizer to manage the process of seeking the lowest eigenvalue. The optimizer's job is to turn the available knobs (the ***Ry*** gates in this example) in such a way that the **Weighted average** (expectation value) on the screen continually decreases. In the video we see the optimizer focusing attention on a given ***Ry*** gate, often rotating it in some direction, and moving to the next ***Ry*** gate. While this is happening, the graphical squares in the **Prob**ability column grow, shrink, appear, and disappear. The area of a given square represents the probability that a measurement will result in the basis state next to the square. These squares are a graphical illustration of the expectation value expression,  $\langle\psi\vert H\vert\psi\rangle$ , mentioned earlier. To see why this is true, review the calculations in *Fig 7* and *Fig 8*, noting that each energy value ends up being multiplied by the square of the absolute value of its corresponding amplitude in the state vector.
 
-Turning our attention to the quantum circuit, notice that it contains a pattern of gates that is repeated a few times. This circuit TODO: LEFT OFF HERE. 
+> Note: The [VQE algorithm implementation in Qiskit Aqua](https://qiskit.org/documentation/aqua/algorithms.html#vqe) provides [several optimizers from which you may choose](https://qiskit.org/documentation/aqua/optimizers.html#optimizers), as well as the ability to plug in your own optimizer.
+
+##### Poking around a Hilbert space
+
+Turning our attention to the quantum circuit, notice that it contains a pattern of gates that is repeated a few times. The structure of this circuit follows one of several standard [variational forms available in Qiskit Aqua](https://qiskit.org/documentation/aqua/variational_forms.html#variational-forms). As shown in *Fig 7*, the variational form that VQE Playground uses is a series of ***Ry*** gates with linear entanglement maps. Entanglement allows an ansatz to visit nooks and crannies of the Hilbert space that it wouldn't otherwise be able to do.
+
+An ansatz that leverages a good variational form will efficiently explore a Hilbert space at it searches for increasingly lower expectation values. Apparently, lowering ones expectations is a good thing in this context! 
+
+ 
 
 | + Shift | - Energy      | = Cut   |
 | ------- | ------------- | ------- |
