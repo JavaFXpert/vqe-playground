@@ -40,6 +40,8 @@ Actually, there are an overabundance of terms in quantum computing that begin wi
 
 <img src="images/graph-three-vertices.png" alt="graph-coloring" width="150"/>
 
+*Fig 3: Graph with three vertices and weights*
+
 The graph has already been colored with one of its MaxCut solutions, namely, 3, as the sum of the cuts between nodes of different colors is 3. The energy for that coloring is $-2$, because the weight total between opposite color vertices is $-3$ and the weight total between same color vertices is 1. Adding these totals yields $-2$.
 
 There are $2^3$ combinations with which the vertices in our graph may be colored. The energy states for each of these combinations are represented on the [main diagonal](https://en.wikipedia.org/wiki/Main_diagonal) of the following Hermitian matrix.  
@@ -67,6 +69,8 @@ $$
  \\
  \end{matrix}
 $$
+
+*Fig 4: Hermitian matrix with energy states*
 
 This matrix serves as our *Hamiltonian operator*, as we'll use it in operations to determine energy values of our graph. To the right of the matrix are basis states that represent the possible color combinations, with $0$ denoting red and $1$ denoting blue. For example the fourth row of the matrix represents the energy state ($-1$) of our graph when the A and B vertices are colored blue, and the C vertex is colored red. To obtain the energy value from this matrix for a given basis state, we'll first multiply the matrix by a column vector that represents the basis state. For example, the following operation yields a vector that contains the energy value for the $\vert011\rangle$ basis state.
 $$
@@ -103,12 +107,13 @@ $$
  0
  \end{bmatrix}
 $$
+*Fig 5: Obtaining an energy value from the Hamiltonian (step 1)* 
 
 > Note: Multiplying this vector with this matrix yields the same result as multiplying this vector with a scalar, in this case $-1$. Therefore, this vector is an [eigenvector](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors) of the matrix, and the eigenvalue of this eigenvector is $-1$. In fact, this matrix has exactly eight eigenvectors, with their associated eigenvalues appearing on the main diagonal. We'll use the Variational Quantum Eigensolver algorithm to find an eigenvector with the lowest eigenvalue.
 
 To obtain the energy value as a scalar from the vector that contains it above, we'll take the inner product of it with a row vector that represents the $\vert011\rangle$ basis state.
 $$
- \begin{bmatrix}
+\begin{bmatrix}
   0 & 0 & 0 & 1 & 0 & 0 & 0 & 0
  \end{bmatrix}
  \cdot
@@ -124,7 +129,14 @@ $$
  \end{bmatrix}
  = -1
 $$
-To express these calculations more succinctly, we'll use [Dirac bra-ket](https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation) notation, where the row vector is expressed as a *bra* and the column vector is expressed as a *ket*. The ***H*** symbol is our Hamiltonian operator, which is multiplied by the ket vector, and the resultant vector multiplied by the bra vector. These are the same operations performed previously, only this time expressed with Dirac notation:
+
+*Fig 6: Obtaining an energy value from the Hamiltonian (step 2)* 
+
+To express these calculations more succinctly, we'll use [Dirac bra-ket](https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation) notation, where the row vector is expressed as a *bra* and the column vector is expressed as a *ket*. 
+
+> Note: Excluding complex numbers, an element in a *bra* (row vector) contains the same number as its associated element in a *ket* (column vector), and vice-versa. When an element contains a complex number, the element in a *bra* contains the complex conjugate (changing the sign of the imaginary component) of its associated element in a *ket*, and vice-versa.  
+
+The ***H*** symbol is our Hamiltonian operator, which is multiplied by the ket vector, and the resultant vector multiplied by the bra vector. These are the same operations performed previously, only this time expressed with Dirac notation:
 
 $\langle011\vert H\vert011\rangle=-1$
 
@@ -136,6 +148,8 @@ Enough theory about VQE (for the moment anyway)! Let's get some hands-on intuiti
 
 > ![Screenshot of VQE Playground](images/vqe-playground-initial.png)
 
+*Fig 7: Screenshot of the VQE Playground application* 
+
 Included in this visualization are a graph with five vertices, an adjacency matrix that defines the graph's edges and their weights, and a list of the eigenvectors and eigenvalues in the Hamiltonian operator for the graph. This visualization also has a quantum circuit with several ***Ry*** gates that will be rotated as the algorithm seeks the lowest eigenvalue.
 
 > Note: This quantum circuit, with its initial rotation angles, is an example of an [ansatz](https://en.wikipedia.org/wiki/Ansatz), which is a term that physicists and mathematicians use that means "educated guess", or more colloquially, [SWAG](https://en.wikipedia.org/wiki/Scientific_wild-ass_guess). As the algorithm progresses, our ansatz will be iteratively updated with rotations that result in increasingly better guesses. 
@@ -146,15 +160,17 @@ Take a look at this short video of VQE Playground in action.
 
 <p><a href="https://vimeo.com/332727564">VQE Playground demo</a> from <a href="https://vimeo.com/javafxpert">James L. Weaver</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
 
+*Fig 8: Video of the VQE Playground application* 
+
 In this video, we first demonstrate how to add an edge to the graph and adjust its weight by clicking repeatedly a cell in the adjacency matrix. Clicking a blank cell adds an edge with a weight value of $1$ between the vertices corresponding to the cell's row and column header labels. Every additional click adds $1$ to the weight, and clicking on a cell with a weight value of $4$ causes that cell to be blank, which removes the corresponding edge from the graph.
 
 > Note: Because this adjacency matrix models an undirected graph (edges don't have arrows), the weight of a cell in a given row and column is the same as the cell in the corresponding column and row. Expressed more succinctly, $A_{ij} = A_{ji}$.
 
 Notice that as the adjacency matrix is modified, the eigenvalues corresponding to the basis states are recalculated. We'll discuss the details of this calculation later, but as you would expect, it uses the weights in the adjacency matrix to compute the energy for each combination of graph coloring.
 
-Clicking the **Optimize** button results in executing the VQE algorithm, which seeks the lowest eigenvalue by iteratively doing the following steps:
+Clicking the **Optimize** button results in executing the VQE algorithm, which relies upon an optimizer to manage the process of seeking the lowest eigenvalue. The optimizer's job is to turn the available knobs (the ***Ry*** gates in this example) in such a way that the **Weighted average** (expectation value) on the screen continually decreases. In the video we see the optimizer focusing attention on a given ***Ry*** gate, often rotating it in some direction, and moving to the next ***Ry*** gate. While this is happening, the graphical squares in the **Prob**ability column grow, shrink, appear, and disappear. The area of a given square represents the probability that a measurement will result in the basis state next to the square. These squares are a graphical illustration of the expectation value expression,  $\langle\psi\vert H\vert\psi\rangle$ , mentioned earlier. To see why this is true, review the calculations in *Fig 7* and *Fig 8*, noting that each energy value ends up being multiplied by the square of the absolute value of its corresponding amplitude in the state vector.
 
-1. 
+Turning our attention to the quantum circuit, notice that it contains a pattern of gates that is repeated a few times. This circuit TODO: LEFT OFF HERE. 
 
 | + Shift | - Energy      | = Cut   |
 | ------- | ------------- | ------- |
