@@ -1,4 +1,4 @@
-### The Variational Quantum Eigensolver-inator: Examining the inner-workings of the VQE algorithm
+### The Variational Quantum Eigensolver: Examining the inner-workings of the VQE algorithm
 
 #### Why are you reading this?
 
@@ -168,7 +168,7 @@ In this video, we first demonstrate how to add an edge to the graph and adjust i
 
 Notice that as the adjacency matrix is modified, the eigenvalues corresponding to the basis states are recalculated. We'll discuss the details of this calculation later, but as you would expect, it uses the weights in the adjacency matrix to compute the energy for each combination of graph coloring.
 
-##### The Optimizer-inator
+##### The Optimizer
 
 Clicking the **Optimize** button results in executing the VQE algorithm, which relies upon an optimizer to manage the process of seeking the lowest eigenvalue. The optimizer's job is to turn the available knobs (the ***Ry*** gates in this example) in such a way that the **Weighted average** (expectation value) on the screen continually decreases. In the video we see the optimizer focusing attention on a given ***Ry*** gate, often rotating it in some direction, and moving to the next ***Ry*** gate. While this is happening, the graphical squares in the **Prob**ability column grow, shrink, appear, and disappear. The area of a given square represents the probability that a measurement will result in the basis state next to the square. These squares are a graphical illustration of the expectation value expression,  $\langle\psi\vert H\vert\psi\rangle$ , mentioned earlier. To see why this is true, review the calculations in *Fig 7* and *Fig 8*, noting that each energy value ends up being multiplied by the square of the absolute value of its corresponding amplitude in the state vector.
 
@@ -178,7 +178,13 @@ Clicking the **Optimize** button results in executing the VQE algorithm, which r
 
 Turning our attention to the quantum circuit, notice that it contains a pattern of gates that is repeated a few times. The structure of this circuit follows one of several standard [variational forms available in Qiskit Aqua](https://qiskit.org/documentation/aqua/variational_forms.html#variational-forms). As shown in *Fig 7*, the variational form that VQE Playground uses is a series of ***Ry*** gates with linear entanglement maps. Entanglement allows an ansatz to visit nooks and crannies of the Hilbert space that it wouldn't otherwise be able to do.
 
-An ansatz that leverages a good variational form will efficiently explore a Hilbert space at it searches for increasingly lower expectation values. Apparently, lowering ones expectations is a good thing in this context! 
+An ansatz that leverages a good variational form will efficiently explore a Hilbert space at it searches for increasingly lower expectation values. Apparently, lowering ones expectations is a good thing in this context!
+
+**Creating a Hamiltonian from the adjacency matrix**
+
+There are $2^n$ energy states in our Hamiltonan, where $n$ is the number of vertices in the graph. These energy states are computed from the weights on the graph's edges, which are expressed in the adjacency matrix.
+
+
 
  
 
