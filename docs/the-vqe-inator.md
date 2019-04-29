@@ -190,11 +190,140 @@ There are $2^n$ energy states in our Hamiltonan, where $n$ is the number of vert
 
 *Fig 9: Three-vertex graph and its adjacency matrix*
 
-As previously discussed, when two vertices are connected by an edge the energy between them corresponds to the edge's weight. The energy is positive if the vertices are the same color, and negative if the vertices are different colors. We'll model this characteristic by representing each edge with a Pauli Z matrix, beginning with the edge that connects vertices **A** and **B**.
+As previously discussed, when two vertices are connected by an edge, the energy between them corresponds to the edge's weight. The energy is positive if the vertices are the same color, and negative if the vertices are different colors. We'll model this characteristic by representing each edge with a pair of Pauli Z matrices, beginning with the edge that connects vertices **A** and **B** whose weight is $1$.  (and scale the matrix by 0.5. TODO: Why?)
+$$
+C ---- B ---- A \\
+\begin{bmatrix}
+  1 & 0 \\
+  0 & 1
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+  1 & 0 \\
+  0 & -1
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+  1 & 0 \\
+  0 & -1
+\end{bmatrix}
+\cdot
+0.5
+=
+$$
+
+$$
+\begin{bmatrix}
+  0.5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  0 & -0.5 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  0 & 0 & -0.5 & 0 & 0 & 0 & 0 & 0 \\
+  0 & 0 & 0 & 0.5 & 0 & 0 & 0 & 0 \\
+  0 & 0 & 0 & 0 & 0.5 & 0 & 0 & 0 \\
+  0 & 0 & 0 & 0 & 0 & -0.5 & 0 & 0 \\
+  0 & 0 & 0 & 0 & 0 & 0 & -0.5 & 0 \\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0.5 \\
+ \end{bmatrix}
+\begin{matrix}
+ CBA \\
+ \vert000\rangle \\
+ \vert001\rangle \\
+ \vert010\rangle \\
+ \vert011\rangle \\
+ \vert100\rangle \\
+ \vert101\rangle \\
+ \vert110\rangle \\
+ \vert111\rangle \\
+ \\
+ \end{matrix}
+$$
+
+*Fig 10: Modeling edge {A, B} with tensor products*
+
+Vertices not connected by this edge (in this example only vertex **C**) are modeled with the identity matrix. Notice that this calculation *increases* the energy of basis states in which vertices **A** and **B** have the same bit value (color), and *decreases* the energy of basis states in which vertices **A** and **B** have different bit values.
+
+Now we'll model the edge that connects vertices **A** and **C**, scaling the tensor product with the weight of the edge.
+$$
+C ---- B ---- A \\
+\begin{bmatrix}
+  1 & 0 \\
+  0 & -1
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+  1 & 0 \\
+  0 & 1
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+  1 & 0 \\
+  0 & -1
+\end{bmatrix}
+\cdot
+2
+\cdot
+0.5
+=
+$$
+
+$$
+\begin{bmatrix}
+  1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+  0 & 0 & 0 & -1 & 0 & 0 & 0 & 0 \\
+  0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 \\
+  0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+  0 & 0 & 0 & 0 & 0 & 0 & -1 & 0 \\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+ \end{bmatrix}
+\begin{matrix}
+ CBA \\
+ \vert000\rangle \\
+ \vert001\rangle \\
+ \vert010\rangle \\
+ \vert011\rangle \\
+ \vert100\rangle \\
+ \vert101\rangle \\
+ \vert110\rangle \\
+ \vert111\rangle \\
+ \\
+ \end{matrix}
+$$
+
+*Fig 11: Modeling edge {A, C} with tensor products*
+
+Again, notice that this calculation *increases* the energy of basis states in which vertices **A** and **C** have the same bit value (color), and *decreases* the energy of basis states in which vertices **A** and **C** have different bit values.
+
+Now that both edges have been modeled, we'll add the matrices together. The resultant matrix shows the combined energy increase/decrease related to each graph coloring.
+$$
+\begin{bmatrix}
+  1.5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  0 & -1.5 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  0 & 0 & 0.5 & 0 & 0 & 0 & 0 & 0 \\
+  0 & 0 & 0 & -0.5 & 0 & 0 & 0 & 0 \\
+  0 & 0 & 0 & 0 & -0.5 & 0 & 0 & 0 \\
+  0 & 0 & 0 & 0 & 0 & 0.5 & 0 & 0 \\
+  0 & 0 & 0 & 0 & 0 & 0 & -1.5 & 0 \\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 1.5 \\
+ \end{bmatrix}
+\begin{matrix}
+ CBA \\
+ \vert000\rangle \\
+ \vert001\rangle \\
+ \vert010\rangle \\
+ \vert011\rangle \\
+ \vert100\rangle \\
+ \vert101\rangle \\
+ \vert110\rangle \\
+ \vert111\rangle \\
+ \\
+ \end{matrix}
+$$
+*Fig 12: Combined effect on energy (TODO: Reword)*
 
 
 
- 
+​    
 
 | + Shift | - Energy      | = Cut   |
 | ------- | ------------- | ------- |
