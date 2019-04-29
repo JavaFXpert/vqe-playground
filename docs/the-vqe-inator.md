@@ -42,18 +42,18 @@ Actually, there are an overabundance of terms in quantum computing that begin wi
 
 *Fig 3: Graph with three vertices and weights*
 
-The graph has already been colored with one of its MaxCut solutions, namely, 3, as the sum of the cuts between nodes of different colors is 3. The energy for that coloring is $-2$, because the weight total between opposite color vertices is $-3$ and the weight total between same color vertices is 1. Adding these totals yields $-2$.
+The graph has already been colored with one of its MaxCut solutions, namely, 3, which is the best we can do with this coloring. The energy for that coloring is $-1$, because negating the weight total between opposite color vertices yields $-3$ and the weight total between same color vertices is 1. Adding these totals (and dividing by 2 to normalize TODO: Why?) yields $-1$.
 
 There are $2^3$ combinations with which the vertices in our graph may be colored. The energy states for each of these combinations are represented on the [main diagonal](https://en.wikipedia.org/wiki/Main_diagonal) of the following Hermitian matrix.  
 $$
 \begin{bmatrix}
   2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 \\
   0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-  0 & 0 & -1 & 0 & 0 & 0 & 0 & 0 \\
   0 & 0 & 0 & -1 & 0 & 0 & 0 & 0 \\
   0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 \\
-  0 & 0 & 0 & 0 & 0 & -1 & 0 & 0 \\
   0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  0 & 0 & 0 & 0 & 0 & 0 & -1 & 0 \\
   0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 \\
  \end{bmatrix}
  \begin{matrix}
@@ -76,12 +76,12 @@ This matrix serves as our *Hamiltonian operator*, as we'll use it in operations 
 $$
 \begin{bmatrix}
   2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 \\
   0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-  0 & 0 & -1 & 0 & 0 & 0 & 0 & 0 \\
   0 & 0 & 0 & -1 & 0 & 0 & 0 & 0 \\
   0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 \\
-  0 & 0 & 0 & 0 & 0 & -1 & 0 & 0 \\
   0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  0 & 0 & 0 & 0 & 0 & 0 & -1 & 0 \\
   0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 \\
  \end{bmatrix}
  \cdot
@@ -172,6 +172,8 @@ Notice that as the adjacency matrix is modified, the eigenvalues corresponding t
 
 Clicking the **Optimize** button results in executing the VQE algorithm, which relies upon an optimizer to manage the process of seeking the lowest eigenvalue. The optimizer's job is to turn the available knobs (the ***Ry*** gates in this example) in such a way that the **Weighted average** (expectation value) on the screen continually decreases. In the video we see the optimizer focusing attention on a given ***Ry*** gate, often rotating it in some direction, and moving to the next ***Ry*** gate. While this is happening, the graphical squares in the **Prob**ability column grow, shrink, appear, and disappear. The area of a given square represents the probability that a measurement will result in the basis state next to the square. These squares are a graphical illustration of the expectation value expression,  $\langle\psi\vert H\vert\psi\rangle$ , mentioned earlier. To see why this is true, review the calculations in *Fig 7* and *Fig 8*, noting that each energy value ends up being multiplied by the square of the absolute value of its corresponding amplitude in the state vector.
 
+While the optimizer uses a classical algorithm running on a classical computer, the circuit containing the ansatz is executed and measured on a quantum computer or simulator. This is why VQE is known as a hybrid algorithm, consisting of quantum and classical components, 
+
 > Note: The [VQE algorithm implementation in Qiskit Aqua](https://qiskit.org/documentation/aqua/algorithms.html#vqe) provides [several optimizers from which you may choose](https://qiskit.org/documentation/aqua/optimizers.html#optimizers), as well as the ability to plug in your own optimizer.
 
 ##### Poking around a Hilbert space
@@ -182,7 +184,13 @@ An ansatz that leverages a good variational form will efficiently explore a Hilb
 
 **Creating a Hamiltonian from the adjacency matrix**
 
-There are $2^n$ energy states in our Hamiltonan, where $n$ is the number of vertices in the graph. These energy states are computed from the weights on the graph's edges, which are expressed in the adjacency matrix.
+There are $2^n$ energy states in our Hamiltonan, where $n$ is the number of vertices in the graph. These energy states are computed from the weights on the graph's edges, which are expressed in the adjacency matrix. To accomplish this, Qiskit Aqua leverages the [Pauli Z matrix](https://en.wikipedia.org/wiki/Pauli_matrices), and the [identity matrix](https://en.wikipedia.org/wiki/Identity_matrix) as demonstrated in the following example containing three vertices shown in *Fig 9*.
+
+![](images/three-vertices-adj-matrix.png)
+
+*Fig 9: Three-vertex graph and its adjacency matrix*
+
+As previously discussed, when two vertices are connected by an edge the energy between them corresponds to the edge's weight. The energy is positive if the vertices are the same color, and negative if the vertices are different colors. We'll model this characteristic by representing each edge with a Pauli Z matrix, beginning with the edge that connects vertices **A** and **B**.
 
 
 
