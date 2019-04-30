@@ -134,13 +134,13 @@ $$
 
 To express these calculations more succinctly, we'll use [Dirac bra-ket](https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation) notation, where the row vector is expressed as a *bra* and the column vector is expressed as a *ket*. 
 
-> Note: Excluding complex numbers, an element in a *bra* (row vector) contains the same number as its associated element in a *ket* (column vector), and vice-versa. When an element contains a complex number, the element in a *bra* contains the complex conjugate (changing the sign of the imaginary component) of its associated element in a *ket*, and vice-versa.  
+> Note: Excluding complex numbers, an element in a *bra* (row vector) contains the same value as its associated element in a *ket* (column vector), and vice-versa. When an element contains a complex number, the element in a *bra* contains the [complex conjugate](https://en.wikipedia.org/wiki/Complex_conjugate) (changing the sign of the imaginary component) of its associated element in a *ket*, and vice-versa.  
 
 The ***H*** symbol is our Hamiltonian operator, which is multiplied by the ket vector, and the resultant vector multiplied by the bra vector. These are the same operations performed previously, only this time expressed with Dirac notation:
 
 $\langle011\vert H\vert011\rangle=-1$
 
-> Note: This expression take the form $\langle\psi\vert H\vert\psi\rangle$ and is known as the [expectation value](https://en.wikipedia.org/wiki/Expectation_value_(quantum_mechanics)). Here we expect the energy value for the given basis state, but as demonstrated later, an expectation value is the average of all the possible outcomes of a measurement weighted by their likelihood.
+> Note: This expression takes the form $\langle\psi\vert H\vert\psi\rangle$ and is known as the [expectation value](https://en.wikipedia.org/wiki/Expectation_value_(quantum_mechanics)). Here we expect the energy value for the given basis state, but as demonstrated later, an expectation value is the average of all the possible outcomes of a measurement weighted by their likelihood.
 
 #### It's time to play
 
