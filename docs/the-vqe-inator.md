@@ -328,7 +328,7 @@ $$
 $$
 *Fig 12: Combined effect of tensor products on energy*
 
-A common and more succinct way of computing the eigenvalues of an Ising Hamiltonian from an adjacency matrix is similar to the following expression. 
+A common and more succinct way of computing the eigenvalues of an Ising Hamiltonian from an adjacency matrix is in a form resembling the following expression. 
 $$
 \frac{1}{2}\left( \sum_{i<j} w_{ij} Z_i Z_j\right)
 $$
