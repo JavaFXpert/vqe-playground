@@ -142,7 +142,7 @@ $\langle011\vert H\vert011\rangle=-1$
 
 > Note: This expression take the form $\langle\psi\vert H\vert\psi\rangle$ and is known as the [expectation value](https://en.wikipedia.org/wiki/Expectation_value_(quantum_mechanics)). Here we expect the energy value for the given basis state, but as demonstrated later, an expectation value is the average of all the possible outcomes of a measurement weighted by their likelihood.
 
-##### It's time to play
+#### It's time to play
 
 Enough theory about VQE (for the moment anyway)! Let's get some hands-on intuition by using an open source application named [VQE Playground](https://github.com/JavaFXpert/vqe-playground). As shown in the following screenshot, this application provides an interactive visualization of how VQE can find the MaxCut of a graph.
 
@@ -182,17 +182,17 @@ Turning our attention to the quantum circuit, notice that it contains a pattern 
 
 An ansatz that leverages a good variational form will efficiently explore a Hilbert space at it searches for increasingly lower expectation values. Apparently, lowering ones expectations is a good thing in this context!
 
-**Creating a Hamiltonian from the adjacency matrix**
+#### **Creating a Hamiltonian from the adjacency matrix**
 
-There are $2^n$ energy states in our Hamiltonan, where $n$ is the number of vertices in the graph. These energy states are computed from the weights on the graph's edges, which are expressed in the adjacency matrix. To accomplish this, Qiskit Aqua leverages the [Pauli Z matrix](https://en.wikipedia.org/wiki/Pauli_matrices), and the [identity matrix](https://en.wikipedia.org/wiki/Identity_matrix) as demonstrated in the following example containing three vertices shown in *Fig 9*.
+There are $2^n$ energy states in our Hamiltonian (more specifically an [Ising Hamiltonian](https://en.wikipedia.org/wiki/Ising_model)), where $n$ is the number of vertices in the graph. These energy states are computed from the weights on the graph's edges, which are expressed in the adjacency matrix. To accomplish this, Qiskit Aqua leverages the [Pauli Z matrix](https://en.wikipedia.org/wiki/Pauli_matrices), and the [identity matrix](https://en.wikipedia.org/wiki/Identity_matrix) as demonstrated in the following example containing three vertices shown in *Fig 9*.
 
 ![](images/three-vertices-adj-matrix.png)
 
 *Fig 9: Three-vertex graph and its adjacency matrix*
 
-As previously discussed, when two vertices are connected by an edge, the energy between them corresponds to the edge's weight. The energy is positive if the vertices are the same color, and negative if the vertices are different colors. We'll model this characteristic by representing each edge with a pair of Pauli Z matrices, beginning with the edge that connects vertices **A** and **B** whose weight is $1$.  (and scale the matrix by 0.5. TODO: Why?)
+As previously discussed, when two vertices are connected by an edge, the energy between them corresponds to the edge's weight. The energy is positive if the vertices are the same color, and negative if the vertices are different colors. We'll model this characteristic by representing each edge with a pair of Pauli Z matrices, beginning with the edge that connects vertices **A** and **B**, whose weight is $1$.  We'll then  scale the matrix by 0.5. (TODO: Why?)
 $$
-C ---- B ---- A \\
+C\phantom{........}B\phantom{.........}A\phantom{.........} \\
 \begin{bmatrix}
   1 & 0 \\
   0 & 1
@@ -241,9 +241,16 @@ $$
 
 Vertices not connected by this edge (in this example only vertex **C**) are modeled with the identity matrix. Notice that this calculation *increases* the energy of basis states in which vertices **A** and **B** have the same bit value (color), and *decreases* the energy of basis states in which vertices **A** and **B** have different bit values.
 
+A more succinct way to express the preceding calculation is the following. 
+$$
+\frac{1}{2}\left(w_{ij} Z_i Z_j\right)
+$$
+The $w_{ij}$ portion of the preceding expression represents the edge weight, which is found in row ${i}$, column ${j}$ of the adjacency matrix. $Z_i Z_j$ means "calculate a tensor product using Pauli $Z$ matrices on qubits ${i}$ and ${j}$, and identity matrices on the rest."
+
 Now we'll model the edge that connects vertices **A** and **C**, scaling the tensor product with the weight of the edge.
 $$
-C ---- B ---- A \\
+C\phantom{........}B\phantom{.........}A\phantom{.........} 
+\\
 \begin{bmatrix}
   1 & 0 \\
   0 & -1
@@ -259,9 +266,9 @@ C ---- B ---- A \\
   0 & -1
 \end{bmatrix}
 \cdot
-2
-\cdot
 0.5
+\cdot
+2
 =
 $$
 
@@ -319,29 +326,23 @@ $$
  \\
  \end{matrix}
 $$
-*Fig 12: Combined effect on energy (TODO: Reword)*
+*Fig 12: Combined effect of tensor products on energy*
 
+A common and more succinct way of computing the eigenvalues of an Ising Hamiltonian from an adjacency matrix is similar to the following expression. 
+$$
+\frac{1}{2}\left( \sum_{i<j} w_{ij} Z_i Z_j\right)
+$$
 
+In the preceding expression, the $\sum_{i<j}$ portion considers all of the cells in the matrix that are above and to the right of main diagonal, summing the resultant matrices.
 
-​    
+#### The end of the beginning
 
-| + Shift | - Energy      | = Cut   |
-| ------- | ------------- | ------- |
-| 4/2 (2) | (+3+1)/2 (2)  | 0/2 (0) |
-| 4/2 (2) | (+3-1)/2 (1)  | 2/2 (1) |
-| 4/2 (2) | (-3+1)/2 (-1) | 6/2 (3) |
-| 4/2 (2) | (-3-1)/2 (-2) | 8/2 (4) |
+In this article we discussed some of the problem domains in which VQE may be used, and we shed some light on its inner-workings. Some suggested next steps learning more about VQE and applying it to solve problems would be to:
 
+- Read the [VQE documentation](https://qiskit.org/documentation/aqua/algorithms.html#vqe), following links that discuss topics  such as optimizers and variational forms.
+- Experiment further with a [Qiskit tutorial that uses VQE for MaxCut problems as well as traveling salesman problems (TSP)](https://nbviewer.jupyter.org/github/Qiskit/qiskit-tutorial/blob/master/qiskit/aqua/optimization/maxcut_and_tsp.ipynb).
+- Check out [Qiskit Chemistry](https://qiskit.org/documentation/aqua/chemistry/qiskit_chemistry.html)
 
+ As stated earlier, Qiskit Aqua enables you to use VQE without understanding how it works, but it is our hope that learning more about how it works has been helpful and enlightening!
 
-#### Glossary
-
-| Term                                                     | Meaning                                             |
-| -------------------------------------------------------- | --------------------------------------------------- |
-| [Ansatz](https://en.wikipedia.org/wiki/Ansatz)           | Educated guess that is made more accurate over time |
-| [MaxCut](https://en.wikipedia.org/wiki/Maximum_cut)      |                                                     |
-| MaxCut shift                                             |                                                     |
-| Hamiltonian                                              |                                                     |
-| [Ising model](https://en.wikipedia.org/wiki/Ising_model) |                                                     |
-|                                                          |                                                     |
 
