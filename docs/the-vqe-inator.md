@@ -42,7 +42,7 @@ Actually, there are an overabundance of terms in quantum computing that begin wi
 
 *Fig 3: Graph with three vertices and weights*
 
-The graph has already been colored with one of its MaxCut solutions, namely, 3, which is the best we can do with this graph. The energy for that coloring is $-1$, because negating the weight total between opposite color vertices yields $-3$ and the weight total between same color vertices is 1. Adding these totals (and dividing by 2 TODO: Determine how to explain why?) yields $-1$.
+The graph has already been colored with one of its MaxCut solutions, namely, 3, which is the best we can do with this graph. The energy for that coloring is $-1$, because negating the weight total between opposite color vertices yields $-3$ and the weight total between same color vertices is 1. Adding these totals (and dividing by 2 **TODO: Determine how to explain why we divide by 2**) yields $-1$.
 
 There are $2^3$ combinations with which the vertices in our graph may be colored. The energy states for each of these combinations are represented on the [main diagonal](https://en.wikipedia.org/wiki/Main_diagonal) of the following Hermitian matrix.  
 $$
