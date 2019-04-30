@@ -337,12 +337,12 @@ In the preceding expression, the $\sum_{i<j}$ portion considers all of the cells
 
 #### The end of the beginning
 
-In this article we discussed some of the problem domains in which VQE may be used, and we shed some light on its inner-workings. Some suggested next steps learning more about VQE and applying it to solve problems would be to:
+In this article we discussed some of the problem domains in which VQE may be used, and we shed some light on its inner-workings. Here are some suggestions for next steps as you to learn more about VQE, and begin to apply it to solve problems:
 
 - Read the [VQE documentation](https://qiskit.org/documentation/aqua/algorithms.html#vqe), following links that discuss topics  such as optimizers and variational forms.
 - Experiment further with a [Qiskit tutorial that uses VQE for MaxCut problems as well as traveling salesman problems (TSP)](https://nbviewer.jupyter.org/github/Qiskit/qiskit-tutorial/blob/master/qiskit/aqua/optimization/maxcut_and_tsp.ipynb).
 - Check out [Qiskit Chemistry](https://qiskit.org/documentation/aqua/chemistry/qiskit_chemistry.html)
 
- As stated earlier, Qiskit Aqua enables you to use VQE without understanding how it works, but it is our hope that learning more about how it works has been helpful and enlightening!
+As stated earlier, Qiskit Aqua enables you to use VQE without understanding how it works, but it is our hope that learning more about how it works has been helpful and enlightening!
 
 
