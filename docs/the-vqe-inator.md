@@ -24,7 +24,7 @@ Take a few moments to solve the following graph coloring puzzle that involves fi
 
 > Hint: The highest possible score for the preceding puzzle (or problem if you prefer) is 13, and there are two possible solutions with that score. Please get out your crayons and solve this puzzle before peeking at one of these solutions shown in the next drawing.
 
-Coloring the vertices of this [weighted graph](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)#Weighted_graph) with two colors is one way of expressing the [MaxCut problem](https://en.wikipedia.org/wiki/Maximum_cut), in which the score is calculated by adding up the weights on the edges that are cut by a line drawn between vertices of different colors:
+Coloring the vertices of this [weighted graph](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)#Weighted_graph) with two colors is one way of expressing the [MaxCut problem](https://en.wikipedia.org/wiki/Maximum_cut), in which the score is calculated by adding up the weights on the edges that are cut by a line drawn between vertices of different colors.
 
 <img src="images/graph-coloring-maxcut.png" alt="graph-coloring" width="600"/>
 
@@ -50,7 +50,7 @@ As shown in the equation, the energy is proportional (by $\frac{1}{2}$) to this 
 $$
 e=\frac{1}{2}(w_s - w_d)
 $$
-There are $2^3$ combinations with which the vertices in our graph may be colored, represented as basis state using bit strings and [Dirac bra-ket](https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation) notation in the following way. 
+There are $2^3$ combinations with which the vertices in our graph may be colored, represented as basis states using bit strings and [Dirac bra-ket](https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation) notation in the following way. 
 $$
  \begin{matrix}
  CBA \\
