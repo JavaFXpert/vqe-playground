@@ -14,17 +14,17 @@ Some words that we'll use here such as [Hamiltonian](https://en.wikipedia.org/wi
 
 #### Using VQE to solve a coloring puzzle
 
-Take a few moments to solve the following graph coloring puzzle that involves filling in some of its circles (vertices) with one color, and the rest of its circles with another color. We'll use the colors *red* and *blue* in this discussion. Solving the puzzle successfully requires achieving the highest possible score, which is defined as the total of the numbers (weights) on the lines (edges) connecting circles that have different colors.
+Real world problems such as social network interactions and marketing influencers may be modeled with graphs containing nodes (vertices) and lines (edges).
+
+Take a few moments to solve the following graph coloring puzzle that involves filling in some of its vertices with one color, and the rest of its vertices with another color. We'll use the colors *red* and *blue* in this discussion. Solving the puzzle successfully requires achieving the highest possible score, which is defined as the total of the numbers (weights) on the edges connecting vertices that have different colors.
 
 <img src="images/graph-coloring.png" alt="graph-coloring" width="600"/>
 
 *Fig 1: Graph coloring puzzle*
 
-Hint: The highest possible score for the preceding puzzle (or problem if you prefer) is 13, and there are two possible solutions with that score. Please get out your crayons and solve this puzzle before peeking at one of these solutions shown in the next drawing.
+> Hint: The highest possible score for the preceding puzzle (or problem if you prefer) is 13, and there are two possible solutions with that score. Please get out your crayons and solve this puzzle before peeking at one of these solutions shown in the next drawing.
 
-##### The relevance of this graph coloring problem
-
-Coloring the vertices of this [weighted graph](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)#Weighted_graph) with two colors can model real world problems such as social network interactions and marketing influencers. It is another way of expressing the [MaxCut problem](https://en.wikipedia.org/wiki/Maximum_cut), in which the score is calculated by adding up the weights on the edges that are cut by a line drawn between vertices of different colors:
+Coloring the vertices of this [weighted graph](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)#Weighted_graph) with two colors is one way of expressing the [MaxCut problem](https://en.wikipedia.org/wiki/Maximum_cut), in which the score is calculated by adding up the weights on the edges that are cut by a line drawn between vertices of different colors:
 
 <img src="images/graph-coloring-maxcut.png" alt="graph-coloring" width="600"/>
 
@@ -42,9 +42,33 @@ Actually, there are an overabundance of terms in quantum computing that begin wi
 
 *Fig 3: Graph with three vertices and weights*
 
-The graph has already been colored with one of its MaxCut solutions, namely, 3, which is the best we can do with this graph. The energy for that coloring is $-1$, because negating the weight total between opposite color vertices yields $-3$ and the weight total between same color vertices is 1. Adding these totals (and dividing by 2 **TODO: Determine how to explain why we divide by 2**) yields $-1$.
+The graph has already been colored with one of its MaxCut solutions, namely, 3, which is the best we can do with this graph. The energy for that coloring is $-1$, as calculated in the following equation where the the weight total between same color vertices is $1$, and between different color vertices is 3. 
+$$
+-1=\frac{1}{2}(1 - 3)
+$$
+As shown in the equation, the energy is proportional (by $\frac{1}{2}$) to this difference of factors. The general equation for calculating the energy of a given coloring is as follows, where $w_s$ is the weight total between same color vertices, and $w_d$ is the weight total between different color vertices.
+$$
+e=\frac{1}{2}(w_s - w_d)
+$$
+There are $2^3$ combinations with which the vertices in our graph may be colored, represented as basis state using bit strings and [Dirac bra-ket](https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation) notation in the following way. 
+$$
+ \begin{matrix}
+ CBA \\
+ \vert000\rangle \\
+ \vert001\rangle \\
+ \vert010\rangle \\
+ \vert011\rangle \\
+ \vert100\rangle \\
+ \vert101\rangle \\
+ \vert110\rangle \\
+ \vert111\rangle \\
+ \end{matrix}
+$$
+*Fig 4: Representing graph vertex coloring as basis states*
 
-There are $2^3$ combinations with which the vertices in our graph may be colored. The energy states for each of these combinations are represented on the [main diagonal](https://en.wikipedia.org/wiki/Main_diagonal) of the following Hermitian matrix.  
+The least significant (rightmost) bit represents vertex **A** and the most significant (leftmost) bit represents vertex **C**. Additionally, we're representing *red* coloring with $0$, and *blue* coloring with $1$.
+
+The energy states for each of these combinations are represented on the [main diagonal](https://en.wikipedia.org/wiki/Main_diagonal) of the following Hermitian matrix.  
 $$
 \begin{bmatrix}
   2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
@@ -70,9 +94,9 @@ $$
  \end{matrix}
 $$
 
-*Fig 4: Hermitian matrix with energy states*
+*Fig 5: Hermitian matrix with energy states*
 
-This matrix serves as our *Hamiltonian operator*, as we'll use it in operations to determine the energy values of our graph. To the right of the matrix are basis states that represent the possible color combinations, with $0$ denoting red and $1$ denoting blue. For example the fourth row of the matrix represents the energy state ($-1$) of our graph when the A and B vertices are colored blue, and the C vertex is colored red. To obtain the energy value from this matrix for a given basis state, we'll first multiply the matrix by a column vector that represents the basis state. For example, the following operation yields a vector that contains the energy value for the $\vert011\rangle$ basis state.
+This matrix serves as our *Hamiltonian operator*, as we'll use it in operations to determine the energy values of our graph. To the right of the matrix are the basis states from *Fig 4* that represent the possible color combinations. For example the fourth row of the matrix represents the energy state ($-1$) of our graph when the **A** and **B** vertices are colored blue, and the **C** vertex is colored red. To obtain the energy value from this matrix for a given basis state, we'll first multiply the matrix by a column vector that represents the basis state. For example, the following operation yields a vector that contains the energy value for the $\vert011\rangle$ basis state.
 $$
 \begin{bmatrix}
   2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
@@ -107,7 +131,7 @@ $$
  0
  \end{bmatrix}
 $$
-*Fig 5: Obtaining an energy value from the Hamiltonian (step 1)* 
+*Fig 6: Obtaining an energy value from the Hamiltonian (step 1)* 
 
 > Note: Multiplying this vector with this matrix yields the same result as multiplying this vector with a scalar, in this case $-1$. Therefore, this vector is an [eigenvector](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors) of the matrix, and the eigenvalue of this eigenvector is $-1$. In fact, this matrix has exactly eight eigenvectors, with their associated eigenvalues appearing on the main diagonal. We'll use the Variational Quantum Eigensolver algorithm to find an eigenvector with the lowest eigenvalue.
 
@@ -130,9 +154,9 @@ $$
  = -1
 $$
 
-*Fig 6: Obtaining an energy value from the Hamiltonian (step 2)* 
+*Fig 7: Obtaining an energy value from the Hamiltonian (step 2)* 
 
-To express these calculations more succinctly, we'll use [Dirac bra-ket](https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation) notation, where the row vector is expressed as a *bra* and the column vector is expressed as a *ket*. 
+To express these calculations more succinctly, we'll use Dirac notation, where the row vector is expressed as a *bra* and the column vector is expressed as a *ket*. 
 
 > Note: Excluding complex numbers, an element in a *bra* (row vector) contains the same value as its associated element in a *ket* (column vector), and vice-versa. When an element contains a complex number, the element in a *bra* contains the [complex conjugate](https://en.wikipedia.org/wiki/Complex_conjugate) (changing the sign of the imaginary component) of its associated element in a *ket*, and vice-versa.  
 
@@ -148,7 +172,7 @@ Enough theory about VQE (for the moment anyway)! Let's get some hands-on intuiti
 
 > ![Screenshot of VQE Playground](images/vqe-playground-initial.png)
 
-*Fig 7: Screenshot of the VQE Playground application* 
+*Fig 8: Screenshot of the VQE Playground application* 
 
 Included in this visualization are a graph with five vertices, an adjacency matrix that defines the graph's edges and their weights, and a list of the eigenvectors and eigenvalues in the Hamiltonian operator for the graph. This visualization also has a quantum circuit with several ***Ry*** gates that will be rotated as the algorithm seeks the lowest eigenvalue.
 
@@ -160,7 +184,7 @@ Take a look at this short video of VQE Playground in action.
 
 <p><a href="https://vimeo.com/332727564">VQE Playground demo</a> from <a href="https://vimeo.com/javafxpert">James L. Weaver</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
 
-*Fig 8: Video of the VQE Playground application* 
+*Fig 9: Video of the VQE Playground application* 
 
 In this video, we first demonstrate how to add an edge to the graph and adjust its weight by clicking a cell repeatedly in the adjacency matrix. Clicking a blank cell adds an edge with a weight value of $1$ between the vertices corresponding to the cell's row and column header labels. Every additional click adds $1$ to the weight, and clicking on a cell with a weight value of $4$ causes that cell to be blank, which removes the corresponding edge from the graph.
 
@@ -170,7 +194,7 @@ Notice that as the adjacency matrix is modified, the eigenvalues corresponding t
 
 ##### The Optimizer
 
-Clicking the **Optimize** button results in executing the VQE algorithm, which relies upon an optimizer to manage the process of seeking the lowest eigenvalue. The optimizer's job is to turn the available knobs (the ***Ry*** gates in this example) in such a way that the **Weighted average** (expectation value) on the screen continually decreases. In the video we see the optimizer focusing attention on a given ***Ry*** gate, often rotating it in some direction, and moving to the next ***Ry*** gate. While this is happening, the graphical squares in the **Prob**ability column grow, shrink, appear, and disappear. The area of a given square represents the probability that a measurement will result in the basis state next to the square. These squares are a graphical illustration of the expectation value expression,  $\langle\psi\vert H\vert\psi\rangle$ , mentioned earlier. To see why this is true, review the calculations in *Fig 7* and *Fig 8*, noting that each energy value ends up being multiplied by the square of the absolute value of its corresponding amplitude in the state vector.
+Clicking the **Optimize** button results in executing the VQE algorithm, which relies upon an optimizer to manage the process of seeking the lowest eigenvalue. The optimizer's job is to turn the available knobs (the ***Ry*** gates in this example) in such a way that the **Weighted average** (expectation value) on the screen continually decreases. In the video we see the optimizer focusing attention on a given ***Ry*** gate, often rotating it in some direction, and moving to the next ***Ry*** gate. While this is happening, the graphical squares in the **Prob**ability column grow, shrink, appear, and disappear. The area of a given square represents the probability that a measurement will result in the basis state next to the square. These squares are a graphical illustration of the expectation value expression,  $\langle\psi\vert H\vert\psi\rangle$ , mentioned earlier. To see why this is true, review the calculations in *Fig 6* and *Fig 7*, noting that each energy value ends up being multiplied by the square of the absolute value of its corresponding amplitude in the state vector.
 
 While the optimizer uses a classical algorithm running on a classical computer, the circuit containing the ansatz is executed and measured on a quantum computer or simulator. This is why VQE is known as a hybrid algorithm, consisting of quantum and classical components, 
 
@@ -178,31 +202,31 @@ While the optimizer uses a classical algorithm running on a classical computer, 
 
 ##### Poking around a Hilbert space
 
-Turning our attention to the quantum circuit, notice that it contains a pattern of gates that is repeated a few times. The structure of this circuit follows one of several standard [variational forms available in Qiskit Aqua](https://qiskit.org/documentation/aqua/variational_forms.html#variational-forms). As shown in *Fig 7*, the variational form that VQE Playground uses is a series of ***Ry*** gates with linear entanglement maps. Entanglement allows an ansatz to visit nooks and crannies of the Hilbert space that it wouldn't otherwise be able to do.
+Turning our attention to the quantum circuit, notice that it contains a pattern of gates that is repeated a few times. The structure of this circuit follows one of several standard [variational forms available in Qiskit Aqua](https://qiskit.org/documentation/aqua/variational_forms.html#variational-forms). As shown in *Fig 8*, the variational form that VQE Playground uses is a series of ***Ry*** gates with linear entanglement maps. Entanglement allows an ansatz to visit nooks and crannies of the Hilbert space that it wouldn't otherwise be able to do.
 
 An ansatz that leverages a good variational form will efficiently explore a Hilbert space at it searches for increasingly lower expectation values. Apparently, lowering ones expectations is a good thing in this context!
 
 #### **Creating a Hamiltonian from the adjacency matrix**
 
-There are $2^n$ energy states in our Hamiltonian (more specifically an [Ising Hamiltonian](https://en.wikipedia.org/wiki/Ising_model)), where $n$ is the number of vertices in the graph. These energy states are computed from the weights on the graph's edges, which are expressed in the adjacency matrix. To accomplish this, Qiskit Aqua leverages the [Pauli Z matrix](https://en.wikipedia.org/wiki/Pauli_matrices), and the [identity matrix](https://en.wikipedia.org/wiki/Identity_matrix) as demonstrated in the following example containing three vertices shown in *Fig 9*.
+There are $2^n$ energy states in our Hamiltonian (more specifically an [Ising Hamiltonian](https://en.wikipedia.org/wiki/Ising_model)), where $n$ is the number of vertices in the graph. These energy states are computed from the weights on the graph's edges, which are expressed in the adjacency matrix. To accomplish this, Qiskit Aqua leverages the [Pauli Z matrix](https://en.wikipedia.org/wiki/Pauli_matrices), and the [identity matrix](https://en.wikipedia.org/wiki/Identity_matrix) as demonstrated in the following example containing three vertices shown in *Fig 10*.
 
 ![](images/three-vertices-adj-matrix.png)
 
-*Fig 9: Three-vertex graph and its adjacency matrix*
+*Fig 10: Three-vertex graph and its adjacency matrix*
 
-As previously discussed, when two vertices are connected by an edge, the energy between them corresponds to the edge's weight. The energy is positive if the vertices are the same color, and negative if the vertices are different colors. We'll model this characteristic by representing each edge with a pair of Pauli Z matrices, beginning with the edge that connects vertices **A** and **B**, whose weight is $1$.  We'll then  scale the matrix by 0.5. (TODO: Why?)
+As previously discussed, when two vertices are connected by an edge, the energy between them corresponds to the edge's weight. The energy is positive if the vertices are the same color, and negative if the vertices are different colors. We'll model this characteristic by representing each edge with a pair of Pauli Z matrices, beginning with the edge that connects vertices **A** and **B**, whose weight is $1$.  Vertices not connected by this edge (in this example only vertex **C**) are modeled with the identity matrix. We'll then take their [tensor product](https://en.wikipedia.org/wiki/Tensor_product), and scale the matrix by 0.5 as the energy is proportional.
 $$
 C\phantom{........}B\phantom{.........}A\phantom{.........} \\
 \begin{bmatrix}
   1 & 0 \\
   0 & 1
 \end{bmatrix}
-\cdot
+\otimes
 \begin{bmatrix}
   1 & 0 \\
   0 & -1
 \end{bmatrix}
-\cdot
+\otimes
 \begin{bmatrix}
   1 & 0 \\
   0 & -1
@@ -237,9 +261,9 @@ $$
  \end{matrix}
 $$
 
-*Fig 10: Modeling edge {A, B} with tensor products*
+*Fig 11: Modeling edge {A, B} with tensor products*
 
-Vertices not connected by this edge (in this example only vertex **C**) are modeled with the identity matrix. Notice that this calculation *increases* the energy of basis states in which vertices **A** and **B** have the same bit value (color), and *decreases* the energy of basis states in which vertices **A** and **B** have different bit values.
+Notice that this calculation *increases* the energy of basis states in which vertices **A** and **B** have the same bit value (color), and *decreases* the energy of basis states in which vertices **A** and **B** have different bit values.
 
 A more succinct way to express the preceding calculation is the following. 
 $$
@@ -255,12 +279,12 @@ C\phantom{........}B\phantom{.........}A\phantom{.........}
   1 & 0 \\
   0 & -1
 \end{bmatrix}
-\cdot
+\otimes
 \begin{bmatrix}
   1 & 0 \\
   0 & 1
 \end{bmatrix}
-\cdot
+\otimes
 \begin{bmatrix}
   1 & 0 \\
   0 & -1
@@ -297,7 +321,7 @@ $$
  \end{matrix}
 $$
 
-*Fig 11: Modeling edge {A, C} with tensor products*
+*Fig 12: Modeling edge {A, C} with tensor products*
 
 Again, notice that this calculation *increases* the energy of basis states in which vertices **A** and **C** have the same bit value (color), and *decreases* the energy of basis states in which vertices **A** and **C** have different bit values.
 
@@ -326,7 +350,7 @@ $$
  \\
  \end{matrix}
 $$
-*Fig 12: Combined effect of tensor products on energy*
+*Fig 13: Combined effect of tensor products on energy*
 
 A common and more succinct way of computing the eigenvalues of an Ising Hamiltonian from an adjacency matrix is in a form resembling the following expression. 
 $$
