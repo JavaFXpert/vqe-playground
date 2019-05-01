@@ -1,4 +1,8 @@
-### The Variational Quantum Eigensolver: Examining the inner-workings of the VQE algorithm
+### The Variational Quantum Eigensolver
+
+Examining the inner-workings of the VQE algorithm
+
+![](images/87396559_s.jpg)
 
 #### Why are you reading this?
 
@@ -52,7 +56,7 @@ e=\frac{1}{2}(w_s - w_d)
 $$
 There are $2^3$ combinations with which the vertices in our graph may be colored, represented as basis states using bit strings and [Dirac bra-ket](https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation) notation in the following way. 
 $$
- \begin{matrix}
+\begin{matrix}
  CBA \\
  \vert000\rangle \\
  \vert001\rangle \\
