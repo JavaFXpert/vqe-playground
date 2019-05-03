@@ -46,7 +46,7 @@ Actually, there are an overabundance of terms in quantum computing that begin wi
 
 *Fig 3: Graph with three vertices and weights*
 
-The graph has already been colored with one of its MaxCut solutions, namely, 3, which is the best we can do with this graph. The energy for that coloring is $-1$, as calculated in the following equation where the weight total between same color vertices is $1$, and between different color vertices is 3. 
+The graph has already been colored with one of its MaxCut solutions, namely, 3, which is the best we can do with this graph. The energy for that coloring is $-1$, as calculated in the following equation where the weight total between all of the same color vertices in this graph is $1$, and weight total between all of the different color vertices in this graph is $3$.
 $$
 -1=\frac{1}{2}(1 - 3)
 $$
