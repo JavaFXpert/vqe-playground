@@ -17,7 +17,7 @@
 import pygame
 import numpy as np
 from qiskit import BasicAer, execute
-from qiskit_aqua.translators.ising import maxcut
+from qiskit.aqua.translators.ising import max_cut
 from vqe_playground.utils.colors import WHITE, BLACK
 from vqe_playground.utils.fonts import ARIAL_30, ARIAL_36
 from vqe_playground.utils.labels import graph_node_labels_reversed_str
@@ -60,7 +60,7 @@ class ExpectationGrid(pygame.sprite.Sprite):
             self.draw_expectation_grid()
 
     def set_adj_matrix(self, adj_matrix):
-        maxcut_op, self.maxcut_shift = maxcut.get_maxcut_qubitops(adj_matrix)
+        maxcut_op, self.maxcut_shift = max_cut.get_max_cut_qubitops(adj_matrix)
         # print("maxcut_op: ", maxcut_op, ", maxcut_shift: ", maxcut_shift)
 
         # TODO: Find different approach of calculating and retrieving diagonal
