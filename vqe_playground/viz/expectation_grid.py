@@ -17,7 +17,8 @@
 import pygame
 import numpy as np
 from qiskit import BasicAer, execute
-from qiskit.aqua.translators.ising import max_cut
+from qiskit.optimization.applications.ising import max_cut
+from qiskit.aqua.operators.legacy import op_converter as op_c
 from vqe_playground.utils.colors import WHITE, BLACK
 from vqe_playground.utils.fonts import ARIAL_30, ARIAL_36
 from vqe_playground.utils.labels import graph_node_labels_reversed_str
@@ -60,12 +61,11 @@ class ExpectationGrid(pygame.sprite.Sprite):
             self.draw_expectation_grid()
 
     def set_adj_matrix(self, adj_matrix):
-        maxcut_op, self.maxcut_shift = max_cut.get_max_cut_qubitops(adj_matrix)
+        maxcut_op, self.maxcut_shift = max_cut.get_operator(adj_matrix)
         # print("maxcut_op: ", maxcut_op, ", maxcut_shift: ", maxcut_shift)
 
-        # TODO: Find different approach of calculating and retrieving diagonal
-        maxcut_op._paulis_to_matrix()
-        self.eigenvalues = maxcut_op._dia_matrix
+        maxcut_to_matrix = op_c.to_matrix_operator(maxcut_op)
+        self.eigenvalues = maxcut_to_matrix.dia_matrix
 
         self.calc_expectation_value()
         self.draw_expectation_grid()
@@ -132,4 +132,3 @@ class ExpectationGrid(pygame.sprite.Sprite):
 
         # print ("in calc_expectation_value, exp_val: ", exp_val, ", basis state: ", self.basis_states[basis_state_idx])
         return exp_val, self.basis_states[basis_state_idx]
-
