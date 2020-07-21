@@ -35,7 +35,7 @@
 from pygame.locals import *
 from qiskit import ClassicalRegister
 from qiskit import execute
-# from qiskit_aqua.translators.ising import maxcut
+# from qiskit.optimization.applications.ising import max_cut
 from .containers import *
 from .controls.circuit_grid import *
 from .model.circuit_grid_model import *
