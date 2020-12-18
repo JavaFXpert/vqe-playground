@@ -424,9 +424,6 @@ class VQEPlayground():
 
         move_radians = np.pi / 8
 
-        # For each rotation this will be either 1 or -1, signifying direction of movement
-        unit_direction_array = np.ones(len(self.optimized_rotations))
-
         self.min_distance = objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
 
         # print('self.cur_optimization_epoch: ', self.cur_optimization_epoch)
@@ -436,6 +433,8 @@ class VQEPlayground():
                 if not self.rotation_initialized:
                     self.cur_ang_rad = self.optimized_rotations[self.cur_rotation_num]
                     self.proposed_cur_ang_rad = self.cur_ang_rad
+                    # For each rotation this will be either 1 or -1, signifying direction of movement
+                    self.unit_direction_array = np.ones(len(self.optimized_rotations))
 
                     # Highlight gate being operated on
                     cur_wire_num = rotation_gate_nodes[self.cur_rotation_num].wire_num
@@ -447,10 +446,10 @@ class VQEPlayground():
                     self.rotation_initialized = True
 
                     # Decide whether to increase or decrease angle
-                    unit_direction_array[self.cur_rotation_num] = 1
+                    self.unit_direction_array[self.cur_rotation_num] = 1
                     if self.cur_ang_rad > np.pi:
-                        unit_direction_array[self.cur_rotation_num] = -1
-                    self.proposed_cur_ang_rad += move_radians * unit_direction_array[self.cur_rotation_num]
+                        self.unit_direction_array[self.cur_rotation_num] = -1
+                    self.proposed_cur_ang_rad += move_radians * self.unit_direction_array[self.cur_rotation_num]
                     if 0.0 <= self.proposed_cur_ang_rad < np.pi * 2 + 0.01:
                         self.optimized_rotations[self.cur_rotation_num] = self.proposed_cur_ang_rad
 
@@ -458,7 +457,7 @@ class VQEPlayground():
                         if temp_distance > self.min_distance:
                             # Moving in the wrong direction so restore the angle in the array and switch direction
                             self.optimized_rotations[self.cur_rotation_num] = self.cur_ang_rad
-                            unit_direction_array[self.cur_rotation_num] *= -1
+                            self.unit_direction_array[self.cur_rotation_num] *= -1
                         else:
                             # Moving in the right direction so use the proposed angle
                             self.cur_ang_rad = self.proposed_cur_ang_rad
@@ -469,7 +468,7 @@ class VQEPlayground():
 
                 elif self.rotation_initialized and not self.finished_rotating:
                     self.rotation_iterations += 1
-                    self.proposed_cur_ang_rad += move_radians * unit_direction_array[self.cur_rotation_num]
+                    self.proposed_cur_ang_rad += move_radians * self.unit_direction_array[self.cur_rotation_num]
                     if 0.0 <= self.proposed_cur_ang_rad <= np.pi * 2 + 0.01:
                         self.optimized_rotations[self.cur_rotation_num] = self.proposed_cur_ang_rad
                         temp_distance = objective_function(circuit_grid, expectation_grid, rotation_gate_nodes)
